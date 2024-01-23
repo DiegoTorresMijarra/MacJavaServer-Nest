@@ -15,11 +15,6 @@ import { UpdateRestauranteDto } from './dto/update-restaurante.dto'
 export class RestaurantesController {
   constructor(private readonly restaurantesService: RestaurantesService) {}
 
-  @Post()
-  create(@Body() createRestauranteDto: CreateRestauranteDto) {
-    return this.restaurantesService.create(createRestauranteDto)
-  }
-
   @Get()
   findAll() {
     return this.restaurantesService.findAll()
@@ -28,6 +23,11 @@ export class RestaurantesController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.restaurantesService.findOne(+id)
+  }
+
+  @Post()
+  create(@Body() createRestauranteDto: CreateRestauranteDto) {
+    return this.restaurantesService.create(createRestauranteDto)
   }
 
   @Patch(':id')

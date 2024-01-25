@@ -3,40 +3,60 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  UseInterceptors,
+  Put,
+  Logger,
+  ParseIntPipe,
+  HttpCode,
 } from '@nestjs/common'
 import { ClientesService } from './clientes.service'
 import { CreateClienteDto } from './dto/create-cliente.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
+import { Paginate, PaginateQuery } from 'nestjs-paginate'
 
 @Controller('clientes')
+@UseInterceptors(CacheInterceptor)
 export class ClientesController {
+  logger: Logger = new Logger(ClientesController.name)
   constructor(private readonly clientesService: ClientesService) {}
 
-  @Post()
-  create(@Body() createClienteDto: CreateClienteDto) {
-    return this.clientesService.create(createClienteDto)
-  }
-
   @Get()
-  findAll() {
-    return this.clientesService.findAll()
+  @CacheKey('all_clientes')
+  @CacheTTL(30)
+  async findAll(@Paginate() query: PaginateQuery) {
+    this.logger.log('Buscando todos los clientes')
+    return await this.clientesService.findAll(query)
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clientesService.findOne(+id)
+  findOne(@Param('id', ParseIntPipe) id: string) {
+    this.logger.log(`Buscando cliente con id ${id}`)
+    return this.clientesService.findOne(id)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClienteDto: UpdateClienteDto) {
-    return this.clientesService.update(+id, updateClienteDto)
+  @Post()
+  @HttpCode(201)
+  create(@Body() createClienteDto: CreateClienteDto) {
+    this.logger.log('Creando un nuevo cliente')
+    return this.clientesService.create(createClienteDto)
+  }
+
+  @Put(':id')
+  update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateClienteDto: UpdateClienteDto,
+  ) {
+    this.logger.log(`Actualizando cliente con id ${id}`)
+    return this.clientesService.update(id, updateClienteDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clientesService.remove(+id)
+  @HttpCode(204)
+  remove(@Param('id', ParseIntPipe) id: string) {
+    this.logger.log(`Eliminando cliente con id ${id}`)
+    return this.clientesService.removeSoft(id)
   }
 }

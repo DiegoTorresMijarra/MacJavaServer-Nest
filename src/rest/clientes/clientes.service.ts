@@ -95,7 +95,7 @@ export class ClientesService {
       throw new NotFoundException(`Cliente con id ${id} no encontrada`)
     } else {
       await this.cacheManager.set(`cliente_${id}`, clienteEncontrar, 60)
-      return clienteEncontrar
+      return this.mapper.toResponse(clienteEncontrar)
     }
   }
 
@@ -107,18 +107,33 @@ export class ClientesService {
         `El cliente con dni ${cliente.dni} ya existe`,
       )
     } else {
-      const res = this.clienteRepository.save(clienteToCreate)
+      const res = await this.clienteRepository.save(clienteToCreate)
       await this.invalidateKey('all_clientes')
-      return res
+      return this.mapper.toResponse(res)
     }
   }
 
   async update(id: string, updateClienteDto: UpdateClienteDto) {
     const clienteToUpdated = await this.findOne(id)
+    const res = await this.clienteRepository.save({
+      ...clienteToUpdated,
+      ...updateClienteDto,
+    })
+    await this.invalidateKey(`cliente_${id}`)
+    await this.invalidateKey('all_cliente')
+    return this.mapper.toResponse(res)
   }
 
-  removeSoft(id: number) {
-    return `This action removes a #${id} cliente`
+  async removeSoft(id: string) {
+    const clienteToRemove = await this.findOne(id)
+    const res: Cliente = await this.clienteRepository.save({
+      ...clienteToRemove,
+      updatedAt: new Date(),
+      is_deleted: true,
+    })
+    await this.invalidateKey(`cliente_${id}`)
+    await this.invalidateKey('all_clientes')
+    return this.mapper.toResponse(res)
   }
   public async exists(dni: string): Promise<Cliente> {
     const cliente = await this.clienteRepository

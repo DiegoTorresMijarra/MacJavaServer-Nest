@@ -1,4 +1,10 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
 import { CreateClienteDto } from './dto/create-cliente.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
 import { ClienteMapper } from './mapper/cliente.mapper'
@@ -93,15 +99,38 @@ export class ClientesService {
     }
   }
 
-  create(createClienteDto: CreateClienteDto) {
-    return 'This action adds a new cliente'
+  async create(createClienteDto: CreateClienteDto) {
+    const clienteToCreate = this.mapper.toCliente(createClienteDto)
+    const cliente = await this.exists(clienteToCreate.dni)
+    if (cliente) {
+      throw new BadRequestException(
+        `El cliente con dni ${cliente.dni} ya existe`,
+      )
+    } else {
+      const res = this.clienteRepository.save(clienteToCreate)
+      await this.invalidateKey('all_clientes')
+      return res
+    }
   }
 
-  update(id: number, updateClienteDto: UpdateClienteDto) {
-    return `This action updates a #${id} cliente`
+  async update(id: string, updateClienteDto: UpdateClienteDto) {
+    const clienteToUpdated = await this.findOne(id)
   }
 
   removeSoft(id: number) {
     return `This action removes a #${id} cliente`
+  }
+  public async exists(dni: string): Promise<Cliente> {
+    const cliente = await this.clienteRepository
+      .createQueryBuilder()
+      .where('LOWER(dni) = LOWER(:dnie)', { dnie: dni.toLowerCase() })
+      .getOne()
+    return cliente
+  }
+  async invalidateKey(keyPattern: string): Promise<void> {
+    const cacheKeys = await this.cacheManager.store.keys()
+    const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))
+    const promises = keysToDelete.map((key) => this.cacheManager.del(key))
+    await Promise.all(promises)
   }
 }

@@ -11,7 +11,7 @@ export class Cliente {
   public static IMAGE_DEFAULT = 'https://via.placeholder.com/150'
   @PrimaryColumn({ type: 'uuid' })
   id: string
-  @Column({ type: 'varchar', length: 9 })
+  @Column({ type: 'varchar', length: 9, unique: true })
   dni: string
   @Column({ type: 'varchar', length: 255 })
   nombre: string

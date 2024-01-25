@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { DataBaseConfigModule } from './config/data-base-config/data-base-config.module'
 import { ClientesModule } from './rest/clientes/clientes.module'
+import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ClientesModule } from './rest/clientes/clientes.module'
     }),
     //bbdd con postgrest
     DataBaseConfigModule,
+    CacheModule.register(),
     ClientesModule,
   ],
   providers: [],

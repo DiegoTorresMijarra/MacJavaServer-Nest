@@ -18,7 +18,7 @@ export class Cliente {
   @Column({ type: 'varchar', length: 255 })
   apellido: string
   @Column({ type: 'integer' })
-  edad: string
+  edad: number
   @Column({ type: 'varchar', length: 20 })
   telefono: string
   @Column({ type: 'text', default: Cliente.IMAGE_DEFAULT })

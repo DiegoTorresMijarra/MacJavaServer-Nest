@@ -2,8 +2,8 @@ SELECT 'CREATE DATABASE macjavaPostgres'
     WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'macjavaPostgres');
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS "clientes";
--- Crear la tabla CLIENTS
-CREATE TABLE "public"."clients" (
+-- Crear la tabla CLIENTES
+CREATE TABLE "public"."clientes" (
                                     "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
                                     "dni" character varying(255),
                                     "nombre" character varying(255),
@@ -12,12 +12,12 @@ CREATE TABLE "public"."clients" (
                                     "telefono" character varying(255),
                                     "imagen" character varying(255),
                                     "deleted" boolean,
-                                    "created_up" timestamp,
-                                    "updated_up" timestamp,
-                                    CONSTRAINT "clients_pkey" PRIMARY KEY ("id")
+                                    "created_at" timestamp,
+                                    "updated_at" timestamp,
+                                    CONSTRAINT "clientes_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 -- Insertar datos en la tabla CLIENTS
-INSERT INTO "clients" ("id", "dni", "nombre", "apellido", "edad", "telefono", "imagen", "deleted", "created_up", "updated_up")
+INSERT INTO "clientes" ("id", "dni", "nombre", "apellido", "edad", "telefono", "imagen", "deleted", "created_at", "updated_at")
 VALUES
     ('00000000-0000-0000-0000-000000000099', '12345678A', 'John', 'Doe', 30, '123456789', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
     (uuid_generate_v4(), '87654321B', 'Jane', 'Smith', 25, '987654321', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),

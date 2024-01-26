@@ -1,0 +1,35 @@
+# Servicios de almacenamiento de datos
+# Desarrollo
+services:
+  # PostgreSQL
+  postgres-db:
+    container_name: tienda-db_postgres
+    image: postgres:12-alpine
+    restart: always
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - ./database/tienda.sql:/docker-entrypoint-initdb.d/tienda.sql
+    networks:
+      - tienda-network
+  # Adminer para conectarse a la base de datos
+  # Quitar en despliegue final
+  adminer-postgres-db:
+    container_name: tienda-db_adminer-postgres-db
+    image: adminer
+    restart: always
+    env_file: .env
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres-db
+    networks:
+      - tienda-network
+networks:
+  tienda-network:
+    driver: bridge

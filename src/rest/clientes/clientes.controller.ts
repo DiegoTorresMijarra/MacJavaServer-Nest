@@ -10,6 +10,7 @@ import {
   Logger,
   ParseIntPipe,
   HttpCode,
+  ParseUUIDPipe,
 } from '@nestjs/common'
 import { ClientesService } from './clientes.service'
 import { CreateClienteDto } from './dto/create-cliente.dto'
@@ -32,7 +33,7 @@ export class ClientesController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Buscando cliente con id ${id}`)
     return this.clientesService.findOne(id)
   }
@@ -46,7 +47,7 @@ export class ClientesController {
 
   @Put(':id')
   update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateClienteDto: UpdateClienteDto,
   ) {
     this.logger.log(`Actualizando cliente con id ${id}`)
@@ -55,7 +56,7 @@ export class ClientesController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', ParseIntPipe) id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Eliminando cliente con id ${id}`)
     return this.clientesService.removeSoft(id)
   }

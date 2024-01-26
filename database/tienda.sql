@@ -1,19 +1,19 @@
-SELECT 'CREATE DATABASE macjavaPostgres'
-    WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'macjavaPostgres');
+SELECT 'CREATE DATABASE MacJava_PS'
+    WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'MacJava_PS');
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS "clientes";
 -- Crear la tabla CLIENTES
 CREATE TABLE "public"."clientes" (
                                     "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
-                                    "dni" character varying(255),
-                                    "nombre" character varying(255),
-                                    "apellido" character varying(255),
-                                    "edad" integer,
-                                    "telefono" character varying(255),
-                                    "imagen" character varying(255),
-                                    "deleted" boolean,
-                                    "created_at" timestamp,
-                                    "updated_at" timestamp,
+                                    "dni" character varying(255) NOT NULL,
+                                    "nombre" character varying(255) NOT NULL,
+                                    "apellido" character varying(255) NOT NULL,
+                                    "edad" integer NOT NULL,
+                                    "telefono" character varying(255) NOT NULL,
+                                    "imagen" character varying(255) DEFAULT 'https://via.placeholder.com/150' NOT NULL,
+                                    "deleted" boolean DEFAULT false NOT NULL,
+                                    "created_at" timestamp DEFAULT now() NOT NULL,
+                                    "updated_at" timestamp DEFAULT now() NOT NULL,
                                     CONSTRAINT "clientes_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 -- Insertar datos en la tabla CLIENTS

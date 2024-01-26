@@ -114,6 +114,9 @@ export class ClientesService {
   }
 
   async update(id: string, updateClienteDto: UpdateClienteDto) {
+    if (updateClienteDto.dni) {
+      this.exists(updateClienteDto.dni)
+    }
     const clienteToUpdated = await this.findOne(id)
     const res = await this.clienteRepository.save({
       ...clienteToUpdated,

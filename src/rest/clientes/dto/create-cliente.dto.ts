@@ -1,14 +1,14 @@
 import {
+  IsIdentityCard,
   IsInt,
   IsNotEmpty,
   IsPhoneNumber,
   IsString,
-  IsUrl,
   Min,
 } from 'class-validator'
 
 export class CreateClienteDto {
-  @IsString({ message: 'El dni debe ser un string' })
+  @IsIdentityCard('ES', { message: 'El dni tiene que ser valido' })
   @IsNotEmpty({ message: 'El dni no puede estar vacío' })
   dni: string
   @IsString({ message: 'El nombre debe ser un string' })
@@ -22,7 +22,4 @@ export class CreateClienteDto {
   edad: number
   @IsPhoneNumber('ES', { message: 'Número de teléfono inválido' })
   telefono: string
-  @IsUrl()
-  @IsNotEmpty({ message: 'La imagen no puede estar vacía' })
-  imagen: string
 }

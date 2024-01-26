@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Trabajadores } from '../../trabajadores/entities/trabajadores.entity'
+import { Trabajador } from '../../trabajadores/entities/trabajadores.entity'
 
 export enum PosicionesValidas {
   MANAGER = 'MANAGER',
@@ -49,6 +49,6 @@ export class Posicion {
   @Column({ type: 'boolean', name: 'deleted', default: false })
   deleted: boolean = false
 
-  @OneToMany(() => Trabajadores, (trabajador) => trabajador.posicion)
-  trabajadores: Trabajadores[]
+  @OneToMany(() => Trabajador, (trabajador) => trabajador.posicion)
+  trabajadores: Trabajador[]
 }

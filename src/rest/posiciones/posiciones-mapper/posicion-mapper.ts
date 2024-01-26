@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common'
 import { CreatePosicionDto } from '../dto/create-posicion.dto'
 import { Posicion } from '../entities/posicion.entity'
+import { UpdatePosicionDto } from '../dto/update-posicion.dto'
 
 @Injectable()
 export class PosicionMapper {
-  static createToDto(dto: CreatePosicionDto): Posicion {
+  createToPosicion(dto: CreatePosicionDto): Posicion {
     return {
       ...new Posicion(),
       ...dto,
     }
   }
-  static updateToDto(original: Posicion, dto: CreatePosicionDto): Posicion {
+  updateToPosicion(original: Posicion, dto: UpdatePosicionDto): Posicion {
     const posicion: Posicion = {
       ...original,
       ...dto,
+      id: original.id,
     }
     posicion.updatedAt = new Date()
     return posicion

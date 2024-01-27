@@ -17,7 +17,7 @@ export class PosicionMapper {
       ...dto,
       id: original.id,
     }
-    posicion.updatedAt = new Date()
+    posicion.updated_at = new Date()
     return posicion
   }
 }

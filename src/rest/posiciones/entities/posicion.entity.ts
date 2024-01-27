@@ -14,12 +14,13 @@ export enum PosicionesValidas {
   COCINERO = 'COCINERO',
   LIMPIEZA = 'LIMPIEZA',
   CAMARERO = 'CAMARERO',
+  OTROS = 'OTROS',
   'NO_ASIGNADO' = 'NO_ASIGNADO',
 }
 @Entity('posiciones')
 export class Posicion {
   @PrimaryGeneratedColumn('uuid', {
-    primaryKeyConstraintName: 'PK_Category',
+    primaryKeyConstraintName: 'posicion_pk',
   })
   @IsUUID(5, {
     message: 'El id debe ser un UUID',
@@ -35,16 +36,17 @@ export class Posicion {
   nombre: string
 
   @Column({
-    type: 'decimal',
+    type: 'numeric',
+    length: 10,
     precision: 2,
   })
   salario: number
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt: Date = new Date()
+  created_at: Date = new Date()
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt: Date = new Date()
+  updated_at: Date = new Date()
 
   @Column({ type: 'boolean', name: 'deleted', default: false })
   deleted: boolean = false

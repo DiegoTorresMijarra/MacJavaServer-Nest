@@ -8,15 +8,15 @@ import {
   Delete,
 } from '@nestjs/common'
 import { TrabajadoresService } from './trabajadores.service'
-import { CreateTrabajadoreDto } from './dto/create-trabajadore.dto'
-import { UpdateTrabajadoreDto } from './dto/update-trabajadore.dto'
+import { CreateTrabajadorDto } from './dto/create-trabajador.dto'
+import { UpdateTrabajadorDto } from './dto/update-trabajador.dto'
 
 @Controller('trabajadores')
 export class TrabajadoresController {
   constructor(private readonly trabajadoresService: TrabajadoresService) {}
 
   @Post()
-  create(@Body() createTrabajadoreDto: CreateTrabajadoreDto) {
+  create(@Body() createTrabajadoreDto: CreateTrabajadorDto) {
     return this.trabajadoresService.create(createTrabajadoreDto)
   }
 
@@ -33,7 +33,7 @@ export class TrabajadoresController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateTrabajadoreDto: UpdateTrabajadoreDto,
+    @Body() updateTrabajadoreDto: UpdateTrabajadorDto,
   ) {
     return this.trabajadoresService.update(+id, updateTrabajadoreDto)
   }

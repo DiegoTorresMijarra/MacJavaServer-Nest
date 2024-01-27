@@ -27,7 +27,7 @@ export class MacjavaNotificationsGateway {
 
   sendMessage(notification: Notification<Posicion | Trabajador>) {
     this.server.emit(
-      `${notification.type}D_${(typeof notification.data).toUpperCase()}`,
+      `${notification.type}D_${(typeof notification.data).toUpperCase()}`, //puede que valga con el name
       notification,
     )
   }

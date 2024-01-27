@@ -30,7 +30,7 @@ export class PosicionesService {
   static readonly CACHE_KEY_FOUND_ALL: string = 'all_posiciones'
   static readonly CACHE_KEY_FOUND: string = 'posicion_'
   static readonly PAGED_DEFAULT_QUERY: PaginateQuery = {
-    path: 'https://localhost:3000/posiciones/paginate',
+    path: 'https://localhost:3000/posiciones/paginated',
   }
   static readonly CACHE_KEY_PAGINATED_DEFAULT: string =
     'posiciones_paged_default'
@@ -88,7 +88,7 @@ export class PosicionesService {
     return res
   }
 
-  async findAllPaginates(paginatedQuery: PaginateQuery) {
+  async findAllPaginated(paginatedQuery: PaginateQuery) {
     this.logger.log('Buscando todas las posiciones paginadas')
 
     const defaultQuery: boolean =

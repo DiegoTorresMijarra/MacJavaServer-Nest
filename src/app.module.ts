@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
 import { ConfigModule } from '@nestjs/config'
 import { DataBaseConfigModule } from './config/data-base-config/data-base-config.module'
+import {RestaurantesModule} from "./rest/restaurantes/restaurantes.module";
+import {CacheModule} from "@nestjs/common/cache";
 
 @Module({
-  imports: [],
   controllers: [],
   providers: [],
   imports: [
@@ -16,8 +15,8 @@ import { DataBaseConfigModule } from './config/data-base-config/data-base-config
     }),
     //bbdd con postgrest
     DataBaseConfigModule,
+    CacheModule.register(),
+    RestaurantesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

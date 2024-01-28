@@ -5,41 +5,56 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Delete, Logger, ParseIntPipe, HttpCode,
 } from '@nestjs/common'
 import { RestaurantesService } from './restaurantes.service'
 import { CreateRestauranteDto } from './dto/create-restaurante.dto'
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto'
+import {CacheKey, CacheTTL} from "@nestjs/common/cache";
 
 @Controller('restaurantes')
 export class RestaurantesController {
+  private readonly logger: Logger = new Logger(RestaurantesController.name);
   constructor(private readonly restaurantesService: RestaurantesService) {}
 
   @Get()
-  findAll() {
-    return this.restaurantesService.findAll()
+  @CacheKey('all_restaurantes')
+  @CacheTTL(30)
+  async findAll() {
+    this.logger.log('Pidiendo todos los restaurantes (Controller)');
+    return await this.restaurantesService.findAll()
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.restaurantesService.findOne(+id)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    this.logger.log(`Pidiendo el restaurante con id: ${id} (Controller)`);
+    return await this.restaurantesService.findOne(id);
   }
 
   @Post()
-  create(@Body() createRestauranteDto: CreateRestauranteDto) {
+  @HttpCode(201)
+  async create(@Body() createRestauranteDto: CreateRestauranteDto) {
+    this.logger.log(`Creando un restaurante (Controller)`);
     return this.restaurantesService.create(createRestauranteDto)
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
+  async update(
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateRestauranteDto: UpdateRestauranteDto,
   ) {
-    return this.restaurantesService.update(+id, updateRestauranteDto)
+    this.logger.log('Actualizando un restaurante (Controller)');
+    return this.restaurantesService.update(id, updateRestauranteDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.restaurantesService.remove(+id)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    this.logger.log(`Eliminando un restaurante (Controller)`);
+    return this.restaurantesService.removeSoft(id);
+  }
+  @Get('by-name/:nombre')
+  async findByName(@Param('nombre') nombre: string) {
+    this.logger.log(`Pidiendo el restaurante con nombre: ${nombre} (Controller)`);
+    return await this.restaurantesService.findByName(nombre);
   }
 }

@@ -37,7 +37,6 @@ export class Posicion {
 
   @Column({
     type: 'numeric',
-    length: 10,
     precision: 2,
   })
   salario: number

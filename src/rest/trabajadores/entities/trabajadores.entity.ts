@@ -28,7 +28,7 @@ export class Trabajador {
   @Column({ type: 'int' })
   edad: number
 
-  @Column({ type: 'string' })
+  @Column({ type: 'character varying' })
   telefono: string
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

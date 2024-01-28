@@ -8,6 +8,7 @@ import {
   Matches,
   Min,
 } from 'class-validator'
+import { PosicionesValidas } from '../../posiciones/entities/posicion.entity'
 
 export class CreateTrabajadorDto {
   @IsNotEmpty({ message: 'El DNI no debe estar vacio' })
@@ -40,6 +41,8 @@ export class CreateTrabajadorDto {
   telefono: string
 
   @IsNotEmpty({ message: 'La posicion no puede estar vacia' })
-  @IsEnum({ message: 'La posicion debe ser una valida, nota: es keysensitive' })
+  @IsEnum(PosicionesValidas, {
+    message: 'La posicion debe ser una valida, nota: es keysensitive',
+  })
   posicionNombre: string
 }

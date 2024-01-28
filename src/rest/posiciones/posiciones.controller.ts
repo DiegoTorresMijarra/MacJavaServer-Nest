@@ -10,6 +10,7 @@ import {
   UseGuards,
   ParseUUIDPipe,
   HttpCode,
+  Put,
 } from '@nestjs/common'
 import { PosicionesService } from './posiciones.service'
 import { CreatePosicionDto } from './dto/create-posicion.dto'
@@ -23,6 +24,7 @@ export class PosicionesController {
   logger: Logger = new Logger(PosicionesController.name)
   constructor(private readonly posicionesService: PosicionesService) {}
 
+  @Get('')
   @CacheKey(PosicionesService.CACHE_KEY_FOUND_ALL)
   @CacheTTL(30000) // validez de la cache 30000 milisegundos es en seg en la v4 de cache-manager
   //@Roles('USER')
@@ -41,7 +43,7 @@ export class PosicionesController {
   @Get(':id')
   //  @Roles('USER')
   async findById(@Param('id', ParseUUIDPipe) id: string) {
-    this.logger.log(`Buscando la categoria con id ${id}`)
+    this.logger.log(`Buscando la posicion con id ${id}`)
     return await this.posicionesService.findById(id)
   }
   @Post()
@@ -49,18 +51,18 @@ export class PosicionesController {
   //@Roles('ADMIN')
   async create(@Body() createPosicioneDto: CreatePosicionDto) {
     this.logger.log(
-      `Creando la categoria con nombre ${createPosicioneDto.nombre}`,
+      `Creando la posicion con nombre ${createPosicioneDto.nombre}`,
     )
     return await this.posicionesService.create(createPosicioneDto)
   }
 
-  @Patch(':id')
+  @Put(':id')
   //@Roles('ADMIN')
   async updateById(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePosicioneDto: UpdatePosicionDto,
   ) {
-    this.logger.log(`Actualizando la categoria con id ${id}`)
+    this.logger.log(`Actualizando la posicion con id ${id}`)
     return await this.posicionesService.updateById(id, updatePosicioneDto)
   }
 
@@ -68,7 +70,7 @@ export class PosicionesController {
   @HttpCode(204)
   // @Roles('ADMIN')
   async removeById(@Param('id', ParseUUIDPipe) id: string) {
-    this.logger.log(`Borrando categoria con id ${id}`)
+    this.logger.log(`Borrando posicion con id ${id}`)
     return await this.posicionesService.removeById(id)
   }
 

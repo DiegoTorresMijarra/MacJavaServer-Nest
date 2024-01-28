@@ -42,7 +42,7 @@ export class PosicionesService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async invalidateCachesCategory(key?: string) {
+  async invalidateCachesPosiciones(key?: string) {
     this.logger.log('Invalidando cache de las posiciones')
     if (key) {
       await this.cacheManager.del(key)
@@ -72,7 +72,7 @@ export class PosicionesService {
 
     const cache: Posicion[] = <Posicion[]>(
       await this.getByCache(PosicionesService.CACHE_KEY_FOUND_ALL)
-    ) // tal vez me de error si le paso el funko... revisar
+    ) // tal vez me de error si le paso el objeto... revisar
     if (cache) {
       return cache
     }
@@ -186,17 +186,17 @@ export class PosicionesService {
 
     if (existSameName) {
       throw new BadRequestException(
-        `La Categoria con el nombre ${createPosicionDto.nombre} ya existe`,
+        `La posicion con el nombre ${createPosicionDto.nombre} ya existe`,
       )
     }
-    await this.invalidateCachesCategory()
+    await this.invalidateCachesPosiciones()
 
     return await this.posicionRepository.save(
       this.posicionMapper.createToPosicion(createPosicionDto),
     )
   }
   async updateById(id: string, updatePosicioneDto: UpdatePosicionDto) {
-    this.logger.log(`Actualizando funko con id ${id}`)
+    this.logger.log(`Actualizando la posicion con id ${id}`)
     const original = await this.findById(id)
 
     const existSameName = await this.existByName(updatePosicioneDto.nombre)
@@ -212,7 +212,9 @@ export class PosicionesService {
     )
 
     this.onChange(NotificationTipo.UPDATE, updated)
-    await this.invalidateCachesCategory(PosicionesService.CACHE_KEY_FOUND + id)
+    await this.invalidateCachesPosiciones(
+      PosicionesService.CACHE_KEY_FOUND + id,
+    )
 
     return updated
   }
@@ -224,7 +226,9 @@ export class PosicionesService {
     original.deleted = true
     const res = await this.posicionRepository.save(original)
 
-    await this.invalidateCachesCategory(PosicionesService.CACHE_KEY_FOUND + id)
+    await this.invalidateCachesPosiciones(
+      PosicionesService.CACHE_KEY_FOUND + id,
+    )
 
     return res
   }
@@ -241,15 +245,17 @@ export class PosicionesService {
     }
     await this.posicionRepository.remove(original)
 
-    await this.invalidateCachesCategory(PosicionesService.CACHE_KEY_FOUND + id)
+    await this.invalidateCachesPosiciones(
+      PosicionesService.CACHE_KEY_FOUND + id,
+    )
   }
   async findByName(name: string) {
-    this.logger.log(`Buscando la Categoria con nombre ${name}`)
+    this.logger.log(`Buscando la posicion con nombre ${name}`)
     const posicionRes = await this.posicionRepository.findOneBy({
       nombre: name,
     })
     if (!posicionRes) {
-      throw new NotFoundException(`Categoria con nombre ${name} no encontrada`)
+      throw new NotFoundException(`Posicion con nombre ${name} no encontrada`)
     }
 
     await this.cacheManager.set(
@@ -263,6 +269,9 @@ export class PosicionesService {
   }
   async existByName(name: string) {
     this.logger.log(`Buscando la Posicion con nombre ${name}`)
+    if (!name) {
+      return null
+    }
     name = name.toUpperCase().trim()
     const posicionRes = await this.posicionRepository.findOneBy({
       nombre: name,

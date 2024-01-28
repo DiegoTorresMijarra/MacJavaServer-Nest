@@ -14,6 +14,6 @@ import { CacheModule } from '@nestjs/cache-manager'
     NotificationsModule,
     CacheModule.register(),
   ],
-  exports: [PosicionesModule],
+  exports: [PosicionesService, PosicionMapper],
 })
 export class PosicionesModule {}

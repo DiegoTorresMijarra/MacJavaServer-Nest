@@ -9,7 +9,7 @@ import { Observable } from 'rxjs'
 import { ClientesService } from '../clientes.service'
 
 @Injectable()
-export class funkoExistGuard implements CanActivate {
+export class clienteExistGuard implements CanActivate {
   constructor(private readonly clienteService: ClientesService) {}
   canActivate(
     context: ExecutionContext,

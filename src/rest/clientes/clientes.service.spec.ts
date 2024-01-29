@@ -12,16 +12,23 @@ import { ResponseCliente } from './dto/response-cliente.dto'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { CreateClienteDto } from './dto/create-cliente.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
+import { StorageService } from '../storage/storage.service'
 
 describe('ClientesService', () => {
   let service: ClientesService
   let repo: Repository<Cliente>
   let mapper: ClienteMapper
+  let storageService: StorageService
   let cacheManager: Cache
 
   const clienteMapperMock = {
     toCliente: jest.fn(),
     toResponse: jest.fn(),
+  }
+
+  const storageServiceMock = {
+    removeFile: jest.fn(),
+    getFileNameWithouUrl: jest.fn(),
   }
 
   const cacheManagerMock = {
@@ -42,6 +49,7 @@ describe('ClientesService', () => {
           provide: getRepositoryToken(Cliente),
           useClass: Repository,
         },
+        { provide: StorageService, useValue: storageServiceMock },
         { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
     }).compile()
@@ -49,6 +57,7 @@ describe('ClientesService', () => {
     service = module.get<ClientesService>(ClientesService)
     repo = module.get<Repository<Cliente>>(getRepositoryToken(Cliente))
     mapper = module.get<ClienteMapper>(ClienteMapper)
+    storageService = module.get<StorageService>(StorageService)
     cacheManager = module.get<Cache>(CACHE_MANAGER)
   })
 
@@ -311,6 +320,38 @@ describe('ClientesService', () => {
       await expect(
         service.removeSoft('123e4567-e89b-12d3-a456-426614174002'),
       ).rejects.toThrowError(NotFoundException)
+    })
+  })
+  describe('updateImage', () => {
+    it('Update image Funko', async () => {
+      const mockRequest = {
+        protocol: 'http',
+        get: () => 'localhost',
+      }
+      const mockFile = {
+        filename: 'new_image',
+      }
+
+      const mockClienteEntity = new Cliente()
+      const mockResponseClienteDto = new ResponseCliente()
+
+      jest.spyOn(service, 'existsID').mockResolvedValue(mockClienteEntity)
+
+      jest.spyOn(repo, 'save').mockResolvedValue(mockClienteEntity)
+
+      jest.spyOn(mapper, 'toResponse').mockReturnValue(mockResponseClienteDto)
+
+      expect(
+        await service.updateImage(
+          '123e4567-e89b-12d3-a456-426614174002',
+          mockFile as any,
+          mockRequest as any,
+          true,
+        ),
+      ).toEqual(mockResponseClienteDto)
+
+      expect(storageService.removeFile).toHaveBeenCalled()
+      expect(storageService.getFileNameWithouUrl).toHaveBeenCalled()
     })
   })
 })

@@ -7,6 +7,7 @@ import { Paginated } from 'nestjs-paginate'
 import { NotFoundException } from '@nestjs/common'
 import { CreateClienteDto } from './dto/create-cliente.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
+import { Request } from 'express'
 
 describe('ClientesController', () => {
   let controller: ClientesController
@@ -151,6 +152,25 @@ describe('ClientesController', () => {
         .spyOn(service, 'removeSoft')
         .mockRejectedValue(new NotFoundException())
       await expect(controller.remove(id)).rejects.toThrow(NotFoundException)
+    })
+  })
+  describe('updateImage', () => {
+    it('update a cliente imagen', async () => {
+      const mockId = '123e4567-e89b-12d3-a456-426614174002'
+      const mockFile = {} as Express.Multer.File
+      const mockReq = {} as Request
+      const mockResult: ResponseCliente = new ResponseCliente()
+
+      jest.spyOn(service, 'updateImage').mockResolvedValue(mockResult)
+
+      await controller.updateImage(mockId, mockFile, mockReq)
+      expect(service.updateImage).toHaveBeenCalledWith(
+        mockId,
+        mockFile,
+        mockReq,
+        true,
+      )
+      expect(mockResult).toBeInstanceOf(ResponseCliente)
     })
   })
 })

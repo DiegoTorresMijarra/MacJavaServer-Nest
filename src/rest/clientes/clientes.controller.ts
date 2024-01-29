@@ -8,15 +8,24 @@ import {
   UseInterceptors,
   Put,
   Logger,
-  ParseIntPipe,
   HttpCode,
   ParseUUIDPipe,
+  Patch,
+  UseGuards,
+  BadRequestException,
+  UploadedFile,
+  Req,
 } from '@nestjs/common'
 import { ClientesService } from './clientes.service'
 import { CreateClienteDto } from './dto/create-cliente.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { Paginate, PaginateQuery } from 'nestjs-paginate'
+import { clienteExistGuard } from './guard/cliente-exists.guard'
+import { diskStorage } from 'multer'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { extname, parse } from 'path'
+import { Request } from 'express'
 
 @Controller('clientes')
 @UseInterceptors(CacheInterceptor)
@@ -59,5 +68,52 @@ export class ClientesController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Eliminando cliente con id ${id}`)
     return this.clientesService.removeSoft(id)
+  }
+  @Patch('/imagen/:id')
+  @UseGuards(clienteExistGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: process.env.UPLOADS_DIR || './storage-dir',
+        filename: (req, file, cb) => {
+          // const fileName = uuidv4() // usamos uuid para generar un nombre único para el archivo
+          const { name } = parse(file.originalname)
+          const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
+          const fileExt = extname(file.originalname) // extraemos la extensión del archivo
+          cb(null, `${fileName}${fileExt}`) // llamamos al callback con el nombre del archivo
+        },
+      }),
+      // Validación de archivos
+      fileFilter: (req, file, cb) => {
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/gif']
+        const maxFileSize = 1024 * 1024 // 1 megabyte
+        if (!allowedMimes.includes(file.mimetype)) {
+          cb(
+            new BadRequestException(
+              'Fichero no soportado. No es del tipo imagen válido',
+            ),
+            false,
+          )
+        } else if (file.size > maxFileSize) {
+          cb(
+            new BadRequestException(
+              'El tamaño del archivo no puede ser mayor a 1 megabyte.',
+            ),
+            false,
+          )
+        } else {
+          cb(null, true)
+        }
+      },
+    }),
+  )
+  async updateImage(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ) {
+    this.logger.log(`Actualizando imagen al cliente con ${id}:  ${file}`)
+
+    return await this.clientesService.updateImage(id, file, req, true)
   }
 }

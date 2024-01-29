@@ -5,6 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common'
+import { Request } from 'express'
 import { CreateClienteDto } from './dto/create-cliente.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
 import { ClienteMapper } from './mapper/cliente.mapper'
@@ -21,6 +22,7 @@ import {
 } from 'nestjs-paginate'
 import { hash } from 'typeorm/util/StringUtils'
 import { ResponseCliente } from './dto/response-cliente.dto'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class ClientesService {
@@ -29,6 +31,7 @@ export class ClientesService {
     @InjectRepository(Cliente)
     private readonly clienteRepository: Repository<Cliente>,
     private readonly mapper: ClienteMapper,
+    private readonly storageService: StorageService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   async findAll(query: PaginateQuery) {
@@ -158,5 +161,38 @@ export class ClientesService {
     const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))
     const promises = keysToDelete.map((key) => this.cacheManager.del(key))
     await Promise.all(promises)
+  }
+  public async updateImage(
+    id: string,
+    file: Express.Multer.File,
+    req: Request,
+    withUrl: boolean = true,
+  ) {
+    this.logger.log(`Actualizar imagen del cliente con id:${id}`)
+    const clienteToUpdate = await this.existsID(id)
+
+    // Borramos su imagen si es distinta a la imagen por defecto
+    if (clienteToUpdate.imagen !== Cliente.IMAGE_DEFAULT) {
+      this.logger.log(`Borrando imagen ${clienteToUpdate.imagen}`)
+      let imagePath = clienteToUpdate.imagen
+      if (withUrl) {
+        imagePath = this.storageService.getFileNameWithouUrl(
+          clienteToUpdate.imagen,
+        )
+      }
+      try {
+        this.storageService.removeFile(imagePath)
+      } catch (error) {
+        this.logger.error(error)
+      }
+    }
+
+    if (!file) {
+      throw new BadRequestException('Fichero no encontrado.')
+    }
+
+    clienteToUpdate.imagen = file.filename
+    const clienteUpdated = await this.clienteRepository.save(clienteToUpdate)
+    return this.mapper.toResponse(clienteUpdated)
   }
 }

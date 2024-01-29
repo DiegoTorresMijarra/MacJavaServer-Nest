@@ -16,10 +16,12 @@ export class clienteExistGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest()
     const clienteId = request.params.id
-    if (isNaN(clienteId)) {
+    const uuidRegex =
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+    if (!uuidRegex.test(clienteId)) {
       throw new BadRequestException('El ID del cliente no es válido')
     }
-    return this.clienteService.exists(clienteId).then((exists) => {
+    return this.clienteService.existsID(clienteId).then((exists) => {
       if (!exists) {
         throw new NotFoundException('El ID del cliente no existe')
       }

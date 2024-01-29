@@ -1,8 +1,7 @@
 import { Logger, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import * as process from 'process'
-import * as path from "path";
-
+import * as path from 'path'
 @Module({
   imports: [
     // Configurar el módulo de base de datos de Postgres asíncronamente
@@ -16,12 +15,11 @@ import * as path from "path";
         password: process.env.DATABASE_PASSWORD || 'admin123', // Contraseña de usuario
         database: process.env.POSTGRES_DATABASE || 'MacJava_PS', // Nombre de la base de datos
         entities: [
-            path.join(__dirname),
-          '../../dist/rest/**/*.entity{.ts,.js}'
-            //__dirname + '/**/*.entity{.ts,.js}',
-        ], // Entidades de la base de datos (buscar archivos con extensión .entity.ts o .entity.js)
+          path.join(__dirname),
+          '../../dist/rest/**/*.entity{.ts,.js}',
+        ],
         synchronize: false, // Sincronizar la base de datos
-        autoLoadEntities: true, //me daba un error al cargar las entidades si no lo metia
+        autoLoadEntities: true, //me daba un error al cargar las entidades si no lo metia todo
         logging: process.env.NODE_ENV === 'dev' ? 'all' : false, // Esto es para que se muestren los logs de las consultas
         retryAttempts: 5,
         connectionFactory: (connection) => {

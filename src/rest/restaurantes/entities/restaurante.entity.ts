@@ -5,7 +5,7 @@ export class Restaurante {
     @PrimaryGeneratedColumn({type: 'bigint', name : 'id'})
     id: number;
 
-    @Column({type: 'varchar', length: 100, name: 'nombre', nullable: false})
+    @Column({type: 'varchar', length: 100, name: 'nombre', nullable: false, unique: true})
     nombre: string;
 
     @Column({type: 'varchar', length: 255, name: 'calle'})
@@ -13,6 +13,9 @@ export class Restaurante {
 
     @Column({type: 'varchar', length: 100, name: 'localidad'})
     localidad: string;
+
+    @Column({type: 'int', name: 'capacidad'})
+    capacidad: number;
 
     @Column({type: 'boolean', name: 'borrado', default: false})
     borrado: boolean;

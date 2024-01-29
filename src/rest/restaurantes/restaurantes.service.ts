@@ -1,4 +1,4 @@
-import {Inject, Injectable, Logger, NotFoundException} from '@nestjs/common'
+import {BadRequestException, Inject, Injectable, Logger, NotFoundException} from '@nestjs/common'
 import { CreateRestauranteDto } from './dto/create-restaurante.dto'
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto'
 import {trabajadoresAnyadidosDto} from "./dto/trabajadores-anyadidos.dto";
@@ -6,18 +6,50 @@ import {Restaurante} from "./entities/restaurante.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {RestaurantesMapper} from "./mapper/restaurantes.mapper";
-import {CACHE_MANAGER} from "@nestjs/common/cache";
-import {async} from "rxjs";
+import {Cache, CACHE_MANAGER} from "@nestjs/cache-manager";
+import {Paginated, PaginateQuery} from "nestjs-paginate";
 
 @Injectable()
 export class RestaurantesService {
   logger= new Logger(RestaurantesService.name);
+  static readonly CACHE_KEY_ALL_RESTAURANTES = 'all_restaurantes';
+  static readonly CACHE_KEY_ONE_RESTAURANTE: string = 'restaurante_';
+  static readonly PAGED_DEFAULT_QUERY: PaginateQuery = {
+      path: 'http://localhost:3000/restaurantes/paginated/',
+  }
+    static readonly CACHE_KEY_PAGINATED_DEFAULT = 'restaurantes_paginated_default';
 
   constructor(
       @InjectRepository(Restaurante)
         private readonly repositorioRestaurante : Repository<Restaurante>,
       private readonly mapper: RestaurantesMapper,
+        @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ){}
+
+    async invalidarRestaurantesEnCache(key?: string) {
+        this.logger.log('Invalidando cache de los restaurantes')
+        if (key) {
+            await this.cacheManager.del(key)
+            this.logger.log(`Invalidando cache de ${key}`)
+        }
+        await this.cacheManager.del(RestaurantesService.CACHE_KEY_ALL_RESTAURANTES)
+        await this.cacheManager.del(RestaurantesService.CACHE_KEY_PAGINATED_DEFAULT)
+    }
+    async getByCache(
+        key: string,
+    ): Promise<Restaurante | Restaurante[] | Paginated<Restaurante>> {
+        let res: Restaurante | Restaurante[] | Paginated<Restaurante>
+        try {
+            res = await this.cacheManager.get(key)
+            if (res) {
+                this.logger.log(`Cache ${key} hitted`)
+            }
+        } catch (error) {
+            // capturo las cache que me devuelvan un tipo que no esta contemplado
+            this.logger.error(`Cache de tipo invalido, causa: ${error.message}`)
+        }
+        return res
+    }
   async findAll() {
     this.logger.log('Obteniendo todos los restaurantes (Service)');
     return await this.repositorioRestaurante.find();
@@ -37,14 +69,14 @@ export class RestaurantesService {
   async create(createRestauranteDto: CreateRestauranteDto) {
     this.logger.log(`Creando un restaurante (Service)`);
     //primero con el primer metodo de dtoAEntidad falta prueba
-    const rest= this.existeRestaurantePorNombre(createRestauranteDto.nombre);
-    if (rest) {
-      throw new NotFoundException(`Restaurante con nombre: ${createRestauranteDto.nombre} ya existe, ingrese otro nombre`)
-    }else{
-        const restaurante= this.mapper.createDtoToEntity(createRestauranteDto);
-        await this.repositorioRestaurante.save(restaurante);
-        return restaurante;
-    }
+    const rest= await this.existeRestaurantePorNombre(createRestauranteDto.nombre);
+      if (rest != false) {
+          throw new BadRequestException(`Restaurante con nombre: ${createRestauranteDto.nombre} ya existe, ingrese otro nombre`)
+      } else {
+          const restaurante = this.mapper.createDtoToEntity(createRestauranteDto);
+          await this.repositorioRestaurante.save(restaurante);
+          return restaurante;
+      }
   }
 
   async update(id: number, updateRestauranteDto: UpdateRestauranteDto) {
@@ -53,6 +85,7 @@ export class RestaurantesService {
     if(restaurante){
       const restauranteActualizado = this.mapper.updateDtoToEntity(updateRestauranteDto, restaurante);
       await this.repositorioRestaurante.save(restauranteActualizado);
+      return restauranteActualizado;
     }else{
         throw new NotFoundException(`Restaurante con id: ${id} no encontrado`)
     }
@@ -90,7 +123,7 @@ export class RestaurantesService {
   }
 
   async existeRestaurantePorNombre(nombre: string): Promise<Restaurante|false> {
-    const restau= await this.repositorioRestaurante.findOneBy({nombre})
+    const restau= await this.repositorioRestaurante.findOneBy({nombre} )
     if (restau) {
       return restau;
     }else{

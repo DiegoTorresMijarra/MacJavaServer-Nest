@@ -12,24 +12,33 @@ export class RestaurantesMapper{
             creadoEn: new Date(),
             actualizadoEn: new Date(),
         };
-        restaurante.nombre.toLowerCase();
-        restaurante.calle.toLowerCase();
-        restaurante.localidad.toLowerCase();
+        restaurante.nombre=restaurante.nombre.toLowerCase();
+        restaurante.calle=restaurante.calle.toLowerCase();
+        restaurante.localidad=restaurante.localidad.toLowerCase();
 
         return restaurante;
     }
 
     createDtoToEntity2(dto: CreateRestauranteDto): Restaurante{
         const restau: Restaurante = plainToClass(Restaurante, dto);
+        restau.creadoEn = new Date();
+        restau.actualizadoEn = new Date();
+        restau.nombre=restau.nombre.toLowerCase();
+        restau.calle=restau.calle.toLowerCase();
+        restau.localidad=restau.localidad.toLowerCase();
+
         return restau;
     }
 
     updateDtoToEntity(dto: UpdateRestauranteDto, restaurante: Restaurante): Restaurante{
-        restaurante = {
+        const restauranteNuevo :Restaurante = {
             ...restaurante,
             ...dto,
-            actualizadoEn: new Date()
         };
-        return restaurante;
+        restaurante.nombre=restauranteNuevo.nombre.toLowerCase();
+        restaurante.calle=restauranteNuevo.calle.toLowerCase();
+        restaurante.localidad=restauranteNuevo.localidad.toLowerCase();
+        restauranteNuevo.actualizadoEn = new Date();
+        return restauranteNuevo;
     }
 }

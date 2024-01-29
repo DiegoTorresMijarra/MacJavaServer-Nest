@@ -5,25 +5,35 @@ import {
   Body,
   Patch,
   Param,
-  Delete, Logger, ParseIntPipe, HttpCode,
+  Delete, Logger, ParseIntPipe, HttpCode, UseInterceptors,
 } from '@nestjs/common'
 import { RestaurantesService } from './restaurantes.service'
 import { CreateRestauranteDto } from './dto/create-restaurante.dto'
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto'
-import {CacheKey, CacheTTL} from "@nestjs/common/cache";
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
+import { Paginate, PaginateQuery } from 'nestjs-paginate'
+
 
 @Controller('restaurantes')
+@UseInterceptors(CacheInterceptor)
 export class RestaurantesController {
   private readonly logger: Logger = new Logger(RestaurantesController.name);
   constructor(private readonly restaurantesService: RestaurantesService) {}
 
   @Get()
-  @CacheKey('all_restaurantes')
-  @CacheTTL(30)
+  @CacheKey(RestaurantesService.CACHE_KEY_ALL_RESTAURANTES)
+  @CacheTTL(30000)
   async findAll() {
     this.logger.log('Pidiendo todos los restaurantes (Controller)');
     return await this.restaurantesService.findAll()
   }
+
+ /* @Get('/paginated/')
+  @CacheTTL(30000)
+  async findAllPaginated(@Paginate() paginatedQuery: PaginateQuery) {
+    this.logger.log('Buscando todos los trabajadores paginados')
+    return await this.restaurantesService.findAllPaginated(paginatedQuery)
+  }*/
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {

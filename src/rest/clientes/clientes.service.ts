@@ -145,6 +145,14 @@ export class ClientesService {
       .getOne()
     return cliente
   }
+  public async existsID(id: string): Promise<Cliente> {
+    const cliente = await this.clienteRepository.findOneBy({ id })
+    if (!cliente) {
+      this.logger.log(`Cliente con id ${id} no encontrado`)
+      throw new NotFoundException(`Cliente con id ${id} no encontrado`)
+    }
+    return cliente
+  }
   async invalidateKey(keyPattern: string): Promise<void> {
     const cacheKeys = await this.cacheManager.store.keys()
     const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))

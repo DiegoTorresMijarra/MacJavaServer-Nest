@@ -21,13 +21,12 @@ export class TrabajadorMapper {
     dto: UpdateTrabajadorDto,
     posicion?: Posicion,
   ): Trabajador {
-    dto.nombre = dto.nombre.trim()
-    dto.apellido = dto.apellido.trim()
-
     return {
       ...original,
       ...dto,
-      posicion: posicion ? posicion : original.posicion,
+      nombre: dto.nombre ? dto.nombre.trim() : original.nombre, //tb podria ponerlo en mayusculas...
+      apellido: dto.apellido ? dto.apellido.trim() : original.apellido,
+      posicion: posicion || original.posicion,
       id: original.id,
     }
   }

@@ -277,7 +277,7 @@ export class PosicionesService {
       nombre: name,
     })
     if (!posicionRes || posicionRes.deleted === true) {
-      this.logger.log(`Posicion con nombre: ${name} no encontrada`)
+      this.logger.error(`Posicion con nombre: ${name} no encontrada`)
       return null
       // throw new NotFoundException(`Posicion con nombre ${name} no encontrada`)
     }

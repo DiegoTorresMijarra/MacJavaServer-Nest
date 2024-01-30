@@ -260,17 +260,25 @@ export class PosicionesService {
   }
   async findByName(name: string) {
     this.logger.log(`Buscando la posicion con nombre ${name}`)
+
     if (!name) {
+      this.logger.error(`La posicion a validar no tiene nombre`)
       return null
     }
+
     const posicionRes = await this.posicionRepository.findOneBy({
       nombre: name.toUpperCase().trim(),
     })
 
-    if (!posicionRes || posicionRes.deleted === true) {
+    if (!posicionRes) {
       this.logger.error(`Posicion con nombre: ${name} no encontrada`)
       return null
       // throw new NotFoundException(`Posicion con nombre ${name} no encontrada`)
+    }
+    if (posicionRes.deleted === true) {
+      this.logger.error(`Posicion con nombre: ${name} tiene delete=true`)
+      //podria simplificarlo, pero asi queda mas claro
+      return null
     }
 
     await this.cacheManager.set(

@@ -7,6 +7,9 @@ import { CacheModule } from '@nestjs/cache-manager'
 import * as process from 'process'
 import { NotificationsModule } from './notifications/notifications.module'
 import { PosicionesModule } from './rest/posiciones/posiciones.module'
+import { ClientesModule } from './rest/clientes/clientes.module'
+import { CorsConfigModule } from './config/cors/cors.module'
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,9 +20,11 @@ import { PosicionesModule } from './rest/posiciones/posiciones.module'
     //entities
     TrabajadoresModule,
     PosicionesModule,
+    ClientesModule,
     //cache
     CacheModule.register(),
     //bbdd con postgrest
+    CorsConfigModule,
     DataBaseConfigModule,
     //notifications
     NotificationsModule,

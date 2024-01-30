@@ -72,8 +72,8 @@ describe('TrabajadorMapper', () => {
         apellido: 'López',
         edad: 25,
         telefono: '987654321',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
         deleted: false,
         posicion: posicion,
       } as Trabajador
@@ -109,6 +109,15 @@ describe('TrabajadorMapper', () => {
 
       expect(res).toEqual(original)
       expect(typeof res).toEqual(typeof Trabajador.prototype)
+    })
+
+    it('TrabajadorToResponse returns correct response', () => {
+      const res = provider.trabajadorToResponse(original)
+
+      expect(res.id).toEqual(original.id)
+      expect(res.nombre).toEqual(original.nombre)
+      expect(res.updated_at).toEqual(original.updated_at)
+      expect(res.posicion).toEqual(original.posicion.nombre)
     })
   })
 })

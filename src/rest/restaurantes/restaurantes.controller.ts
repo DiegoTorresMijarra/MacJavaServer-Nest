@@ -21,19 +21,19 @@ export class RestaurantesController {
   constructor(private readonly restaurantesService: RestaurantesService) {}
 
   @Get()
-  @CacheKey(RestaurantesService.CACHE_KEY_ALL_RESTAURANTES)
+  @CacheKey('all_restaurantes')
   @CacheTTL(30000)
   async findAll() {
     this.logger.log('Pidiendo todos los restaurantes (Controller)');
     return await this.restaurantesService.findAll()
   }
 
- /* @Get('/paginated/')
-  @CacheTTL(30000)
+  @Get('/paginated/')
+  @CacheTTL(30)
   async findAllPaginated(@Paginate() paginatedQuery: PaginateQuery) {
     this.logger.log('Buscando todos los trabajadores paginados')
     return await this.restaurantesService.findAllPaginated(paginatedQuery)
-  }*/
+  }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -67,4 +67,5 @@ export class RestaurantesController {
     this.logger.log(`Pidiendo el restaurante con nombre: ${nombre} (Controller)`);
     return await this.restaurantesService.findByName(nombre);
   }
+
 }

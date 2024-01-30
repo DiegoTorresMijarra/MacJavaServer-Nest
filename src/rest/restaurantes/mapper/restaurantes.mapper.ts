@@ -31,13 +31,13 @@ export class RestaurantesMapper{
     }
 
     updateDtoToEntity(dto: UpdateRestauranteDto, restaurante: Restaurante): Restaurante{
-        const restauranteNuevo :Restaurante = {
+        const restauranteNuevo : Restaurante = {
             ...restaurante,
             ...dto,
         };
-        restaurante.nombre=restauranteNuevo.nombre.toLowerCase();
-        restaurante.calle=restauranteNuevo.calle.toLowerCase();
-        restaurante.localidad=restauranteNuevo.localidad.toLowerCase();
+        restauranteNuevo.nombre=restauranteNuevo.nombre.toLowerCase();
+        restauranteNuevo.calle=restauranteNuevo.calle.toLowerCase();
+        restauranteNuevo.localidad=restauranteNuevo.localidad.toLowerCase();
         restauranteNuevo.actualizadoEn = new Date();
         return restauranteNuevo;
     }

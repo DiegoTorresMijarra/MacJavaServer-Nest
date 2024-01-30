@@ -8,6 +8,7 @@ describe('RestaurantesController', () => {
   let service: RestaurantesService
   const mockRestaurantesService = {
     findAll: jest.fn(),
+    //findAllPaginated: jest.fn(),
     findOne: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
@@ -18,6 +19,7 @@ describe('RestaurantesController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RestaurantesController],
+        imports: [CacheModule.register()],
       providers: [{provide: RestaurantesService, useValue: mockRestaurantesService}],
     }).compile()
 
@@ -28,6 +30,5 @@ describe('RestaurantesController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined()
   })
-  describe('findAll', () => {
-  })
+
 })

@@ -7,17 +7,17 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {RestaurantesMapper} from "./mapper/restaurantes.mapper";
 import {Cache, CACHE_MANAGER} from "@nestjs/cache-manager";
-import {Paginated, PaginateQuery} from "nestjs-paginate";
+import {
+    FilterOperator,
+    FilterSuffix,
+    paginate,
+    PaginateQuery,
+} from 'nestjs-paginate'
+import {hash} from "typeorm/util/StringUtils";
 
 @Injectable()
 export class RestaurantesService {
   logger= new Logger(RestaurantesService.name);
-  static readonly CACHE_KEY_ALL_RESTAURANTES = 'all_restaurantes';
-  static readonly CACHE_KEY_ONE_RESTAURANTE: string = 'restaurante_';
-  static readonly PAGED_DEFAULT_QUERY: PaginateQuery = {
-      path: 'http://localhost:3000/restaurantes/paginated/',
-  }
-    static readonly CACHE_KEY_PAGINATED_DEFAULT = 'restaurantes_paginated_default';
 
   constructor(
       @InjectRepository(Restaurante)
@@ -26,34 +26,29 @@ export class RestaurantesService {
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ){}
 
-    async invalidarRestaurantesEnCache(key?: string) {
-        this.logger.log('Invalidando cache de los restaurantes')
-        if (key) {
-            await this.cacheManager.del(key)
-            this.logger.log(`Invalidando cache de ${key}`)
-        }
-        await this.cacheManager.del(RestaurantesService.CACHE_KEY_ALL_RESTAURANTES)
-        await this.cacheManager.del(RestaurantesService.CACHE_KEY_PAGINATED_DEFAULT)
-    }
-    async getByCache(
-        key: string,
-    ): Promise<Restaurante | Restaurante[] | Paginated<Restaurante>> {
-        let res: Restaurante | Restaurante[] | Paginated<Restaurante>
-        try {
-            res = await this.cacheManager.get(key)
-            if (res) {
-                this.logger.log(`Cache ${key} hitted`)
-            }
-        } catch (error) {
-            // capturo las cache que me devuelvan un tipo que no esta contemplado
-            this.logger.error(`Cache de tipo invalido, causa: ${error.message}`)
-        }
-        return res
-    }
   async findAll() {
     this.logger.log('Obteniendo todos los restaurantes (Service)');
     return await this.repositorioRestaurante.find();
   }
+
+  async findAllPaginated(paginatedQuery: PaginateQuery) {
+      const cache= await this.cacheManager.get(`restaurantes_paginated_${hash(JSON.stringify(paginatedQuery))}`)
+      if (cache) {
+         return cache;
+      }
+      const resultado = await paginate(paginatedQuery, this.repositorioRestaurante,{
+          sortableColumns: ['id', 'nombre', 'localidad', 'capacidad'],
+          searchableColumns: ['id', 'nombre', 'localidad', 'capacidad'],
+          defaultSortBy: [['id', 'ASC']],
+          filterableColumns: {
+              nombre: [FilterOperator.EQ, FilterSuffix.NOT],
+              localidad: [FilterOperator.EQ, FilterSuffix.NOT],
+          }
+      })
+      await this.cacheManager.set(`restaurantes_paginated_${hash(JSON.stringify(paginatedQuery))}`, resultado, 60)
+      return resultado;
+  }
+
 
   async findOne(id: number) {
     this.logger.log(`Obteniendo el restaurante con id: ${id} (Service)`);
@@ -75,6 +70,8 @@ export class RestaurantesService {
       } else {
           const restaurante = this.mapper.createDtoToEntity(createRestauranteDto);
           await this.repositorioRestaurante.save(restaurante);
+          await this.invalidarCacheKey('all_restaurantes');
+          await this.cacheManager.set(`restaurante_${restaurante.id}`, restaurante, 60)
           return restaurante;
       }
   }
@@ -85,6 +82,8 @@ export class RestaurantesService {
     if(restaurante){
       const restauranteActualizado = this.mapper.updateDtoToEntity(updateRestauranteDto, restaurante);
       await this.repositorioRestaurante.save(restauranteActualizado);
+      await this.invalidarCacheKey('all_restaurantes');
+      await this.invalidarCacheKey(`restaurante_${id}`);
       return restauranteActualizado;
     }else{
         throw new NotFoundException(`Restaurante con id: ${id} no encontrado`)
@@ -108,14 +107,21 @@ export class RestaurantesService {
         if (restaurante) {
             restaurante.borrado = true;
             await this.repositorioRestaurante.save(restaurante);
+            await this.invalidarCacheKey('all_restaurantes');
+            await this.invalidarCacheKey(`restaurante_${id}`);
         } else {
           throw new NotFoundException(`Restaurante con id: ${id} no encontrado`)
         }
     }
 
   async existeRestaurantePorId(id: number): Promise<false|Restaurante> {
+    const cache: Restaurante = await this.cacheManager.get(`restaurante_${id}`)
+    if (cache) {
+      return cache;
+    }
     const restau= await this.repositorioRestaurante.findOneBy({id})
     if (restau) {
+      await this.cacheManager.set(`restaurante_${id}`, restau , 60)
       return restau;
     }else{
       return false;
@@ -129,6 +135,13 @@ export class RestaurantesService {
     }else{
       return false;
     }
+  }
+
+  async invalidarCacheKey(keyPattern: string) {
+      const cacheKeys = await this.cacheManager.store.keys()
+      const keysABorrar = cacheKeys.filter((key) => key.includes(keyPattern))
+      const promesas = keysABorrar.map((key) => this.cacheManager.del(key))
+      await Promise.all(promesas)
   }
 
     // Metodo añadir trabajadores a un restaurante uno o varios a la vez

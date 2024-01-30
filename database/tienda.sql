@@ -1,5 +1,3 @@
-
-
 SELECT 'CREATE DATABASE MacJava_PS'
 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'MacJava_PS');
 DROP TABLE IF EXISTS "restaurantes";

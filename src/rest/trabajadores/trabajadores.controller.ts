@@ -70,4 +70,10 @@ export class TrabajadoresController {
     this.logger.log(`Borrando trabajador con id ${id}`)
     return await this.trabajadoresService.removeById(id)
   }
+  @Patch('/softRemove/:id')
+  // @Roles('ADMIN')
+  async softRemoveById(@Param('id', ParseUUIDPipe) id: string) {
+    this.logger.log(`Actualizando a deleted: true el Trabajador con id: ${id}`)
+    return await this.trabajadoresService.softRemoveById(id)
+  }
 }

@@ -79,6 +79,13 @@ export class TrabajadoresService {
       .leftJoinAndSelect('trabajador.posicion', 'posicion')
       // .orderBy('trabajador.nombre', 'ASC')
       .getMany()
+    /*
+      .then((array) => {
+        return array.map((trab) =>
+          this.trabajadorMapper.trabajadorToResponse(trab),
+        )
+      })
+       */
     await this.cacheManager.set(
       TrabajadoresService.CACHE_KEY_FOUND_ALL,
       res,
@@ -188,6 +195,7 @@ export class TrabajadoresService {
     if (updateTrabajadorDto.posicionNombre) {
       pos = await this.checkPosicion(updateTrabajadorDto.posicionNombre)
     }
+
     const updated = await this.trabajadorRepository.save(
       this.trabajadorMapper.updateToTrabajador(
         original,
@@ -197,6 +205,7 @@ export class TrabajadoresService {
     )
 
     this.onChange(NotificationTipo.UPDATE, updated)
+
     await this.invalidateCachesTrabajadores(
       TrabajadoresService.CACHE_KEY_FOUND + id,
     )
@@ -215,6 +224,18 @@ export class TrabajadoresService {
       TrabajadoresService.CACHE_KEY_FOUND + id,
     )
   }
+  async softRemoveById(id: string) {
+    this.logger.log(`Actualizando a deleted: true Trabajador con id ${id}`)
+    const original = await this.findById(id)
+    original.deleted = true
+    const res = await this.trabajadorRepository.save(original)
+
+    this.onChange(NotificationTipo.UPDATE, res)
+    await this.invalidateCachesTrabajadores(
+      TrabajadoresService.CACHE_KEY_FOUND + id,
+    )
+    return res
+  }
 
   /**
    * checks if the posicion exists and isActive and returns it, throws BadRequestException otherwise
@@ -224,7 +245,7 @@ export class TrabajadoresService {
     this.logger.log(
       `Comprobando si existe y es valida la Posicon ${posicionName}`,
     )
-    const posicion = await this.posicionesService.existByName(posicionName)
+    const posicion = await this.posicionesService.findByName(posicionName)
     if (!posicion) {
       throw new BadRequestException(`La Posicion ${posicionName} no es valida`)
     }

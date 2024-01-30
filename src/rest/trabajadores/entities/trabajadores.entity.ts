@@ -32,10 +32,10 @@ export class Trabajador {
   telefono: string
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt: Date = new Date()
+  created_at: Date = new Date()
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt: Date = new Date()
+  updated_at: Date = new Date()
 
   @Column({ type: 'boolean', name: 'deleted', default: false })
   deleted: boolean = false

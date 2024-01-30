@@ -12,12 +12,11 @@ export class PosicionMapper {
     }
   }
   updateToPosicion(original: Posicion, dto: UpdatePosicionDto): Posicion {
-    const posicion: Posicion = {
+    return {
       ...original,
       ...dto,
       id: original.id,
+      updated_at: new Date(),
     }
-    posicion.updated_at = new Date()
-    return posicion
   }
 }

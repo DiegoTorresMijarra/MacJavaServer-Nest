@@ -24,6 +24,7 @@ import {
   NotificationTipo,
 } from '../../notifications/models/notificacion.model'
 import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
+
 @Injectable()
 export class PosicionesService {
   logger: Logger = new Logger(PosicionesService.name)
@@ -189,11 +190,15 @@ export class PosicionesService {
         `La posicion con el nombre ${createPosicionDto.nombre} ya existe`,
       )
     }
-    await this.invalidateCachesPosiciones()
-
-    return await this.posicionRepository.save(
+    const res = await this.posicionRepository.save(
       this.posicionMapper.createToPosicion(createPosicionDto),
     )
+
+    await this.invalidateCachesPosiciones()
+
+    this.onChange(NotificationTipo.CREATE, res)
+
+    return res
   }
   async updateById(id: string, updatePosicioneDto: UpdatePosicionDto) {
     this.logger.log(`Actualizando la posicion con id ${id}`)
@@ -226,6 +231,8 @@ export class PosicionesService {
     original.deleted = true
     const res = await this.posicionRepository.save(original)
 
+    this.onChange(NotificationTipo.UPDATE, res)
+
     await this.invalidateCachesPosiciones(
       PosicionesService.CACHE_KEY_FOUND + id,
     )
@@ -245,17 +252,25 @@ export class PosicionesService {
     }
     await this.posicionRepository.remove(original)
 
+    this.onChange(NotificationTipo.DELETE, original)
+
     await this.invalidateCachesPosiciones(
       PosicionesService.CACHE_KEY_FOUND + id,
     )
   }
   async findByName(name: string) {
     this.logger.log(`Buscando la posicion con nombre ${name}`)
+    if (!name) {
+      return null
+    }
     const posicionRes = await this.posicionRepository.findOneBy({
-      nombre: name,
+      nombre: name.toUpperCase().trim(),
     })
-    if (!posicionRes) {
-      throw new NotFoundException(`Posicion con nombre ${name} no encontrada`)
+
+    if (!posicionRes || posicionRes.deleted === true) {
+      this.logger.error(`Posicion con nombre: ${name} no encontrada`)
+      return null
+      // throw new NotFoundException(`Posicion con nombre ${name} no encontrada`)
     }
 
     await this.cacheManager.set(
@@ -272,16 +287,9 @@ export class PosicionesService {
     if (!name) {
       return null
     }
-    name = name.toUpperCase().trim()
-    const posicionRes = await this.posicionRepository.findOneBy({
+    return await this.posicionRepository.findOneBy({
       nombre: name,
     })
-    if (!posicionRes || posicionRes.deleted === true) {
-      this.logger.error(`Posicion con nombre: ${name} no encontrada`)
-      return null
-      // throw new NotFoundException(`Posicion con nombre ${name} no encontrada`)
-    }
-    return posicionRes
   }
 
   private onChange(type: NotificationTipo, data: Posicion) {

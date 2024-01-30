@@ -1,0 +1,2086 @@
+{
+	"info": {
+		"_postman_id": "687f1740-e52a-497a-8e57-91623685e2d3",
+		"name": "MacJava2",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30696572"
+	},
+	"item": [
+		{
+			"name": "Trabajadores",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "surname",
+									"value": "Doe",
+									"disabled": true
+								},
+								{
+									"key": "age",
+									"value": "25",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "isDeleted",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "antiquierityMin",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "antiquierityMax",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "positionId",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Page, Options and SortBy Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/paginated",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								"paginated"
+							],
+							"query": [
+								{
+									"key": "filter.nombre",
+									"value": "admin",
+									"disabled": true
+								},
+								{
+									"key": "filter.nombre",
+									"value": "$not:DISNEY",
+									"description": "distinto",
+									"disabled": true
+								},
+								{
+									"key": "filter.nombre",
+									"value": "$ilike:S",
+									"description": "FUNCION LIKE (CONTIENE)",
+									"disabled": true
+								},
+								{
+									"key": "filter.apellido",
+									"value": "admin",
+									"description": "NOMBRE EXACTO",
+									"disabled": true
+								},
+								{
+									"key": "filter.edad",
+									"value": "$eq:30",
+									"disabled": true
+								},
+								{
+									"key": "filter.edad",
+									"value": "$gt:30",
+									"disabled": true
+								},
+								{
+									"key": "filter.deleted",
+									"value": "f",
+									"description": "t/f 1/0",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "nombre:DESC",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get byID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/00000000-0000-0000-0001-000000000001",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								"00000000-0000-0000-0001-000000000001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Worker",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"dni\": \"00000000T\",\n    \"nombre\": \"Jane\",\n    \"apellido\": \"Doe\",\n    \"edad\": 30,\n    \"telefono\": \"+34629384747\",\n    \"posicionNombre\": \"MANAGER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Worker",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/00000000-0000-0000-0001-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								"00000000-0000-0000-0001-000000000002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Worker",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t//\"dni\": \"00000001r\"\n    \"nombre\": \" CAMBIADO\"\n   , \"apellido\": \" CAMBIADO\"\n   //, \"edad\": 30\n    //,\"telefono\": \"629384780\"\n    //,\"posicionNombre\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/00000000-0000-0000-0001-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								"00000000-0000-0000-0001-000000000002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "softRemove",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/softRemove/00000000-0000-0000-0001-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								"softRemove",
+								"00000000-0000-0000-0001-000000000002"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posicion",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}posiciones",
+							"host": [
+								"{{DOMAIN_NAME}}posiciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Page, Options and SortBy Copy 2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}posiciones/paginated",
+							"host": [
+								"{{DOMAIN_NAME}}posiciones"
+							],
+							"path": [
+								"paginated"
+							],
+							"query": [
+								{
+									"key": "filter.nombre",
+									"value": "CAMARERO",
+									"disabled": true
+								},
+								{
+									"key": "filter.nombre",
+									"value": "$not:CAMARERO",
+									"description": "distinto",
+									"disabled": true
+								},
+								{
+									"key": "filter.nombre",
+									"value": "$ilike:S",
+									"description": "FUNCION LIKE (CONTIENE)",
+									"disabled": true
+								},
+								{
+									"key": "filter.apellido",
+									"value": "admin",
+									"description": "NOMBRE EXACTO",
+									"disabled": true
+								},
+								{
+									"key": "filter.salario",
+									"value": "$eq:1500",
+									"disabled": true
+								},
+								{
+									"key": "filter.salario",
+									"value": "$gt:1300",
+									"disabled": true
+								},
+								{
+									"key": "filter.deleted",
+									"value": "f",
+									"description": "t/f 1/0",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "nombre:DESC",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Position byId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}posiciones/00000000-0000-0000-0000-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}posiciones"
+							],
+							"path": [
+								"00000000-0000-0000-0000-000000000002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Position",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"OTROS\",\r\n    \"salario\": 10000.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DOMAIN_NAME}}posiciones",
+							"host": [
+								"{{DOMAIN_NAME}}posiciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete ById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}posiciones/00000000-0000-0000-0000-000000000005",
+							"host": [
+								"{{DOMAIN_NAME}}posiciones"
+							],
+							"path": [
+								"00000000-0000-0000-0000-000000000005"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Position",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   // \"name\": \"MANAGER\",\r\n   // \"salario\": 108800.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DOMAIN_NAME}}posiciones/00000000-0000-0000-0000-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}posiciones"
+							],
+							"path": [
+								"00000000-0000-0000-0000-000000000002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "softRemove",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}posiciones/softRemove/00000000-0000-0000-0000-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}posiciones"
+							],
+							"path": [
+								"softRemove",
+								"00000000-0000-0000-0000-000000000002"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Storage",
+					"item": [
+						{
+							"name": "newImage",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/jaime/OneDrive/Imágenes/Capturas de pantalla/principal.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://localhost:3000/storage",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"storage"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ModifyImage",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/jaime/OneDrive/Imágenes/Capturas de pantalla/principal.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://localhost:3000/image/1d62ad8a-cc0d-4ba8-bdcb-380cc7178621",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"image",
+										"1d62ad8a-cc0d-4ba8-bdcb-380cc7178621"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Clients",
+					"item": [
+						{
+							"name": "GetAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:3000/clientes",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"clientes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllFilters",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:3000/clientes",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"clientes"
+									],
+									"query": [
+										{
+											"key": "dni",
+											"value": "99999999D",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "Jane",
+											"disabled": true
+										},
+										{
+											"key": "last_name",
+											"value": "Doe",
+											"disabled": true
+										},
+										{
+											"key": "age",
+											"value": "35",
+											"disabled": true
+										},
+										{
+											"key": "ageMax",
+											"value": "35",
+											"disabled": true
+										},
+										{
+											"key": "ageMin",
+											"value": "35",
+											"disabled": true
+										},
+										{
+											"key": "phone",
+											"value": "555555555",
+											"disabled": true
+										},
+										{
+											"key": "deleted",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "format",
+											"value": "xml",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetByID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:3000/clientes/2ff369fa-4cf6-4bd3-b6d2-7485c10ac436",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"clientes",
+										"2ff369fa-4cf6-4bd3-b6d2-7485c10ac436"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "NewClient",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"dni\": \"64734418F\",\r\n        \"name\": \"Pedro\",\r\n        \"last_name\": \"Rodriguez\",\r\n        \"age\": 26,\r\n        \"phone\":\"738294765\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:3000/clientes",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"clientes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ModifyClient",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n     \"dni\": \"85736418F\",\r\n        \"name\": \"Paco\",\r\n        \"last_name\": \"Lopez\",\r\n        \"age\": 26,\r\n        \"phone\":\"738294765\",\r\n        \"image\":\"null\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:3000/clientes/2ff369fa-4cf6-4bd3-b6d2-7485c10ac436",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"clientes",
+										"2ff369fa-4cf6-4bd3-b6d2-7485c10ac436"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteClient",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:3000/clientes/2ff369fa-4cf6-4bd3-b6d2-7485c10ac436",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"clientes",
+										"2ff369fa-4cf6-4bd3-b6d2-7485c10ac436"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Restaurant",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/restaurant",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllFilters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/restaurant",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "res1",
+									"disabled": true
+								},
+								{
+									"key": "number",
+									"value": "123456778",
+									"disabled": true
+								},
+								{
+									"key": "isDeleted",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "format",
+									"value": "xml",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/restaurant/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewRestaurant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"name\": \"res1\",\r\n            \"number\": 123456789\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/restaurant",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ModifyRestaurant",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"name\": \"res1\",\r\n            \"number\": 123456789\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/restaurant/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteRestaurant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/restaurant/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"restaurant",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/productos",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllFilters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/productos",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"productos"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "Producto3",
+									"disabled": true
+								},
+								{
+									"key": "stockMax",
+									"value": "75",
+									"disabled": true
+								},
+								{
+									"key": "stockMin",
+									"value": "75",
+									"disabled": true
+								},
+								{
+									"key": "precioMax",
+									"value": "16",
+									"disabled": true
+								},
+								{
+									"key": "precioMin",
+									"value": "16",
+									"disabled": true
+								},
+								{
+									"key": "gluten",
+									"value": "false",
+									"disabled": true
+								},
+								{
+									"key": "is_deleted",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "format",
+									"value": "xml",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/productos/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"productos",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Producto1\",\r\n    \"precio\": 10.501,\r\n    \"stock\": 100,\r\n    \"gluten\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/productos",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProduct",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Producto1\",\r\n    \"precio\": 10.5,\r\n    \"stock\": 100,\r\n    \"gluten\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/productos/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"productos",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteProduct",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/productos/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"productos",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "listAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/listAll",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"listAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll Pageable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/6569a29d62996427018dc774",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"6569a29d62996427018dc774"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"clientUUID\": \"168ecf01-a6b6-4a56-ba5a-cb26199f21ab\",\r\n  \"workerUUID\": \"550e8400-e29b-41d4-a716-446655440000\",\r\n  \"restaurantId\": 2,\r\n  \"orderedProducts\": [\r\n    {\r\n      \"quantity\": 4,\r\n      \"productId\":1,\r\n      \"productPrice\": 10.50,\r\n      \"totalPrice\": 42.00\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/orders",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post OrderAdmin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"clientUUID\": \"168ecf01-a6b6-4a56-ba5a-cb26199f21ab\",\r\n  \"workerUUID\": \"550e8400-e29b-41d4-a716-446655440000\",\r\n  \"restaurantId\": 2,\r\n  \"orderedProducts\": [\r\n    {\r\n      \"quantity\": 4,\r\n      \"productId\":1,\r\n      \"productPrice\": 10.50,\r\n      \"totalPrice\": 42.00\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/ordersAdmin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"ordersAdmin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Pedido",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/6569a77e44ce487c8247abbb",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"6569a77e44ce487c8247abbb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientUUID\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\"\r\n   // \"workerUUID\": \"550e8400-e29b-41d4-a716-446655440000\"\r\n    //\"restaurantId\": 5\r\n    ,\"orderedProducts\": [        {\r\n            \"quantity\": 60,\r\n            \"productId\": 1,\r\n            \"productPrice\": 10.5\r\n        }]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/6569a29d62996427018dc774",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"6569a29d62996427018dc774"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "existsByClientExistsUUID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/clientExists/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"clientExists",
+								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListAll findByClientUUID Pag",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/client/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"client",
+								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "existsByworkerExistsUUID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/workerExists/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"workerExists",
+								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListAll findByworkerUUID Pag",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/worker/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"worker",
+								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "existsByRestaurantId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/restaurantExists/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"restaurantExists",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListAll findByRestaurantId Pag",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:3000/v1/orders/restaurant/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"orders",
+								"restaurant",
+								"2"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"{{$randomFirstName}}\",\r\n    \"apellidos\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"user\",\r\n    \"password\": \"user1234\",\r\n    \"passwordComprobacion\": \"user1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/v1/auth/signup",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign In",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"user1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/v1/auth/signin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign In Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"Admin1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/v1/auth/signin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign In Test",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"Test1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:3000/v1/auth/signin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Me",
+					"item": [
+						{
+							"name": "Profile",
+							"item": [
+								{
+									"name": "Me",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/profile",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"profile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Me",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/profile",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"profile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Me",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"nombre\": \"{{$randomFirstName}}\",\r\n    \"apellidos\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"admin\",\r\n    \"password\": \"caca1234\",\r\n    \"roles\": [\r\n        \"USER\",\r\n        \"ADMIN\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/profile",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"profile"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Pedidos",
+							"item": [
+								{
+									"name": "GET Pedidos",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/pedidos",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"pedidos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GET Pedidos by Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/orders/65376a9522702a195b2d983d",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"orders",
+												"65376a9522702a195b2d983d"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "POST Create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"idUsuario\": 1,\r\n    \"cliente\": {\r\n        \"nombreCompleto\": \"Juan Perez\",\r\n        \"email\": \"juanperez@gmail.com\",\r\n        \"telefono\": \"+34123456789\",\r\n        \"direccion\": {\r\n            \"calle\": \"Calle Mayor\",\r\n            \"numero\": \"10\",\r\n            \"ciudad\": \"Madrid\",\r\n            \"provincia\": \"Madrid\",\r\n            \"pais\": \"España\",\r\n            \"codigoPostal\": \"28001\"\r\n        }\r\n    },\r\n    \"lineasPedido\": [\r\n        {\r\n            \"id\": \"123e4567-e89b-12d3-a456-426614174001\",\r\n            \"idProducto\": 2,\r\n            \"precioProducto\": 19.99,\r\n            \"cantidad\": 1\r\n        },\r\n        {\r\n            \"id\": \"123e4567-e89b-12d3-a456-426614174002\",\r\n            \"idProducto\": 3,\r\n            \"precioProducto\": 15.99,\r\n            \"cantidad\": 2\r\n        }\r\n    ]\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/orders",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "UPDATE",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"idUsuario\": 1,\r\n    \"cliente\": {\r\n        \"nombreCompleto\": \"Juan Perez\",\r\n        \"email\": \"juanperez@gmail.com\",\r\n        \"telefono\": \"+34123456789\",\r\n        \"direccion\": {\r\n            \"calle\": \"Calle Mayor\",\r\n            \"numero\": \"10\",\r\n            \"ciudad\": \"Madrid\",\r\n            \"provincia\": \"Madrid\",\r\n            \"pais\": \"España\",\r\n            \"codigoPostal\": \"28001\"\r\n        }\r\n    },\r\n    \"lineasPedido\": [\r\n        {\r\n            \"id\": \"123e4567-e89b-12d3-a456-426614174001\",\r\n            \"idProducto\": 2,\r\n            \"precioProducto\": 19.99,\r\n            \"cantidad\": 1\r\n        },\r\n        {\r\n            \"id\": \"123e4567-e89b-12d3-a456-426614174002\",\r\n            \"idProducto\": 3,\r\n            \"precioProducto\": 15.99,\r\n            \"cantidad\": 2\r\n        }\r\n    ]\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/orders/6542c2c94efd947500a5a23e",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"orders",
+												"6542c2c94efd947500a5a23e"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "DELETE",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:3000/v1/users/me/orders/6542c2c94efd947500a5a23e",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"v1",
+												"users",
+												"me",
+												"orders",
+												"6542c2c94efd947500a5a23e"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Gestion",
+					"item": [
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:3000/v1/users",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:3000/v1/users/3",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"v1",
+										"users",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nombre\": \"{{$randomFirstName}}\",\r\n    \"apellidos\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"user\",\r\n    \"password\": \"user1234\",\r\n    \"roles\": [\r\n        \"USER\",\r\n        \"ADMIN\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:3000/v1/users",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST by Id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nombre\": \"{{$randomFirstName}}\",\r\n    \"apellidos\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"update\",\r\n    \"password\": \"update\",\r\n    \"roles\": [\r\n        \"USER\",\r\n        \"ADMIN\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:3000/v1/users/2",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"v1",
+										"users",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete by ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:3000/v1/users/3",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"v1",
+										"users",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTAyNTc5MCwiZXhwIjoxNzAxMTEyMTkwLCJleHRyYUNsYWltcyI6e319.2Ql-nA8Du18i0VbmZi1vGZoD4AjxklpHoZttXNNZyG0w_EEYka4VW9b-9tXkFOTFqNctrqhZkg3RNE8XoYyXlQ",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "DOMAIN_NAME",
+			"value": "http://localhost:3000/"
+		}
+	]
+}

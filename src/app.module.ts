@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
 import { ConfigModule } from '@nestjs/config'
 import { DataBaseConfigModule } from './config/data-base-config/data-base-config.module'
-
+import { TrabajadoresModule } from './rest/trabajadores/trabajadores.module'
+import { PosicionesService } from './rest/posiciones/posiciones.service'
+import { CacheModule } from '@nestjs/cache-manager'
+import * as process from 'process'
+import { NotificationsModule } from './notifications/notifications.module'
+import { PosicionesModule } from './rest/posiciones/posiciones.module'
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -11,10 +14,17 @@ import { DataBaseConfigModule } from './config/data-base-config/data-base-config
       envFilePath: '.env', //jugar con los config y los perfiles
       ignoreEnvFile: false,
     }),
+    //entities
+    TrabajadoresModule,
+    PosicionesModule,
+    //cache
+    CacheModule.register(),
     //bbdd con postgrest
     DataBaseConfigModule,
+    //notifications
+    NotificationsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

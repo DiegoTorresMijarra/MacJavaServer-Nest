@@ -115,7 +115,6 @@ export class ProductosController {
           cb(null, `${fileName}${fileExt}`);
         },
       }),
-      // Aquí puedes incluir validaciones adicionales para el archivo
     }),
   )
   @ApiResponse({

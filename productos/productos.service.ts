@@ -8,13 +8,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductoEntity } from './entities/producto.entity';
-import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { ResponseProductoDto } from './dto/response-producto.dto';
 import { StorageService } from '../storage/storage.service';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { hash } from 'typeorm/util/StringUtils';
 import {
   FilterOperator,
   FilterSuffix,
@@ -25,7 +23,7 @@ import { ProductosMapper } from './mappers/producto-mapper';
 
 @Injectable()
 export class ProductoService {
-  private readonly logger: Logger = new Logger(ProductoService.name);
+  private readonly logger = new Logger(ProductoService.name);
 
   constructor(
     @InjectRepository(ProductoEntity)
@@ -34,14 +32,12 @@ export class ProductoService {
     private readonly storageService: StorageService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
-
   async findAll(query: PaginateQuery): Promise<any> {
     this.logger.log('Find all productos');
-    const cacheKey = `all_products_page_${hash(JSON.stringify(query))}`;
-    const cache = await this.cacheManager.get(cacheKey);
-    if (cache) {
-      this.logger.log('Cache hit');
-      return cache;
+
+    // Asegúrate de que el path esté definido
+    if (!query.path) {
+      throw new Error('Path is required for pagination');
     }
 
     const queryBuilder = this.productoRepository.createQueryBuilder('producto');
@@ -56,22 +52,15 @@ export class ProductoService {
       },
     });
 
-    const res = {
-      data: (pagination.data ?? []).map((productos) =>
-        this.productosMapper.toResponseDto(productos),
+    return {
+      data: (pagination.data ?? []).map((producto) =>
+        this.productosMapper.toResponseDto(producto),
       ),
       meta: pagination.meta,
       links: pagination.links,
     };
-
-    // Guardamos en caché
-    await this.cacheManager.set(
-      `all_products_page_${hash(JSON.stringify(query))}`,
-      res,
-      60,
-    );
-    return res;
   }
+
   async findOne(id: number): Promise<ResponseProductoDto> {
     this.logger.log(`Find one producto by id: ${id}`);
     const cacheKey = `product_${id}`;
@@ -91,9 +80,11 @@ export class ProductoService {
     return dto;
   }
 
-  async create(
-    createProductoDto: CreateProductoDto,
-  ): Promise<ResponseProductoDto> {
+  async create(createProductoDto: {
+    precio: number;
+    stock: number;
+    nombre: string;
+  }): Promise<ResponseProductoDto> {
     this.logger.log('Create producto');
     const producto = this.productosMapper.toEntity(createProductoDto);
     const productoCreado = await this.productoRepository.save(producto);
@@ -121,6 +112,7 @@ export class ProductoService {
     if (!producto) {
       throw new NotFoundException(`Producto con id ${id} no encontrado`);
     }
+
     await this.productoRepository.remove(producto);
   }
 
@@ -138,9 +130,17 @@ export class ProductoService {
     if (!imageFile) {
       throw new BadRequestException('No se proporcionó ninguna imagen');
     }
+
+    // Asumiendo que `uploadImage` en `storageService` ha sido actualizado para aceptar `Express.Multer.File`
     producto.imagen = this.storageService.uploadImage(imageFile);
     const productoActualizado = await this.productoRepository.save(producto);
 
     return this.productosMapper.toResponseDto(productoActualizado);
+  }
+
+  exists(productId: number) {
+    return this.productoRepository
+      .findOne({ where: { id: productId } })
+      .then((producto) => !!producto);
   }
 }

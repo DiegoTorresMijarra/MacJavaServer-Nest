@@ -8,13 +8,14 @@ import { diskStorage } from 'multer';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ProductoEntity]), // Registra ProductoEntity con TypeORM
+    TypeOrmModule.forFeature([ProductoEntity]),
     MulterModule.register({
       storage: diskStorage({
-        destination: './uploads/productos',
-        filename: (req, file, callback) => {
-          const uniqueName = `${Date.now()}-${file.originalname}`;
-          callback(null, uniqueName);
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const fileName: string = file.originalname.split('.')[0];
+          const fileExtName: string = file.originalname.split('.')[1];
+          cb(null, `${fileName}-${Date.now()}.${fileExtName}`);
         },
       }),
     }),

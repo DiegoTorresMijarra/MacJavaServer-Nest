@@ -26,13 +26,6 @@ export class CreateProductoDto {
     minLength: 10,
     maxLength: 255,
   })
-  @IsString()
-  @IsNotEmpty()
-  @Length(10, 255, {
-    message: 'La descripción debe tener entre 10 y 255 caracteres',
-  })
-  description: string;
-
   @ApiProperty({
     example: 21.99,
     description: 'El precio del producto',

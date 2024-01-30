@@ -308,6 +308,24 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "softRemove",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/softRemove/00000000-0000-0000-0001-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								"softRemove",
+								"00000000-0000-0000-0001-000000000002"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -465,7 +483,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n   // \"name\": \"MANAGER\",\r\n    \"salario\": 108800.0\r\n}",
+							"raw": "{\r\n   // \"name\": \"MANAGER\",\r\n   // \"salario\": 108800.0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -250,6 +250,7 @@ export class PosicionesService {
         `No se puede eliminar la posicion con id ${id} porque tiene trabajadores relacionados, use el metodo softRemoveById`,
       )
     }
+
     await this.posicionRepository.remove(original)
 
     this.onChange(NotificationTipo.DELETE, original)
@@ -302,7 +303,7 @@ export class PosicionesService {
 
   private onChange(type: NotificationTipo, data: Posicion) {
     const notification: Notification<Posicion> = {
-      message: `La Posicion con id ${data.id} ha sido ${type.toLowerCase()}`,
+      message: `La Posicion con id ${data.id} ha sido ${type.toLowerCase()}d`,
       type: type,
       data: data,
       createdAt: new Date(),

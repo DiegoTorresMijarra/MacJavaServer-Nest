@@ -11,6 +11,8 @@ import { Posicion } from '../../posiciones/entities/posicion.entity'
 
 @Entity('trabajadores')
 export class Trabajador {
+  public readonly CLASS_NAME = 'Trabajador'
+
   @PrimaryGeneratedColumn('uuid', {
     primaryKeyConstraintName: 'trabajadores_pk', //no creo q vaya a ser util en esta entidad en concreto, pero me parece una buena practica
   })

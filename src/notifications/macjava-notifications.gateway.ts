@@ -27,7 +27,7 @@ export class MacjavaNotificationsGateway {
 
   sendMessage(notification: Notification<Posicion | Trabajador>) {
     this.server.emit(
-      `${notification.type}D_${(typeof notification.data).toUpperCase()}`, //puede que valga con el name
+      `${notification.type}D_${notification.data.CLASS_NAME.toUpperCase()}`, //puede que valga con el name
       notification,
     )
   }
@@ -60,6 +60,39 @@ export class MacjavaNotificationsGateway {
   handleDeletePosicion(client: Socket, data: any) {
     const notification: Notification<Posicion> = {
       message: 'Se ha eliminado una Posicion',
+      type: NotificationTipo.DELETE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+  @SubscribeMessage('UPDATED_TRABAJADOR')
+  handleUpdateTrabajador(client: Socket, data: any) {
+    const notification: Notification<Posicion> = {
+      message: 'Se ha actualizado un Trabajador',
+      type: NotificationTipo.UPDATE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+  @SubscribeMessage('CREATED_TRABAJADOR')
+  handleCreateTrabajador(client: Socket, data: any) {
+    const notification: Notification<Posicion> = {
+      message: 'Se ha creado una Trabajador',
+      type: NotificationTipo.CREATE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+  @SubscribeMessage('DELETED_TRABAJADOR')
+  handleDeleteTrabajador(client: Socket, data: any) {
+    const notification: Notification<Posicion> = {
+      message: 'Se ha eliminado una Trabajador',
       type: NotificationTipo.DELETE,
       data: data,
       createdAt: new Date(),

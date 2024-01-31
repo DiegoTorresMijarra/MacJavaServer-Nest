@@ -42,13 +42,11 @@ describe('ProveedoresMapper', () => {
       }
 
       const expectedProveedor: Proveedor = {
+        ...new Proveedor(),
         id: 1,
         nombre: 'Pizza 4 Quesos',
         tipo: 'Pizzas',
         telefono: '690135540',
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: true,
         productos: [],
       }
 
@@ -67,13 +65,11 @@ describe('ProveedoresMapper', () => {
       }
 
       const expectedCategoriaEntity: Proveedor = {
+        ...new Proveedor(),
         id: 1,
         nombre: 'Pizza 4 Quesos',
         tipo: 'Pizzas',
         telefono: '690135540',
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         productos: [],
       }
 

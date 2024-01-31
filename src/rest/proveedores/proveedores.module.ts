@@ -6,14 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Proveedor } from './entities/proveedores.entity'
 import { Producto } from '../productos/entities/producto.entity'
 import { CacheModule } from '@nestjs/cache-manager'
+import { NotificationsModule } from '../../notifications/notifications.module'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Proveedor,
-      //  /*Prueba*/ Producto
+      //  /*Prueba*/ ProductoEntity
     ]),
     CacheModule.register(),
+    NotificationsModule,
   ],
   controllers: [ProveedoresController],
   providers: [ProveedoresService, ProveedoresMapper],

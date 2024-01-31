@@ -20,6 +20,12 @@ import {
   paginate,
   PaginateQuery,
 } from 'nestjs-paginate'
+import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
+import {
+  Notification,
+  NotificationTipo,
+} from '../../notifications/models/notificacion.model'
+import { Producto } from '../productos/entities/producto.entity'
 
 @Injectable()
 export class ProveedoresService {
@@ -30,6 +36,7 @@ export class ProveedoresService {
     @InjectRepository(Proveedor)
     private readonly proveedoresRepository: Repository<Proveedor>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly notificationGateway: MacjavaNotificationsGateway,
   ) {}
 
   async findAll(query: PaginateQuery) {
@@ -108,6 +115,7 @@ export class ProveedoresService {
     const newProveedor = await this.proveedoresRepository.save(proveedorMapped)
 
     await this.invalidateCacheKey('all_proveedores')
+    this.onChange(NotificationTipo.CREATE, newProveedor)
 
     return newProveedor
   }
@@ -139,11 +147,13 @@ export class ProveedoresService {
 
     await this.invalidateCacheKey('all_proveedores')
     await this.invalidateCacheKey(`proveedor_${id}`)
+    this.onChange(NotificationTipo.UPDATE, updatedProveedor)
 
     return updatedProveedor
   }
 
   async remove(id: number) {
+    //todo no deberia devolver nada (segun el profe)
     this.logger.log(`Servicio: Eliminando el proveedor con id ${id}`)
     const existingProveedor = await this.findOne(id)
     const deletedProveedor =
@@ -151,6 +161,8 @@ export class ProveedoresService {
 
     await this.invalidateCacheKey('all_proveedores')
     await this.invalidateCacheKey(`proveedor_${id}`)
+
+    this.onChange(NotificationTipo.DELETE, deletedProveedor)
 
     return deletedProveedor
   }
@@ -167,6 +179,8 @@ export class ProveedoresService {
     await this.invalidateCacheKey('all_proveedores')
     await this.invalidateCacheKey(`proveedor_${id}`)
 
+    this.onChange(NotificationTipo.UPDATE, inActiveProveedor)
+
     return inActiveProveedor
   }
 
@@ -175,5 +189,16 @@ export class ProveedoresService {
     const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))
     const promises = keysToDelete.map((key) => this.cacheManager.del(key))
     await Promise.all(promises)
+  }
+
+  private onChange(type: NotificationTipo, data: Proveedor) {
+    const notification: Notification<Proveedor> = {
+      message: `La Posicion con id ${data.id} ha sido ${type.toLowerCase()}d`,
+      type: type,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.notificationGateway.sendMessage(notification)
   }
 }

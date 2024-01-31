@@ -4,13 +4,18 @@ import {
   Post,
   Body,
   Param,
-  Delete, ParseIntPipe, Put, HttpCode, UseInterceptors, Logger,
+  Delete,
+  ParseIntPipe,
+  Put,
+  HttpCode,
+  UseInterceptors,
+  Logger,
 } from '@nestjs/common'
 import { ProveedoresService } from './proveedores.service'
 import { CreateProveedoresDto } from './dto/create-proveedores.dto'
 import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
-import {CacheInterceptor, CacheKey, CacheTTL} from "@nestjs/cache-manager";
-import {Paginate, PaginateQuery} from "nestjs-paginate";
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
+import { Paginate, PaginateQuery } from 'nestjs-paginate'
 
 @Controller('proveedores')
 @UseInterceptors(CacheInterceptor)

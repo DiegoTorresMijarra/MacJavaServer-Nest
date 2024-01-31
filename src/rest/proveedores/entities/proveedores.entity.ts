@@ -10,6 +10,8 @@ import { Producto } from '../../productos/entities/producto.entity'
 
 @Entity({ name: 'proveedores' })
 export class Proveedor {
+  public readonly CLASS_NAME = 'Proveedor'
+
   //Id por la poca cantidad de datos que tendra esta tabla
   // y porque solo usaremos una BD y no podran solaparse los id's
   @PrimaryGeneratedColumn()

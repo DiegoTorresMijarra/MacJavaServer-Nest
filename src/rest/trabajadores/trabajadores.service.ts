@@ -18,6 +18,7 @@ import {
   FilterOperator,
   FilterSuffix,
   paginate,
+  Paginated,
   PaginateQuery,
 } from 'nestjs-paginate'
 import {
@@ -25,6 +26,7 @@ import {
   NotificationTipo,
 } from '../../notifications/models/notificacion.model'
 import { Posicion } from '../posiciones/entities/posicion.entity'
+import { ResponseTrabajadorDto } from './dto/response-trabajador.dto'
 
 @Injectable()
 export class TrabajadoresService {
@@ -79,13 +81,7 @@ export class TrabajadoresService {
       .leftJoinAndSelect('trabajador.posicion', 'posicion')
       // .orderBy('trabajador.nombre', 'ASC')
       .getMany()
-    /*
-      .then((array) => {
-        return array.map((trab) =>
-          this.trabajadorMapper.trabajadorToResponse(trab),
-        )
-      })
-       */
+
     await this.cacheManager.set(
       TrabajadoresService.CACHE_KEY_FOUND_ALL,
       res,
@@ -133,7 +129,7 @@ export class TrabajadoresService {
       .createQueryBuilder('trabajador')
       .leftJoinAndSelect('trabajador.posicion', 'posicion')
 
-    return await paginate(paginatedQuery, queryBuilder, {
+    const res = await paginate(paginatedQuery, queryBuilder, {
       loadEagerRelations: false, //default false: por si usara eager para las relaciones
       sortableColumns: ['nombre', 'apellido', 'edad', 'deleted'], //These are the columns that are valid to be sorted by.
       nullSort: 'last', //Define whether to put null values at the beginning or end of the result set.
@@ -162,6 +158,13 @@ export class TrabajadoresService {
       },
       relativePath: true, //Generate relative paths in the resource links
     })
+
+    return {
+      ...res,
+      data: (res.data ?? []).map((trabajador) =>
+        this.trabajadorMapper.trabajadorToResponse(trabajador),
+      ),
+    }
   }
 
   async create(createTrabajadorDto: CreateTrabajadorDto) {

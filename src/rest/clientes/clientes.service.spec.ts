@@ -13,6 +13,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { CreateClienteDto } from './dto/create-cliente.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
 import { StorageService } from '../storage/storage.service'
+import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
 
 describe('ClientesService', () => {
   let service: ClientesService
@@ -24,6 +25,10 @@ describe('ClientesService', () => {
   const clienteMapperMock = {
     toCliente: jest.fn(),
     toResponse: jest.fn(),
+  }
+
+  const notificationMock = {
+    sendMessage: jest.fn(),
   }
 
   const storageServiceMock = {
@@ -51,6 +56,10 @@ describe('ClientesService', () => {
         },
         { provide: StorageService, useValue: storageServiceMock },
         { provide: CACHE_MANAGER, useValue: cacheManagerMock },
+        {
+          provide: MacjavaNotificationsGateway,
+          useValue: notificationMock,
+        },
       ],
     }).compile()
 
@@ -136,6 +145,7 @@ describe('ClientesService', () => {
     it('Un Cliente del repositorio', async () => {
       const id = '123e4567-e89b-12d3-a456-426614174002'
       const testCliente: Cliente = {
+        ...new Cliente(),
         id: id,
         dni: '62840516G',
         nombre: 'Manolo',
@@ -143,9 +153,6 @@ describe('ClientesService', () => {
         edad: 23,
         telefono: '549573654',
         imagen: 'https://via.placeholder.com/150',
-        deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
       }
       const testClienteResponse = new ResponseCliente()
 

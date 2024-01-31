@@ -4,7 +4,8 @@ import * as process from 'process'
 import * as Path from 'path'
 import { Posicion } from '../../rest/posiciones/entities/posicion.entity'
 import { Trabajador } from '../../rest/trabajadores/entities/trabajadores.entity'
-import { Trabajador } from '../../rest/clientes/entities/clientes.entity'
+import { Cliente } from '../../rest/clientes/entities/cliente.entity'
+
 @Module({
   imports: [
     // Configurar el módulo de base de datos de Postgres asíncronamente

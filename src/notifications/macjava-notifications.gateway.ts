@@ -9,6 +9,7 @@ import * as process from 'process'
 import { Notification, NotificationTipo } from './models/notificacion.model'
 import { Posicion } from '../rest/posiciones/entities/posicion.entity'
 import { Trabajador } from '../rest/trabajadores/entities/trabajadores.entity'
+import { Cliente } from '../rest/clientes/entities/cliente.entity'
 
 const ENDPOINT: string = `/ws/${process.env.API_VERSION || 'v1'}/macjava`
 
@@ -25,7 +26,7 @@ export class MacjavaNotificationsGateway {
     this.logger.log(`MacjavaNotificationsGateway is listening on ${ENDPOINT}`)
   }
 
-  sendMessage(notification: Notification<Posicion | Trabajador>) {
+  sendMessage(notification: Notification<Posicion | Trabajador | Cliente>) {
     this.server.emit(
       `${notification.type}D_${notification.data.CLASS_NAME.toUpperCase()}`, //puede que valga con el name
       notification,
@@ -37,7 +38,7 @@ export class MacjavaNotificationsGateway {
     // Aquí puedes manejar la lógica para procesar la actualización del Posicion
     // y enviar la notificación a todos los clientes conectados
     const notification: Notification<Posicion> = {
-      message: 'Se ha actualizado un ',
+      message: 'Se ha actualizado una posicion',
       type: NotificationTipo.UPDATE,
       data: data,
       createdAt: new Date(),
@@ -93,6 +94,40 @@ export class MacjavaNotificationsGateway {
   handleDeleteTrabajador(client: Socket, data: any) {
     const notification: Notification<Posicion> = {
       message: 'Se ha eliminado una Trabajador',
+      type: NotificationTipo.DELETE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+
+  @SubscribeMessage('UPDATED_CLIENTE')
+  handleUpdateCliente(client: Socket, data: any) {
+    const notification: Notification<Cliente> = {
+      message: 'Se ha actualizado un Cliente',
+      type: NotificationTipo.UPDATE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+  @SubscribeMessage('CREATED_CLIENTE')
+  handleCreateCliente(client: Socket, data: any) {
+    const notification: Notification<Cliente> = {
+      message: 'Se ha creado una Cliente',
+      type: NotificationTipo.CREATE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+  @SubscribeMessage('DELETED_CLIENTE')
+  handleDeleteCliente(client: Socket, data: any) {
+    const notification: Notification<Cliente> = {
+      message: 'Se ha eliminado una Cliente',
       type: NotificationTipo.DELETE,
       data: data,
       createdAt: new Date(),

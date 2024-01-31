@@ -63,12 +63,10 @@ describe('PosicionesController (e2e)', () => {
 
       updateDto = new UpdatePosicionDto()
       original = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000001',
         nombre: 'MANAGER',
         salario: 10000,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: true,
         trabajadores: [],
       }
     })

@@ -43,6 +43,7 @@ describe('ClienteMapper', () => {
     it('debería mapear Cliente a ResponseCliente', () => {
       // Arrange
       const cliente: Cliente = {
+        ...new Cliente(),
         id: '00000000-0000-0000-0000-000000000055',
         dni: '62840516G',
         nombre: 'Manolo',
@@ -50,9 +51,6 @@ describe('ClienteMapper', () => {
         edad: 23,
         telefono: '549573654',
         imagen: 'https://via.placeholder.com/150',
-        deleted: false,
-        created_at: new Date(),
-        updated_at: new Date(),
       }
 
       // Act

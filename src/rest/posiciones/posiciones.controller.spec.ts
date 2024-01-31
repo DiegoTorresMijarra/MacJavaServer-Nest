@@ -52,12 +52,10 @@ describe('PosicionesController', () => {
       createDto.nombre = 'DISNEY'
       updateDto = new UpdatePosicionDto()
       original = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000001',
         nombre: 'MANAGER',
         salario: 1000,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: true,
         trabajadores: [],
       }
     })

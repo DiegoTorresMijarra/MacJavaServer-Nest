@@ -12,6 +12,7 @@ import { CreateTrabajadorDto } from './dto/create-trabajador.dto'
 import { UpdateTrabajadorDto } from './dto/update-trabajador.dto'
 import { PaginateQuery } from 'nestjs-paginate'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
+import { ResponseTrabajadorDto } from './dto/response-trabajador.dto'
 
 describe('TrabajadoresService', () => {
   let trabService: TrabajadoresService
@@ -24,6 +25,7 @@ describe('TrabajadoresService', () => {
   const mapperMock = {
     createToTrabajador: jest.fn(),
     updateToTrabajador: jest.fn(),
+    trabajadorToResponse: jest.fn(),
   }
 
   const posServMock = {
@@ -44,6 +46,7 @@ describe('TrabajadoresService', () => {
   }
 
   beforeEach(async () => {
+    jest.clearAllMocks()
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TrabajadoresService,
@@ -78,28 +81,25 @@ describe('TrabajadoresService', () => {
     let original: Trabajador
     let createDto: CreateTrabajadorDto
     let updateDto: UpdateTrabajadorDto
+    let responseDto: ResponseTrabajadorDto
     let mockQueryBuilder
 
     beforeAll(() => {
       originalPos = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000001',
         nombre: 'MANAGER',
         salario: 10000,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         trabajadores: [],
       }
       original = {
+        ...new Trabajador(),
         id: '00000000-0000-0000-0001-000000000001',
         dni: '53718369Y',
         nombre: 'T1',
         apellido: ' test',
         edad: 18,
         telefono: '629384747',
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         posicion: originalPos,
       }
       createDto = {
@@ -110,7 +110,10 @@ describe('TrabajadoresService', () => {
         telefono: '629384747',
         posicionNombre: 'MANAGER',
       }
-
+      responseDto = {
+        ...original,
+        posicion: original.posicion.nombre,
+      }
       updateDto = new UpdateTrabajadorDto()
     })
 
@@ -219,11 +222,15 @@ describe('TrabajadoresService', () => {
           take: jest.fn().mockReturnThis(),
           skip: jest.fn().mockReturnThis(),
           addOrderBy: jest.fn().mockReturnThis(),
-          getManyAndCount: jest.fn().mockResolvedValue([original]),
+          getManyAndCount: jest.fn().mockResolvedValue([]),
         }
         jest
           .spyOn(repository, 'createQueryBuilder')
           .mockReturnValue(mockQueryBuilder as any)
+
+        jest
+          .spyOn(mapperMock, 'trabajadorToResponse')
+          .mockResolvedValue(responseDto)
 
         const res = await trabService.findAllPaginated(paginatedQuery)
 
@@ -319,12 +326,10 @@ describe('TrabajadoresService', () => {
 
       it('Should update a Trabajador', async () => {
         const pos2: Posicion = {
+          ...new Posicion(),
           id: '00000000-0000-0000-0000-000000000002',
           nombre: 'OTROS',
           salario: 1500,
-          created_at: new Date(),
-          updated_at: new Date(),
-          deleted: false,
           trabajadores: [],
         }
 

@@ -28,24 +28,20 @@ describe('TrabajadorMapper', () => {
 
     beforeEach(() => {
       posicion = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000001',
         nombre: 'CAMARERO',
         salario: 1500,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         trabajadores: [],
       }
 
       nuevaPosicion = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000002',
         nombre: 'MANAGER',
         salario: 10000,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         trabajadores: [],
-      } as Posicion
+      }
 
       createDto = {
         dni: '12345678Z',

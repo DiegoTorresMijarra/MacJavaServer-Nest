@@ -23,6 +23,11 @@ import {
 import { hash } from 'typeorm/util/StringUtils'
 import { ResponseCliente } from './dto/response-cliente.dto'
 import { StorageService } from '../storage/storage.service'
+import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
+import {
+  Notification,
+  NotificationTipo,
+} from '../../notifications/models/notificacion.model'
 
 @Injectable()
 export class ClientesService {
@@ -32,6 +37,7 @@ export class ClientesService {
     private readonly clienteRepository: Repository<Cliente>,
     private readonly mapper: ClienteMapper,
     private readonly storageService: StorageService,
+    private readonly notificationGateway: MacjavaNotificationsGateway,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   async findAll(query: PaginateQuery) {
@@ -112,6 +118,7 @@ export class ClientesService {
     } else {
       const res = await this.clienteRepository.save(clienteToCreate)
       await this.invalidateKey('all_clientes')
+      this.onChange(NotificationTipo.CREATE, res)
       return this.mapper.toResponse(res)
     }
   }
@@ -127,6 +134,7 @@ export class ClientesService {
     })
     await this.invalidateKey(`cliente_${id}`)
     await this.invalidateKey('all_cliente')
+    this.onChange(NotificationTipo.UPDATE, res)
     return this.mapper.toResponse(res)
   }
 
@@ -139,6 +147,7 @@ export class ClientesService {
     })
     await this.invalidateKey(`cliente_${id}`)
     await this.invalidateKey('all_clientes')
+    this.onChange(NotificationTipo.UPDATE, res)
     return this.mapper.toResponse(res)
   }
   public async exists(dni: string): Promise<Cliente> {
@@ -192,7 +201,19 @@ export class ClientesService {
     }
 
     clienteToUpdate.imagen = file.filename
-    const clienteUpdated = await this.clienteRepository.save(clienteToUpdate)
-    return this.mapper.toResponse(clienteUpdated)
+    const res = await this.clienteRepository.save(clienteToUpdate)
+    this.onChange(NotificationTipo.UPDATE, res)
+    return this.mapper.toResponse(res)
+  }
+
+  private onChange(type: NotificationTipo, data: Cliente) {
+    const notification: Notification<Cliente> = {
+      message: `El Trabajador con id ${data.id} ha sido ${type.toLowerCase()}`,
+      type: type,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.notificationGateway.sendMessage(notification)
   }
 }

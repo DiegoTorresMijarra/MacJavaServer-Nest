@@ -81,12 +81,10 @@ describe('PosicionesService', () => {
       createDto.nombre = 'OTROS'
       updateDto = new UpdatePosicionDto()
       original = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000001',
         nombre: 'MANAGER',
         salario: 10000,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         trabajadores: [],
       }
     })
@@ -253,12 +251,10 @@ describe('PosicionesService', () => {
     describe('createPosicion', () => {
       it('should create a new Posicion', async () => {
         const createdPos: Posicion = {
+          ...new Posicion(),
           id: '00000000-0000-0000-0000-000000000002',
           nombre: 'COCINERO',
           salario: 1500,
-          created_at: new Date(),
-          updated_at: new Date(),
-          deleted: true,
           trabajadores: [],
         }
         jest.spyOn(mapper, 'createToPosicion').mockReturnValue(createdPos)

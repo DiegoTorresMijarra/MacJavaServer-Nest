@@ -3,7 +3,6 @@ export class ResponseTrabajadorDto {
   dni: string
   nombre: string
   apellido: string
-  salario: number
   edad: number
   telefono: string
   created_at: Date

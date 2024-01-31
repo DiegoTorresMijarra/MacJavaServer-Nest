@@ -45,7 +45,7 @@ describe('TrabajadoresController', () => {
     expect(controller).toBeDefined()
   })
 
-  describe('posicionesServiceFunc', () => {
+  describe('trabajadoresControllerFunc', () => {
     let originalCat: Posicion
     let original: Trabajador
     let createDto: CreateTrabajadorDto
@@ -54,24 +54,20 @@ describe('TrabajadoresController', () => {
 
     beforeAll(() => {
       originalCat = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000001',
         nombre: 'MANAGER',
         salario: 10000,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         trabajadores: [],
       }
       original = {
+        ...new Trabajador(),
         id: '00000000-0000-0000-0001-000000000001',
         dni: '53718369Y',
         nombre: 'T1',
         apellido: ' test',
         edad: 18,
         telefono: '629384747',
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         posicion: originalCat,
       }
       createDto = {
@@ -132,7 +128,7 @@ describe('TrabajadoresController', () => {
           ...new Trabajador(),
           ...createDto,
           posicion: originalCat,
-        }
+        } as Trabajador
         jest.spyOn(service, 'create').mockResolvedValue(createdFunko)
 
         const category = await controller.create(createDto)
@@ -149,12 +145,10 @@ describe('TrabajadoresController', () => {
       it('Should update a category', async () => {
         updateDto = { nombre: 'Cambiado', posicionNombre: 'OTROS' }
         const cat2: Posicion = {
+          ...new Posicion(),
           id: '00000000-0000-0000-0000-000000000002',
           nombre: 'OTROS',
           salario: 1500,
-          created_at: new Date(),
-          updated_at: new Date(),
-          deleted: false,
           trabajadores: [],
         }
         const updatedFunko: Trabajador = {

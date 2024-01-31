@@ -1,11 +1,11 @@
 import { INestApplication, NotFoundException } from '@nestjs/common'
-import { ResponseCliente } from '../../src/rest/clientes/dto/response-cliente.dto'
-import { UpdateClienteDto } from '../../src/rest/clientes/dto/update-cliente.dto'
-import { CreateClienteDto } from '../../src/rest/clientes/dto/create-cliente.dto'
+import { ResponseCliente } from '../../../src/rest/clientes/dto/response-cliente.dto'
+import { UpdateClienteDto } from '../../../src/rest/clientes/dto/update-cliente.dto'
+import { CreateClienteDto } from '../../../src/rest/clientes/dto/create-cliente.dto'
 import { CacheModule } from '@nestjs/cache-manager'
 import { Test, TestingModule } from '@nestjs/testing'
-import { ClientesController } from '../../src/rest/clientes/clientes.controller'
-import { ClientesService } from '../../src/rest/clientes/clientes.service'
+import { ClientesController } from '../../../src/rest/clientes/clientes.controller'
+import { ClientesService } from '../../../src/rest/clientes/clientes.service'
 import * as request from 'supertest'
 
 describe('ClientesController (e2e)', () => {

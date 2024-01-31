@@ -58,24 +58,20 @@ describe('TrabajadoresController (e2e)', () => {
 
     beforeAll(() => {
       originalPos = {
+        ...new Posicion(),
         id: '00000000-0000-0000-0000-000000000001',
         nombre: 'MANAGER',
         salario: 10000,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         trabajadores: [],
       }
       original = {
+        ...new Trabajador(),
         id: '00000000-0000-0000-0001-000000000001',
         dni: '00000000t',
         nombre: 'Trabajador1',
         apellido: 'apellido',
         edad: 18,
         telefono: '629384747',
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted: false,
         posicion: originalPos,
       }
       createDto = {

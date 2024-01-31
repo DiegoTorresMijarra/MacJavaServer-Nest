@@ -209,6 +209,39 @@ export class MacjavaNotificationsGateway {
 
     this.sendMessage(notification)
   }
+  @SubscribeMessage('UPDATED_RESTAURANTE')
+  handleUpdateRestaurante(client: Socket, data: any) {
+    const notification: Notification<Restaurante> = {
+      message: 'Se ha actualizado una Restaurante',
+      type: NotificationTipo.UPDATE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+  @SubscribeMessage('CREATED_RESTAURANTE')
+  handleCreateRestaurante(client: Socket, data: any) {
+    const notification: Notification<Restaurante> = {
+      message: 'Se ha creado una Restaurante',
+      type: NotificationTipo.CREATE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
+  @SubscribeMessage('DELETED_RESTAURANTE')
+  handleDeleteRestaurante(client: Socket, data: any) {
+    const notification: Notification<Restaurante> = {
+      message: 'Se ha eliminado una Restaurante',
+      type: NotificationTipo.DELETE,
+      data: data,
+      createdAt: new Date(),
+    }
+
+    this.sendMessage(notification)
+  }
   private handleConnection(client: Socket) {
     // Este método se ejecutará cuando un cliente se conecte al WebSocket
     this.logger.debug('Cliente conectado:', client.id)

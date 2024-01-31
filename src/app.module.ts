@@ -3,8 +3,9 @@ import { ConfigModule } from '@nestjs/config'
 import { DataBaseConfigModule } from './config/data-base-config/data-base-config.module'
 import { TrabajadoresModule } from './rest/trabajadores/trabajadores.module'
 import { PosicionesService } from './rest/posiciones/posiciones.service'
+import {RestaurantesModule} from "./rest/restaurantes/restaurantes.module";
 import { CacheModule } from '@nestjs/cache-manager'
-import * as process from 'process'
+import { TrabajadoresModule } from './rest/trabajadores/trabajadores.module'
 import { NotificationsModule } from './notifications/notifications.module'
 import { PosicionesModule } from './rest/posiciones/posiciones.module'
 import { ClientesModule } from './rest/clientes/clientes.module'
@@ -25,6 +26,7 @@ import { ProductosModule } from './rest/productos/productos.module'
     ClientesModule,
     ProveedoresModule,
     ProductosModule,
+    RestaurantesModule,
     //cache
     CacheModule.register(),
     //bbdd con postgrest

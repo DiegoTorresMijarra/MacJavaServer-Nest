@@ -9,7 +9,8 @@ import { NotificationsModule } from './notifications/notifications.module'
 import { PosicionesModule } from './rest/posiciones/posiciones.module'
 import { ClientesModule } from './rest/clientes/clientes.module'
 import { CorsConfigModule } from './config/cors/cors.module'
-import {ProveedoresModule} from "./rest/proveedores/proveedores.module";
+import { ProveedoresModule } from './rest/proveedores/proveedores.module'
+import { ProductosModule } from './rest/productos/productos.module'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import {ProveedoresModule} from "./rest/proveedores/proveedores.module";
     PosicionesModule,
     ClientesModule,
     ProveedoresModule,
+    ProductosModule,
     //cache
     CacheModule.register(),
     //bbdd con postgrest

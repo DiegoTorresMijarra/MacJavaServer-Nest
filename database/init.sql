@@ -5,7 +5,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS "posiciones";
 DROP TABLE IF EXISTS "trabajadores";
 DROP TABLE IF EXISTS "clientes";
-
+DROP TABLE IF EXISTS "proveedores";
+DROP SEQUENCE IF EXISTS proveedores_id_seq;
 -- Crear la tabla position
 CREATE TABLE "public"."posiciones" (
                                        "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
@@ -77,3 +78,18 @@ VALUES
     (uuid_generate_v4(), '55555555C', 'Michael', 'Johnson', 40, '555555555', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
     (uuid_generate_v4(), '99999999D', 'Sarah', 'Williams', 35, '999999999', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
     (uuid_generate_v4(), '11111111E', 'David', 'Brown', 28, '111111111', 'https://via.placeholder.com/150', true, '2022-12-12', '2022-12-12');
+
+
+CREATE SEQUENCE proveedores_id_seq INCREMENT 1 MINVALUE 4 MAXVALUE 100 CACHE 1;
+
+-- Crear la tabla proveedores
+CREATE TABLE "public"."proveedores" (
+                                   "id" bigint DEFAULT nextval('proveedores_id_seq') NOT NULL,
+                                   "nombre" VARCHAR NOT NULL,
+                                   "tipo" VARCHAR NOT NULL,
+                                   "telefono" VARCHAR NOT NULL UNIQUE,
+                                   "created_at" timestamp DEFAULT now(),
+                                   "updated_at" timestamp DEFAULT now(),
+                                   "deleted" BOOLEAN DEFAULT true,
+                                   CONSTRAINT "proveedores_pk" PRIMARY KEY ("id")
+)WITH (oids = false);

@@ -4,7 +4,9 @@ import {Repository} from "typeorm";
 import {Restaurante} from "./entities/restaurante.entity";
 import {RestaurantesMapper} from "./mapper/restaurantes.mapper";
 import {getRepositoryToken} from "@nestjs/typeorm";
-import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { hash } from 'typeorm/util/StringUtils';
 
 describe('RestaurantesService', () => {
   let service: RestaurantesService
@@ -21,6 +23,9 @@ describe('RestaurantesService', () => {
   const cacheManagerMock = {
     get: jest.fn(()=> Promise.resolve()),
     set: jest.fn(()=> Promise.resolve()),
+    del: jest.fn(()=> Promise.resolve()),
+    reset: jest.fn(()=> Promise.resolve()),
+    ttl: jest.fn(()=> Promise.resolve()),
     store:{
       keys: jest.fn(),
     },
@@ -59,6 +64,7 @@ describe('RestaurantesService', () => {
             creadoEn: new Date(),
             actualizadoEn: new Date(),
         }
+        jest.spyOn(cache, 'get').mockResolvedValue(undefined)
         const restaurantes: Restaurante[] = [restaurant]
         jest.spyOn(repositorio, 'find').mockResolvedValueOnce(restaurantes)
         const resultado = await service.findAll()

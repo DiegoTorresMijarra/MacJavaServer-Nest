@@ -31,7 +31,7 @@ export class RestaurantesController {
   @Get('/paginated/')
   @CacheTTL(30)
   async findAllPaginated(@Paginate() paginatedQuery: PaginateQuery) {
-    this.logger.log('Buscando todos los trabajadores paginados')
+    this.logger.log('Buscando todos los restaurantes paginados')
     return await this.restaurantesService.findAllPaginated(paginatedQuery)
   }
 
@@ -60,7 +60,7 @@ export class RestaurantesController {
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     this.logger.log(`Eliminando un restaurante (Controller)`);
-    return this.restaurantesService.removeSoft(id);
+    return await this.restaurantesService.removeSoft(id);
   }
   @Get('by-name/:nombre')
   async findByName(@Param('nombre') nombre: string) {

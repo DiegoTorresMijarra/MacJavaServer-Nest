@@ -32,6 +32,7 @@ export class RestaurantesService {
   }
 
   async findAllPaginated(paginatedQuery: PaginateQuery) {
+      this.logger.log('Buscando todos los restaurantes paginados (Servicio)')
       const cache= await this.cacheManager.get(`restaurantes_paginated_${hash(JSON.stringify(paginatedQuery))}`)
       if (cache) {
          return cache;

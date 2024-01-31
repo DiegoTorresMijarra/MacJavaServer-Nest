@@ -14,4 +14,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
   await app.listen(process.env.API_PORT || 3000)
 }
-bootstrap()
+bootstrap().then(() =>
+    console.log(
+        `Servidro escichando en el puerto ${
+            process.env.API_PORT || 3000
+        } y con el perfil ${process.env.NODE_ENV || 'dev'}`,
+    ),
+)

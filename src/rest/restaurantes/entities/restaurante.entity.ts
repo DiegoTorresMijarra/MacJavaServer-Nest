@@ -1,39 +1,52 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity('restaurantes')
 export class Restaurante {
-    @PrimaryGeneratedColumn({type: 'bigint', name : 'id'})
-    id: number;
+  public readonly CLASS_NAME = 'Restaurante'
 
-    @Column({type: 'varchar', length: 100, name: 'nombre', nullable: false, unique: true})
-    nombre: string;
+  @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
+  id: number
 
-    @Column({type: 'varchar', length: 255, name: 'calle'})
-    calle: string;
+  @Column({
+    type: 'varchar',
+    length: 100,
+    name: 'nombre',
+    nullable: false,
+    unique: true,
+  })
+  nombre: string
 
-    @Column({type: 'varchar', length: 100, name: 'localidad'})
-    localidad: string;
+  @Column({ type: 'varchar', length: 255, name: 'calle' })
+  calle: string
 
-    @Column({type: 'int', name: 'capacidad'})
-    capacidad: number;
+  @Column({ type: 'varchar', length: 100, name: 'localidad' })
+  localidad: string
 
-    @Column({type: 'boolean', name: 'borrado', default: false})
-    borrado: boolean;
+  @Column({ type: 'int', name: 'capacidad' })
+  capacidad: number
 
-    @CreateDateColumn({
-        type: 'timestamp',
-        name: 'creado_en',
-        default: () => 'CURRENT_TIMESTAMP'
-    })
-    creadoEn: Date;
+  @Column({ type: 'boolean', name: 'borrado', default: false })
+  borrado: boolean = false
 
-    @UpdateDateColumn({
-        type: 'timestamp',
-        name: 'actualizado_en',
-        default: () => 'CURRENT_TIMESTAMP'
-    })
-    actualizadoEn: Date;
+  @CreateDateColumn({
+    type: 'timestamp',
+    name: 'creado_en',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  creadoEn: Date = new Date()
 
+  @UpdateDateColumn({
+    type: 'timestamp',
+    name: 'actualizado_en',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  actualizadoEn: Date = new Date()
 
-    //trabajadores: Trabajadores [];
+  //trabajadores: Trabajadores [];
 }

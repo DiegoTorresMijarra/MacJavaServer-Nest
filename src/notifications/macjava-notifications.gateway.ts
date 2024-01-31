@@ -12,6 +12,7 @@ import { Trabajador } from '../rest/trabajadores/entities/trabajadores.entity'
 import { Cliente } from '../rest/clientes/entities/cliente.entity'
 import { Producto } from '../rest/productos/entities/producto.entity'
 import { Proveedor } from '../rest/proveedores/entities/proveedores.entity'
+import { Restaurante } from '../rest/restaurantes/entities/restaurante.entity'
 
 const ENDPOINT: string = `/ws/${process.env.API_VERSION || 'v1'}/macjava`
 
@@ -30,7 +31,7 @@ export class MacjavaNotificationsGateway {
 
   sendMessage(
     notification: Notification<
-      Posicion | Trabajador | Cliente | Producto | Proveedor
+      Posicion | Trabajador | Cliente | Producto | Proveedor | Restaurante
     >,
   ) {
     this.server.emit(

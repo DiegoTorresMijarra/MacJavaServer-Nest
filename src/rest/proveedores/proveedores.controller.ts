@@ -3,43 +3,63 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
+  Delete, ParseIntPipe, Put, HttpCode, UseInterceptors, Logger,
 } from '@nestjs/common'
 import { ProveedoresService } from './proveedores.service'
-import { CreateProveedoreDto } from './dto/create-proveedore.dto'
-import { UpdateProveedoreDto } from './dto/update-proveedore.dto'
+import { CreateProveedoresDto } from './dto/create-proveedores.dto'
+import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
+import {CacheInterceptor, CacheKey, CacheTTL} from "@nestjs/cache-manager";
+import {Paginate, PaginateQuery} from "nestjs-paginate";
 
 @Controller('proveedores')
+@UseInterceptors(CacheInterceptor)
 export class ProveedoresController {
+  private readonly logger = new Logger(ProveedoresController.name)
+
   constructor(private readonly proveedoresService: ProveedoresService) {}
 
-  @Post()
-  create(@Body() createProveedoreDto: CreateProveedoreDto) {
-    return this.proveedoresService.create(createProveedoreDto)
-  }
-
   @Get()
-  findAll() {
-    return this.proveedoresService.findAll()
+  @CacheKey('all_proveedores')
+  @CacheTTL(30)
+  async findAll(@Paginate() query: PaginateQuery) {
+    this.logger.log(`Controlador: Obteniendo todos los funkos`)
+    return await this.proveedoresService.findAll(query)
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.proveedoresService.findOne(+id)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    this.logger.log(`Controlador: Obteniendo el proveedor con id ${id}`)
+    return await this.proveedoresService.findOne(id)
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateProveedoreDto: UpdateProveedoreDto,
+  @Post()
+  @HttpCode(201)
+  async add(@Body() createProveedoresDto: CreateProveedoresDto) {
+    this.logger.log(`Controlador: Creando proveedor`)
+    return await this.proveedoresService.add(createProveedoresDto)
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProveedoresDto: UpdateProveedoresDto,
   ) {
-    return this.proveedoresService.update(+id, updateProveedoreDto)
+    this.logger.log(`Controlador: Actualizando el proveedor con id ${id}`)
+    return await this.proveedoresService.update(id, updateProveedoresDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.proveedoresService.remove(+id)
+  @HttpCode(204)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    this.logger.log(`Controlador: Eliminando el proveedor con id ${id}`)
+    return await this.proveedoresService.remove(id)
+  }
+
+  @Delete('/soft/:id')
+  @HttpCode(204)
+  async removeSoft(@Param('id', ParseIntPipe) id: number) {
+    this.logger.log(`Controlador: Eliminando el proveedor con id ${id}`)
+    return await this.proveedoresService.removeSoft(id)
   }
 }

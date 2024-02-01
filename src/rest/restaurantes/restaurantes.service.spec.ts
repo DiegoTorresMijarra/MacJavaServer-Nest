@@ -10,12 +10,14 @@ import { hash } from 'typeorm/util/StringUtils';
 import {Paginated, PaginateQuery} from "nestjs-paginate";
 import {CreateRestauranteDto} from "./dto/create-restaurante.dto";
 import {BadRequestException, NotFoundException} from "@nestjs/common";
-
+import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
+import { Trabajador } from '../trabajadores/entities/trabajadores.entity'
 describe('RestaurantesService', () => {
   let service: RestaurantesService
   let repositorio: Repository<Restaurante>
   let mapper: RestaurantesMapper
   let cache: Cache
+let notificationGateway: MacjavaNotificationsGateway
 
   const restauranteMapperMock = {
     createDtoToEntity: jest.fn(),
@@ -30,6 +32,9 @@ describe('RestaurantesService', () => {
       keys: jest.fn(),
     },
   }
+    const notificationMock = {
+        sendMessage: jest.fn(),
+    }
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -39,6 +44,10 @@ describe('RestaurantesService', () => {
         {provide: getRepositoryToken(Restaurante), useClass: Repository,},
         {provide: RestaurantesMapper, useValue: restauranteMapperMock},
         {provide: CACHE_MANAGER, useValue: cacheManagerMock},
+          {
+              provide: MacjavaNotificationsGateway,
+              useValue: notificationMock,
+          },
       ],
     }).compile()
 
@@ -46,6 +55,9 @@ describe('RestaurantesService', () => {
     repositorio = module.get<Repository<Restaurante>>(getRepositoryToken(Restaurante))
     mapper = module.get<RestaurantesMapper>(RestaurantesMapper)
     cache = module.get<Cache>(CACHE_MANAGER)
+      notificationGateway = module.get<MacjavaNotificationsGateway>(
+          MacjavaNotificationsGateway,
+      )
   })
 
   it('should be defined', () => {
@@ -306,5 +318,7 @@ describe('RestaurantesService', () => {
              expect( service.existeRestaurantePorNombre(nombre)).resolves.toEqual(false)
       })
   });
+
+
 
 })

@@ -2,6 +2,8 @@ import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColu
 
 @Entity('restaurantes')
 export class Restaurante {
+    public static readonly CLASS_NAME = 'Restaurante';
+
     @PrimaryGeneratedColumn({type: 'bigint', name : 'id'})
     id: number;
 
@@ -18,21 +20,21 @@ export class Restaurante {
     capacidad: number;
 
     @Column({type: 'boolean', name: 'borrado', default: false})
-    borrado: boolean;
+    borrado: boolean = false;
 
     @CreateDateColumn({
         type: 'timestamp',
         name: 'creado_en',
         default: () => 'CURRENT_TIMESTAMP'
     })
-    creadoEn: Date;
+    creadoEn: Date = new Date();
 
     @UpdateDateColumn({
         type: 'timestamp',
         name: 'actualizado_en',
         default: () => 'CURRENT_TIMESTAMP'
     })
-    actualizadoEn: Date;
+    actualizadoEn: Date = new Date()
 
 
     //trabajadores: Trabajadores [];

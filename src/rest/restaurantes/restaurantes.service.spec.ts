@@ -134,6 +134,15 @@ let notificationGateway: MacjavaNotificationsGateway
       })
   });
 
+  describe('findAll', () => {
+    it('debe devolver un array de restaurantes', async () => {
+        const restaurantes = [new Restaurante(), new Restaurante()]
+        jest.spyOn(repositorio, 'find').mockResolvedValue(restaurantes)
+
+        expect(service.findAll()).resolves.toEqual(restaurantes)
+    })
+  })
+
   describe('findOne', () => {
     it('deberia devolver un restaurante', async () => {
         const id = 1
@@ -163,8 +172,10 @@ let notificationGateway: MacjavaNotificationsGateway
             }
             jest.spyOn(mapper, 'createDtoToEntity').mockReturnValue(restaurante)
             jest.spyOn(repositorio, 'save').mockResolvedValue(restaurante)
+            jest.spyOn(service, 'existeRestaurantePorNombre').mockResolvedValue(false)
+            jest.spyOn(service, 'invalidarCacheKey').mockResolvedValue(undefined)
 
-
+            expect(service.create(createDto)).resolves.toEqual(restaurante)
         })
         it('debe lanzar un error BadRequest si el nombre del restaurante ya existe', async () => {
             const restaurante = new Restaurante()
@@ -319,6 +330,19 @@ let notificationGateway: MacjavaNotificationsGateway
       })
   });
 
+  describe('findByName', () => {
+    it('debe devolver un restaurante', async () => {
+      const nombre = 'Restaurante 1'
+      const restaurante = new Restaurante()
+      jest.spyOn(service, 'existeRestaurantePorNombre').mockResolvedValue(restaurante)
 
+      expect(service.findByName(nombre)).resolves.toEqual(restaurante)
+    })
+    it('debe lanzar un error NotFound si no encuentra el restaurante', async () => {
+        const nombre = 'Restaurante 1'
+        jest.spyOn(service, 'existeRestaurantePorNombre').mockResolvedValue(undefined)
 
+        expect(service.findByName(nombre)).rejects.toThrow()
+    })
+  })
 })

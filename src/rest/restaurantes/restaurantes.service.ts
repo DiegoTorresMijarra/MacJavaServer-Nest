@@ -1,13 +1,11 @@
 import {BadRequestException, Inject, Injectable, Logger, NotFoundException} from '@nestjs/common'
 import { CreateRestauranteDto } from './dto/create-restaurante.dto'
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto'
-import {trabajadoresAnyadidosDto} from "./dto/trabajadores-anyadidos.dto";
 import {Restaurante} from "./entities/restaurante.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {RestaurantesMapper} from "./mapper/restaurantes.mapper";
 import {Cache, CACHE_MANAGER} from "@nestjs/cache-manager";
-import { Trabajador } from '../trabajadores/entities/trabajadores.entity'
 import {
     FilterOperator,
     FilterSuffix,
@@ -170,8 +168,10 @@ export class RestaurantesService {
         this.notificationGateway.sendMessage(notification)
     }
 
-    // Metodo añadir trabajadores a un restaurante uno o varios a la vez
+    /*Metodo añadir trabajadores a un restaurante uno o varios a la vez
     anyadirTrabajadores(trabajadores: trabajadoresAnyadidosDto) {}
 
     // Metodo eliminar trabajadores de un restaurante uno a uno
+
+     */
 }

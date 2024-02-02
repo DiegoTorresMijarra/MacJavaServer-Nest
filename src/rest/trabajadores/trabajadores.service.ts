@@ -164,7 +164,7 @@ export class TrabajadoresService {
       data: (res.data ?? []).map((trabajador) =>
         this.trabajadorMapper.trabajadorToResponse(trabajador),
       ),
-    }
+    } as Paginated<ResponseTrabajadorDto>
   }
 
   async create(createTrabajadorDto: CreateTrabajadorDto) {

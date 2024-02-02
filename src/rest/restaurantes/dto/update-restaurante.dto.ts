@@ -4,6 +4,18 @@ import {IsBoolean, IsNotEmpty, IsOptional, IsPositive, IsString, Length} from "c
 import {Optional} from "@nestjs/common";
 import {ApiProperty} from "@nestjs/swagger";
 
+/**
+ * DTO para la actualización de un restaurante
+ * @export
+ * @class UpdateRestauranteDto
+ *
+ * @property {string} nombre - Nombre del restaurante
+ * @property {string} calle - Calle del restaurante
+ * @property {string} localidad - Localidad del restaurante
+ * @property {number} capacidad - Capacidad del restaurante
+ * @property {boolean} borrado - Indica si el restaurante ha sido borrado
+ *
+ */
 export class UpdateRestauranteDto extends PartialType(CreateRestauranteDto) {
     @ApiProperty({
         example: 'MacJava',

@@ -23,14 +23,29 @@ import {
 } from "@nestjs/swagger";
 import {Restaurante} from "./entities/restaurante.entity";
 
-
+/**
+ * Controlador de los restaurantes
+ * @controller
+ * @path /restaurantes
+ * @security JWT
+ */
 @Controller('restaurantes')
 @UseInterceptors(CacheInterceptor)
 @ApiTags('Restaurantes')
 export class RestaurantesController {
   private readonly logger: Logger = new Logger(RestaurantesController.name);
+
+  /**
+   * Constructor del controlador
+   * @param restaurantesService
+   */
   constructor(private readonly restaurantesService: RestaurantesService) {}
 
+  /**
+   * Obtiene todos los restaurantes
+   * @response 200 - Array de restaurantes
+   * @returns Array de restaurantes
+   */
   @Get()
   @CacheKey('all_restaurantes')
   @CacheTTL(30000)
@@ -40,6 +55,12 @@ export class RestaurantesController {
     return await this.restaurantesService.findAll()
   }
 
+  /**
+   * Obtiene todos los restaurantes paginados
+   * @response 200 - Array de restaurantes
+   * @returns Array de restaurantes
+   * @param paginatedQuery
+   */
   @Get('/paginated/')
   @CacheTTL(30)
   @ApiResponse({status: 200, description: 'Obtiene todos los restaurantes paginados', type:Paginated<Restaurante>})
@@ -50,6 +71,13 @@ export class RestaurantesController {
     return await this.restaurantesService.findAllPaginated(paginatedQuery)
   }
 
+  /**
+   * Obtiene un restaurante por id
+   * @response 200 - Restaurante
+   * @response 404 - No se encuentra el restaurante
+   * @param id
+   * @returns Restaurante
+   */
   @Get(':id')
   @ApiResponse({status: 200, description: 'Obtiene un restaurante por id', type: Restaurante})
   @ApiNotFoundResponse({description: 'No se encuentra el restaurante'})
@@ -59,6 +87,13 @@ export class RestaurantesController {
     return await this.restaurantesService.findOne(id);
   }
 
+  /**
+   * Crea un restaurante a partir de un dto con los datos de este
+   * @response 201 - Restaurante
+   * @response 400 - Error en los datos del nuevo restaurante
+   * @param createRestauranteDto
+   * @returns Restaurante
+   */
   @Post()
   @HttpCode(201)
   @ApiResponse({status: 201, description: 'Crea un restaurante', type: Restaurante})
@@ -70,6 +105,15 @@ export class RestaurantesController {
     return this.restaurantesService.create(createRestauranteDto)
   }
 
+    /**
+     * Actualiza un restaurante buscado por id y lo actualiza a partir de un dto con los nuevos datos
+     * @response 200 - Restaurante
+     * @response 404 - No se encuentra el restaurante que quiere actualizar
+     * @response 400 - Error en los datos del restaurante a actualizar
+     * @param id
+     * @param updateRestauranteDto
+     * @returns Restaurante
+     */
   @Patch(':id')
   @ApiResponse({status: 200, description: 'Actualiza un restaurante', type: Restaurante})
   @ApiNotFoundResponse({description: 'No se encuentra el restaurante que quiere actualizar'})
@@ -85,6 +129,12 @@ export class RestaurantesController {
     return this.restaurantesService.update(id, updateRestauranteDto)
   }
 
+  /**
+   * Elimina un restaurante buscado por id
+   * @response 200 - Restaurante
+   * @response 404 - No se encuentra el restaurante que quiere eliminar
+   * @param id
+   */
   @Delete(':id')
   @ApiResponse({status: 200, description: 'Elimina un restaurante'})
   @ApiNotFoundResponse({description: 'No se encuentra el restaurante que quiere eliminar'})
@@ -94,6 +144,14 @@ export class RestaurantesController {
     this.logger.log(`Eliminando un restaurante (Controller)`);
     return await this.restaurantesService.removeSoft(id);
   }
+
+  /**
+   * Obtiene un restaurante a partir de un nombre
+   * @response 200 - Restaurante
+   * @response 404 - No se encuentra el restaurante
+   * @param nombre
+   * @returns Restaurante
+   */
   @Get('by-name/:nombre')
   @ApiResponse({status: 200, description: 'Obtiene un restaurante por nombre', type: Restaurante})
   @ApiNotFoundResponse({description: 'No se encuentra el restaurante'})

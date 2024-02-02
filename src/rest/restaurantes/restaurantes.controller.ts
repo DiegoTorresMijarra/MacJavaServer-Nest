@@ -12,10 +12,12 @@ import { CreateRestauranteDto } from './dto/create-restaurante.dto'
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { Paginate, PaginateQuery } from 'nestjs-paginate'
+import {ApiTags} from "@nestjs/swagger";
 
 
 @Controller('restaurantes')
 @UseInterceptors(CacheInterceptor)
+@ApiTags('Restaurantes')
 export class RestaurantesController {
   private readonly logger: Logger = new Logger(RestaurantesController.name);
   constructor(private readonly restaurantesService: RestaurantesService) {}
@@ -43,12 +45,14 @@ export class RestaurantesController {
 
   @Post()
   @HttpCode(201)
+  //@Roles('ADMIN')
   async create(@Body() createRestauranteDto: CreateRestauranteDto) {
     this.logger.log(`Creando un restaurante (Controller)`);
     return this.restaurantesService.create(createRestauranteDto)
   }
 
   @Patch(':id')
+  //@Roles('ADMIN')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRestauranteDto: UpdateRestauranteDto,
@@ -58,6 +62,7 @@ export class RestaurantesController {
   }
 
   @Delete(':id')
+  //@Roles('ADMIN')
   async remove(@Param('id', ParseIntPipe) id: number) {
     this.logger.log(`Eliminando un restaurante (Controller)`);
     return await this.restaurantesService.removeSoft(id);

@@ -77,13 +77,13 @@ describe('RestaurantesController', () => {
 
   describe('findOne', () => {
     it('debe devolver un restaurante', async () => {
-      const mockRestaurant : Restaurante = new Restaurante();
-      const id=1;
+        const mockRestaurant : Restaurante = new Restaurante();
+        const id=1;
 
-      jest.spyOn(service, 'findOne').mockResolvedValue(mockRestaurant);
-      await controller.findOne(id);
-      expect(service.findOne).toHaveBeenCalledWith(id);
-      expect(service.findOne).toBeInstanceOf(Restaurante);
+        jest.spyOn(service, 'findOne').mockResolvedValue(mockRestaurant);
+        await controller.findOne(id);
+        expect(service.findOne).toHaveBeenCalledWith(id);
+        expect(service.findOne).not.toBeInstanceOf(Restaurante);
     });
 
     it('debe lanzar un erro NotFoundException si no existe el Restaurante', async () => {

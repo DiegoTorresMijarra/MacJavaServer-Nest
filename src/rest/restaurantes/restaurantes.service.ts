@@ -1,7 +1,6 @@
 import {BadRequestException, Inject, Injectable, Logger, NotFoundException} from '@nestjs/common'
 import { CreateRestauranteDto } from './dto/create-restaurante.dto'
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto'
-import {trabajadoresAnyadidosDto} from "./dto/trabajadores-anyadidos.dto";
 import {Restaurante} from "./entities/restaurante.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
@@ -14,6 +13,11 @@ import {
     PaginateQuery,
 } from 'nestjs-paginate'
 import {hash} from "typeorm/util/StringUtils";
+import {
+    Notification,
+    NotificationTipo,
+} from '../../notifications/models/notificacion.model'
+import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
 
 @Injectable()
 export class RestaurantesService {
@@ -23,6 +27,7 @@ export class RestaurantesService {
       @InjectRepository(Restaurante)
         private readonly repositorioRestaurante : Repository<Restaurante>,
       private readonly mapper: RestaurantesMapper,
+      private readonly notificationGateway: MacjavaNotificationsGateway,
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ){}
 
@@ -73,6 +78,9 @@ export class RestaurantesService {
           await this.repositorioRestaurante.save(restaurante);
           await this.invalidarCacheKey('all_restaurantes');
           await this.cacheManager.set(`restaurante_${restaurante.id}`, restaurante, 60)
+
+          this.onChange(NotificationTipo.CREATE, restaurante)
+
           return restaurante;
       }
   }
@@ -85,6 +93,8 @@ export class RestaurantesService {
       await this.repositorioRestaurante.save(restauranteActualizado);
       await this.invalidarCacheKey('all_restaurantes');
       await this.invalidarCacheKey(`restaurante_${id}`);
+        this.onChange(NotificationTipo.UPDATE, restauranteActualizado)
+
       return restauranteActualizado;
     }else{
         throw new NotFoundException(`Restaurante con id: ${id} no encontrado`)
@@ -110,6 +120,8 @@ export class RestaurantesService {
             await this.repositorioRestaurante.save(restaurante);
             await this.invalidarCacheKey('all_restaurantes');
             await this.invalidarCacheKey(`restaurante_${id}`);
+
+            this.onChange(NotificationTipo.UPDATE, restaurante)
         } else {
           throw new NotFoundException(`Restaurante con id: ${id} no encontrado`)
         }
@@ -145,8 +157,21 @@ export class RestaurantesService {
       await Promise.all(promesas)
   }
 
-    // Metodo añadir trabajadores a un restaurante uno o varios a la vez
+    private onChange(type: NotificationTipo, data: Restaurante) {
+        const notification: Notification<Restaurante> = {
+            message: `El Restaurante con id ${data.id} ha sido ${type.toLowerCase()}`,
+            type: type,
+            data: data,
+            createdAt: new Date(),
+        }
+
+        this.notificationGateway.sendMessage(notification)
+    }
+
+    /*Metodo añadir trabajadores a un restaurante uno o varios a la vez
     anyadirTrabajadores(trabajadores: trabajadoresAnyadidosDto) {}
 
     // Metodo eliminar trabajadores de un restaurante uno a uno
+
+     */
 }

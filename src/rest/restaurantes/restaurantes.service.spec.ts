@@ -7,11 +7,10 @@ import {getRepositoryToken} from "@nestjs/typeorm";
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { hash } from 'typeorm/util/StringUtils';
-import {Paginated, PaginateQuery} from "nestjs-paginate";
+import {Paginated} from "nestjs-paginate";
 import {CreateRestauranteDto} from "./dto/create-restaurante.dto";
-import {BadRequestException, NotFoundException} from "@nestjs/common";
+import {NotFoundException} from "@nestjs/common";
 import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
-import { Trabajador } from '../trabajadores/entities/trabajadores.entity'
 describe('RestaurantesService', () => {
   let service: RestaurantesService
   let repositorio: Repository<Restaurante>
@@ -229,7 +228,6 @@ let notificationGateway: MacjavaNotificationsGateway
             expect(service.existeRestaurantePorId).toHaveBeenCalledWith(id)
         });
       it('debe lanzar un error BadRequest si se ingresan datos mal', async () => {
-          const id = 1;
           const restaurante = new Restaurante();
           const updateDto: CreateRestauranteDto = {
               nombre: 'Restaurante 1',
@@ -248,7 +246,6 @@ let notificationGateway: MacjavaNotificationsGateway
       });
         it('debe lanzar un error NotFound si no existe el restaurante', () => {
             const id = 1
-            const restaurante = new Restaurante()
             const updateDto : CreateRestauranteDto = {
                 nombre: 'Restaurante 1',
                 localidad: 'Localidad 1',
@@ -282,8 +279,6 @@ let notificationGateway: MacjavaNotificationsGateway
       });
       it('debe lanzar un error NotFound si no existe el restaurante', () => {
             const id = 1
-            const restaurante = new Restaurante()
-
             jest.spyOn(service, 'existeRestaurantePorId').mockResolvedValue(undefined)
             jest.spyOn(service, 'invalidarCacheKey').mockResolvedValue(undefined)
             expect(service.removeSoft(id)).rejects.toThrow(NotFoundException)
@@ -302,7 +297,6 @@ let notificationGateway: MacjavaNotificationsGateway
           })
       it('debe devolver false si no existe el restaurante', () => {
             const id = 1
-            const restaurante = new Restaurante()
 
             jest.spyOn(cache, 'get').mockResolvedValue(null)
             jest.spyOn(repositorio, 'findOneBy').mockResolvedValue(null)
@@ -322,7 +316,6 @@ let notificationGateway: MacjavaNotificationsGateway
       })
       it('debe devolver false si no existe el restaurante', () => {
             const nombre = 'Restaurante 1'
-            const restaurante = new Restaurante()
 
             jest.spyOn(cache, 'get').mockResolvedValue(null)
             jest.spyOn(repositorio, 'findOneBy').mockResolvedValue(null)

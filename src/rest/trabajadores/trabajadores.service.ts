@@ -28,6 +28,11 @@ import {
 import { Posicion } from '../posiciones/entities/posicion.entity'
 import { ResponseTrabajadorDto } from './dto/response-trabajador.dto'
 
+/**
+ * Servicio CRUD para la gestion de los trabajadores de nuestro negocio.  <br>
+ * Los metodos que alteran alguna posicion emiten una notificacion, cuando el cambio se produce <br>
+ * Los metodos que que recuperan datos almacenan los objetos en el gestor de la cache.
+ */
 @Injectable()
 export class TrabajadoresService {
   logger: Logger = new Logger(TrabajadoresService.name)
@@ -43,6 +48,11 @@ export class TrabajadoresService {
     private readonly posicionesService: PosicionesService,
   ) {}
 
+  /**
+   * Metodo para invalidar las cache de los trabajadores, cuando sea llamado invalidara las que hacen referencia a varios trabajadores (findAll y findAllPaginated) <br>
+   * Además se le puede pasar la key del objeto que se quiera borrar de esta.
+   * @param key (opcional) del objeto en la cache que se quiera borrar
+   */
   async invalidateCachesTrabajadores(key?: string) {
     this.logger.log('Invalidando cache de los  Trabajadores')
     if (key) {
@@ -52,6 +62,10 @@ export class TrabajadoresService {
     await this.cacheManager.del(TrabajadoresService.CACHE_KEY_FOUND_ALL)
     await this.cacheManager.del(TrabajadoresService.CACHE_KEY_PAGINATED)
   }
+  /**
+   * Metodo que recupera un objeto de la cache. Tipificamos, para evitar que puedan pasar objetos que no esten previstos o que sean instancias de otros endpoints; en ese caso, captura la excepcion (typeError) y devuelve null
+   * @param key del objeto que se quiera recuperar.
+   */
   async getByCache(key: string): Promise<Trabajador | Trabajador[]> {
     //todo le podria añadir boolean si quiero añadirle los exist
     let res: Trabajador | Trabajador[]
@@ -66,6 +80,11 @@ export class TrabajadoresService {
     }
     return res
   }
+
+  /**
+   * Metodo que devuelve una array de Trabajadores, esta implementado para usos relacionados con la administracion de la app. Para mostrar resultados, se recomienda usar:
+   * @see {TrabajadoresService.findAllPaginated}
+   */
   async findAll() {
     this.logger.log('Buscando todos los Trabajadores')
 
@@ -91,6 +110,11 @@ export class TrabajadoresService {
     return res
   }
 
+  /**
+   * Metodo que devuelve un trabajador dado su id
+   * @param id del objeto que se quiera recuperar
+   * @throws NotFoundException si el trabajador no existe
+   */
   async findById(id: string) {
     this.logger.log(`Buscando el trabajador con id ${id}`)
 
@@ -119,6 +143,7 @@ export class TrabajadoresService {
   }
 
   /**
+   * Metodo que devuelve la pagina de posiciones que cumplen el query. <br>
    * cacheo las busquedas especificas en el controlador, pero no en el servicio, en el findAll si para operaciones internas, pero la paginacion se la dejamos al cliente
    * @param paginatedQuery
    */
@@ -166,7 +191,13 @@ export class TrabajadoresService {
       ),
     } as Paginated<ResponseTrabajadorDto>
   }
-
+  /**
+   * Metodo que genera un trabajador y la inserta en el repositorio<br>
+   * tras esto borra las caches globales para evitar errores. <br>
+   * La posicion la obtiene del servicio de las posicones
+   * @param createTrabajadorDto con los datos del trabajador a crear
+   * @throws BadRequestException si el id es erroneo, si los datos son incorrectos, si el dni ya existe o si la categoria del trabajador no existe o no es valida (deleted=true)
+   */
   async create(createTrabajadorDto: CreateTrabajadorDto) {
     this.logger.log(`Creando Trabajador ${JSON.stringify(createTrabajadorDto)}`)
 
@@ -186,6 +217,14 @@ export class TrabajadoresService {
     return saved
   }
 
+  /**
+   * Metodo que actualiza un trabajador dado su id<br>
+   * tras esto borra las caches globales para evitar errores. <br>
+   * La posicion la obtiene del servicio de las posicones
+   * @param id del objeto que se quiera actualizar
+   * @throws BadRequestException si el id es erroneo, si los datos son incorrectos, si el dni ya existe o si la categoria del trabajador no existe o no es valida (deleted=true)
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   async updateById(id: string, updateTrabajadorDto: UpdateTrabajadorDto) {
     this.logger.log(`Actualizando Trabajador con id ${id}`)
     const original = await this.findById(id)
@@ -216,6 +255,12 @@ export class TrabajadoresService {
     return updated
   }
 
+  /**
+   * Metodo que borra un trabajador dado su id<br>
+   * tras esto borra las caches globales para evitar errores. <br>
+   * @param id del objeto que se quiera borrar
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   async removeById(id: string) {
     this.logger.log(`Borrando Trabajador con id ${id}`)
     const original = await this.findById(id)
@@ -227,6 +272,13 @@ export class TrabajadoresService {
       TrabajadoresService.CACHE_KEY_FOUND + id,
     )
   }
+
+  /**
+   * Metodo que hace el borrado logico (deleted=true) de un trabajador dado su id<br>
+   * tras esto borra las caches globales para evitar errores. <br>
+   * @param id del objeto que se quiera borrar
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   async softRemoveById(id: string) {
     this.logger.log(`Actualizando a deleted: true Trabajador con id ${id}`)
     const original = await this.findById(id)
@@ -254,6 +306,13 @@ export class TrabajadoresService {
     }
     return posicion
   }
+
+  /**
+   * metodo que comprueba si existe algun trabajador con el dni pasado y lanza una excepcion si existe.
+   * @throws BadRequestException si existe un trabajador con ese dni
+   * @param dni
+   * @return Promise<false>
+   */
   async checkByDni(dni: string) {
     const existByDni: boolean = await this.trabajadorRepository.existsBy({
       dni: dni,
@@ -263,6 +322,14 @@ export class TrabajadoresService {
     }
     return existByDni
   }
+
+  /**
+   * metodo para emitir una notificacion de un trabajador ha sido creada o alterada, enviando el tipo del cambio en el objeto y los datos de este. <br>
+   * Lo manda al gateway generañ de la app
+   * @param type tipo del cambio
+   * @param data objeto cambiado
+   * @private el metodo es privado, ya que en principio solo se llama desde el servicio asociaco al objeto en cuestion
+   */
   private onChange(type: NotificationTipo, data: Trabajador) {
     const notification: Notification<Trabajador> = {
       message: `El Trabajador con id ${data.id} ha sido ${type.toLowerCase()}`,

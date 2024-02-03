@@ -29,12 +29,22 @@ import { Trabajador } from './entities/trabajadores.entity'
 import { ResponseTrabajadorDto } from './dto/response-trabajador.dto'
 import { UUID } from 'typeorm/driver/mongodb/bson.typings'
 
+/**
+ * Controlador para la gestion de las peticiones relacionadas con los trabajadores.
+ */
+//@UseGuards(JwtAuthGuard, RolesAuthGuard)
 @ApiTags('Trabajadores')
 @Controller('trabajadores')
 export class TrabajadoresController {
   logger: Logger = new Logger(TrabajadoresController.name)
   constructor(private readonly trabajadoresService: TrabajadoresService) {}
 
+  /**
+   * **Obtiene todas las trabajadoras.**
+   * Se realiza cacheo de la consulta y se buscara en la cache cuando sea llamado
+   * @see {TrabajadoresService.findAll}
+   * @returns Promise<Posicion[]> - Array de objetos Posicion.
+   */
   @Get('')
   @ApiResponse({
     status: 200,
@@ -48,7 +58,12 @@ export class TrabajadoresController {
     this.logger.log('Buscando todos los trabajadores')
     return await this.trabajadoresService.findAll()
   }
-
+  /**
+   * **Obtiene todas los trabajadores paginados.**
+   * Se realiza cacheo de la consulta y se buscara en la cache cuando sea llamado
+   * @see TrabajadoresService.findAllPaginated
+   * @returns Promise<Paginated<Posicion>> - Objeto paginado de objetos Posicion.
+   */
   @Get('/paginated/')
   @ApiResponse({
     status: 200,
@@ -93,6 +108,14 @@ export class TrabajadoresController {
     return await this.trabajadoresService.findAllPaginated(paginatedQuery)
   }
 
+  /**
+   * **Obtiene un trabajador por su id.**
+   * Se realiza cacheo de la consulta y se buscara en la cache cuando sea llamado
+   * @see {TrabajadoresService.findById}
+   * @param {string} id - Id del trabajador.
+   * @throws BadRequestException si el id son incorrectos
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -115,6 +138,14 @@ export class TrabajadoresController {
     this.logger.log(`Buscando el trabajador con id ${id}`)
     return await this.trabajadoresService.findById(id)
   }
+
+  /**
+   * **Crea un nuevo trabajador.**
+   * @see {TrabajadoresService.create}
+   * @param {CreateTrabajadorDto} createTrabajadorDto - Objeto con los datos del trabajador.
+   * @throws BadRequestException si el id es incorrectos
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   @Post()
   @ApiResponse({
     status: 201,
@@ -136,6 +167,13 @@ export class TrabajadoresController {
     return await this.trabajadoresService.create(createTrabajadorDto)
   }
 
+  /**
+   * **Actualiza un trabajador.**
+   * @see {TrabajadoresService.updateById}
+   * @param {string} id - Id del trabajador.
+   * @throws BadRequestException si el id o el dto son incorrectos
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   @Put(':id')
   @ApiResponse({
     status: 200,
@@ -170,6 +208,13 @@ export class TrabajadoresController {
     return await this.trabajadoresService.updateById(id, updateTrabajadorDto)
   }
 
+  /**
+   * **Elimina un trabajador.**
+   * @see {TrabajadoresService.removeById}
+   * @param {string} id - Id del trabajador.
+   * @throws BadRequestException si el id son incorrectos
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   @Delete(':id')
   @ApiResponse({
     status: 204,
@@ -189,6 +234,14 @@ export class TrabajadoresController {
     this.logger.log(`Borrando trabajador con id ${id}`)
     return await this.trabajadoresService.removeById(id)
   }
+
+  /**
+   * **Borrado logico de un trabajador.**
+   * @see {TrabajadoresService.softRemoveById}
+   * @param {string} id - Id del trabajador.
+   * @throws BadRequestException si el id son incorrectos
+   * @throws NotFoundException si el trabajador con ese id no existe
+   */
   @Patch('/softRemove/:id')
   @ApiResponse({
     status: 200,

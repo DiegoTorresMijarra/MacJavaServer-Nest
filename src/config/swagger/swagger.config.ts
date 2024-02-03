@@ -14,11 +14,13 @@ export function setupSwagger(app: INestApplication) {
       'https://github.com/DiegoTorresMijarra/MacJavaServer-Nest.git',
       'Jaime9lozano@gmail.com',
     )
-    .setLicense('CC BY-NC-SA 4.0', 'https://joseluisgs.dev/docs/license/')
+    .setLicense('CC BY-NC-SA 4.0', 'https://creativecommons.org/')
     .setVersion('1.0.0')
-    .addTag('Clientes', 'Operaciones con funkos')
+    .addTag('Clientes', 'Operaciones con los clientes')
     .addTag('Storage', 'Operaciones con almacenamiento')
     .addTag('Auth', 'Operaciones de autenticación')
+    .addTag('Posiciones', 'Operaciones con las posiciones')
+    .addTag('Trabajadores', 'Operaciones con los trabajadores')
     .addBearerAuth()
     .build()
 

@@ -25,13 +25,18 @@ import {
 } from '../../notifications/models/notificacion.model'
 import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
 
+/**
+ * Servicio CRUD para la gestion de las posiciones de nuestro negocio.  <br>
+ * Los metodos que alteran alguna posicion emiten una notificacion, cuando el cambio se produce <br>
+ * Los metodos que que recuperan datos almacenan los objetos en el gestor de la cache.
+ */
 @Injectable()
 export class PosicionesService {
   logger: Logger = new Logger(PosicionesService.name)
   static readonly CACHE_KEY_FOUND_ALL: string = 'all_posiciones'
   static readonly CACHE_KEY_FOUND: string = 'posicion_'
   static readonly PAGED_DEFAULT_QUERY: PaginateQuery = {
-    path: 'https://localhost:3000/posiciones/paginated',
+    path: 'http://localhost:3000/posiciones/paginated',
   }
   static readonly CACHE_KEY_PAGINATED_DEFAULT: string =
     'posiciones_paged_default'
@@ -43,6 +48,11 @@ export class PosicionesService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
+  /**
+   * Metodo para invalidar las cache de las posiciones, cuando sea llamado invalidara las que hacen referencia a varias posiciones (findAll y findAllPaginated) <br>
+   * Además se le puede pasar la key del objeto que se quiera borrar de esta.
+   * @param key (opcional) del objeto en la cache que se quiera borrar
+   */
   async invalidateCachesPosiciones(key?: string) {
     this.logger.log('Invalidando cache de las posiciones')
     if (key) {
@@ -52,6 +62,11 @@ export class PosicionesService {
     await this.cacheManager.del(PosicionesService.CACHE_KEY_FOUND_ALL)
     await this.cacheManager.del(PosicionesService.CACHE_KEY_PAGINATED_DEFAULT)
   }
+
+  /**
+   * Metodo que recupera un objeto de la cache. Tipificamos, para evitar que puedan pasar objetos que no esten previstos o que sean instancias de otros endpoints; en ese caso, captura la excepcion (typeError) y devuelve null
+   * @param key del objeto que se quiera recuperar.
+   */
   async getByCache(
     key: string,
   ): Promise<Posicion | Posicion[] | Paginated<Posicion>> {
@@ -68,6 +83,11 @@ export class PosicionesService {
     }
     return res
   }
+
+  /**
+   * Metodo que devuelve una array de posiciones, esta implementado para usos relacionados con la administracion de la app. Para mostrar resultados, se recomienda usar:
+   * @see {PosicionesService.findAllPaginated}
+   */
   async findAll() {
     this.logger.log('Buscando todos las posiciones')
 
@@ -89,6 +109,11 @@ export class PosicionesService {
     return res
   }
 
+  /**
+   * Metodo que devuelve la pagina de posiciones que cumplen el query. <br>
+   * Si el query pasado es el por defecto (sin ningun parametro) se buscara en la cache y si no se encuentra se seteara tras realizar la consulta.
+   * @param paginatedQuery query de la paginacion
+   */
   async findAllPaginated(paginatedQuery: PaginateQuery) {
     this.logger.log('Buscando todas las posiciones paginadas')
 
@@ -148,6 +173,11 @@ export class PosicionesService {
     return res
   }
 
+  /**
+   * Metodo que devuelve una posicion dado su id
+   * @param id del objeto que se quiera recuperar
+   * @throws NotFoundException si la posicion no existe
+   */
   async findById(id: string) {
     this.logger.log(`Buscando la Posicion con id ${id}`)
     const cache: Posicion = <Posicion>(
@@ -180,6 +210,13 @@ export class PosicionesService {
 
     return posicionRes
   }
+
+  /**
+   * Metodo que genera una posicion y la inserta en el repositorio<br>
+   * tras esto borra las caches globales para evitar errores
+   * @param createPosicionDto con los datos de la posicion a crear
+   * @throws BadRequestException si el nombre de la posicion existe en el repo (es unique)
+   */
   async create(createPosicionDto: CreatePosicionDto) {
     this.logger.log(`Creando posicion con nombre: ${createPosicionDto.nombre}`)
 
@@ -200,20 +237,29 @@ export class PosicionesService {
 
     return res
   }
-  async updateById(id: string, updatePosicioneDto: UpdatePosicionDto) {
+
+  /**
+   * Metodo que actualiza una posicion dado su id <br>
+   * tras esto borra las caches que guardaran relacion con esta posicion
+   * @param id del objeto que se quiera actualizar
+   * @param updatePosicionDto con los datos de la posicion a actualizar
+   * @throws NotFoundException si la posicion no existe
+   * @throws BadRequestException si el nombre del posicion ya existe en el repo
+   */
+  async updateById(id: string, updatePosicionDto: UpdatePosicionDto) {
     this.logger.log(`Actualizando la posicion con id ${id}`)
     const original = await this.findById(id)
 
-    const existSameName = await this.existByName(updatePosicioneDto.nombre)
+    const existSameName = await this.existByName(updatePosicionDto.nombre)
 
     if (existSameName) {
       throw new BadRequestException(
-        `La Posicion con nombre ${updatePosicioneDto.nombre} ya existe`,
+        `La Posicion con nombre ${updatePosicionDto.nombre} ya existe`,
       )
     }
 
     const updated = await this.posicionRepository.save(
-      this.posicionMapper.updateToPosicion(original, updatePosicioneDto),
+      this.posicionMapper.updateToPosicion(original, updatePosicionDto),
     )
 
     this.onChange(NotificationTipo.UPDATE, updated)
@@ -224,6 +270,12 @@ export class PosicionesService {
     return updated
   }
 
+  /**
+   * Metodo que actualiza el deleted de la posicion dada a true <br>
+   * tras esto borra las caches que guardaran relacion con esta posicion
+   * @param id del objeto que se quiera eliminar (borrado logico)
+   * @throws NotFoundException si la posicion no existe
+   */
   async softRemoveById(id: string) {
     this.logger.log(`Actualizando a deleted: true la posicion con id: ${id}`)
 
@@ -240,6 +292,12 @@ export class PosicionesService {
     return res
   }
 
+  /**
+   * Metodo que elimina una posicion dado su id
+   * @param id del objeto que se quiera eliminar
+   * @throws NotFoundException si la posicion no existe
+   * @throws BadRequestException si la posicion contiene trabajadores, evitamos error en la bbdd
+   */
   async removeById(id: string) {
     this.logger.log(`Eliminando posicion con id: ${id}`)
 
@@ -259,11 +317,17 @@ export class PosicionesService {
       PosicionesService.CACHE_KEY_FOUND + id,
     )
   }
+  /**
+   * Metodo que devuelve una posicion dado su nombre <br>
+   * es usado con el objetivo de obtener una posicon valida: **con  deleted=false** <br>
+   * no lanza excepciones si la posicion no existe o no es valida devuelve null; notifica por el canal de errores de la app si ha ocurrido algo de lo anterior
+   * @param name de la posicion que se quiera recuperar
+   */
   async findByName(name: string) {
     this.logger.log(`Buscando la posicion con nombre ${name}`)
 
     if (!name) {
-      this.logger.error(`La posicion a validar no tiene nombre`)
+      this.logger.error(`La posicion a validar no tiene nombre`) //salgo rapido si se pasara  undefined como param
       return null
     }
 
@@ -278,7 +342,7 @@ export class PosicionesService {
     }
     if (posicionRes.deleted === true) {
       this.logger.error(`Posicion con nombre: ${name} tiene delete=true`)
-      //podria simplificarlo, pero asi queda mas claro
+      //podria simplificarlo, pero asi queda mas claro asi
       return null
     }
 
@@ -291,6 +355,12 @@ export class PosicionesService {
 
     return posicionRes
   }
+  /**
+   * Metodo que devuelve una posicion dado su nombre <br>
+   * Se usa para comprobar que el nombre pasado no pertenece a ninguna posicion del repositorio <br>
+   * podria devolver un boolean pero se implementa de esta forma, por si en el futuro se pretende obtener o comprobar mas valores de la posicion obtenida
+   * @param name nombre de la posicion a comprobar
+   */
   async existByName(name: string) {
     this.logger.log(`Buscando la Posicion con nombre ${name}`)
     if (!name) {
@@ -301,6 +371,13 @@ export class PosicionesService {
     })
   }
 
+  /**
+   * metodo para emitir una notificacion de que la posicon ha sido creada o alterada, enviando el tipo del cambio en el objeto y los datos de este. <br>
+   * Lo manda al gateway generañ de la app
+   * @param type tipo del cambio
+   * @param data objeto cambiado
+   * @private el metodo es privado, ya que en principio solo se llama desde el servicio asociaco al objeto en cuestion
+   */
   private onChange(type: NotificationTipo, data: Posicion) {
     const notification: Notification<Posicion> = {
       message: `La Posicion con id ${data.id} ha sido ${type.toLowerCase()}d`,

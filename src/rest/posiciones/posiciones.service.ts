@@ -25,6 +25,11 @@ import {
 } from '../../notifications/models/notificacion.model'
 import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
 
+/**
+ * Servicio CRUD para la gestion de las posiciones de nuestro negocio.  <br>
+ * Los metodos que alteran alguna posicion emiten una notificacion, cuando el cambio se produce <br>
+ * Los metodos que que recuperan datos almacenan los objetos en el gestor de la cache.
+ */
 @Injectable()
 export class PosicionesService {
   logger: Logger = new Logger(PosicionesService.name)
@@ -105,7 +110,8 @@ export class PosicionesService {
   }
 
   /**
-   * Metodo que devuelve la pagina de posiciones que cumplen el query.
+   * Metodo que devuelve la pagina de posiciones que cumplen el query. <br>
+   * Si el query pasado es el por defecto (sin ningun parametro) se buscara en la cache y si no se encuentra se seteara tras realizar la consulta.
    * @param paginatedQuery query de la paginacion
    */
   async findAllPaginated(paginatedQuery: PaginateQuery) {
@@ -321,7 +327,7 @@ export class PosicionesService {
     this.logger.log(`Buscando la posicion con nombre ${name}`)
 
     if (!name) {
-      this.logger.error(`La posicion a validar no tiene nombre`)
+      this.logger.error(`La posicion a validar no tiene nombre`) //salgo rapido si se pasara  undefined como param
       return null
     }
 
@@ -336,7 +342,7 @@ export class PosicionesService {
     }
     if (posicionRes.deleted === true) {
       this.logger.error(`Posicion con nombre: ${name} tiene delete=true`)
-      //podria simplificarlo, pero asi queda mas claro
+      //podria simplificarlo, pero asi queda mas claro asi
       return null
     }
 

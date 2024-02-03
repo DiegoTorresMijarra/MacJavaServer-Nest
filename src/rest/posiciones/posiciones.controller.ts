@@ -29,6 +29,9 @@ import {
 import { Posicion } from './entities/posicion.entity'
 import { UUID } from 'typeorm/driver/mongodb/bson.typings'
 
+/**
+ * Controlador para la gestion de las peticiones relacionadas con las posiciones.
+ */
 //@UseGuards(JwtAuthGuard, RolesAuthGuard)
 @ApiTags('Posiciones')
 @Controller('posiciones')
@@ -36,6 +39,12 @@ export class PosicionesController {
   logger: Logger = new Logger(PosicionesController.name)
   constructor(private readonly posicionesService: PosicionesService) {}
 
+  /**
+   * **Obtiene todas las posiciones.**
+   * Se realiza cacheo de la consulta y se buscara en la cache cuando sea llamado
+   * @see PosicionesService.findAll
+   * @returns Promise<Posicion[]> - Array de objetos Posicion.
+   */
   @Get('')
   @ApiResponse({
     status: 200,
@@ -50,6 +59,12 @@ export class PosicionesController {
     return await this.posicionesService.findAll()
   }
 
+  /**
+   * **Obtiene todas las posiciones paginadas.**
+   * Se realiza cacheo de la consulta y se buscara en la cache cuando sea llamado
+   * @see PosicionesService.findAllPaginated
+   * @returns Promise<Paginated<Posicion>> - Objeto paginado de objetos Posicion.
+   */
   @Get('/paginated/')
   @ApiResponse({
     status: 200,
@@ -92,6 +107,14 @@ export class PosicionesController {
     return await this.posicionesService.findAllPaginated(paginatedQuery)
   }
 
+  /**
+   * **Obtiene una posicion por su id.**
+   * Se realiza cacheo de la consulta y se buscara en la cache cuando sea llamado
+   * @see PosicionesService.findById
+   * @returns Promise<Posicion> - Objeto Posicion.
+   * @throws NotFoundException cuando no se encuentre ninguna poscion con ese id
+   * @throws BadRequestException cuando el id pasado sea incorrecto
+   */
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -114,6 +137,14 @@ export class PosicionesController {
     this.logger.log(`Buscando la posicion con id ${id}`)
     return await this.posicionesService.findById(id)
   }
+
+  /**
+   * **Crea una posicion.**
+   * Se realiza cacheo de la consulta en el servicio y se buscara en la cache cuando sea llamado
+   * @see PosicionesService.create
+   * @returns Promise<Posicion> - Objeto Posicion.
+   * @throws BadRequestException si el dto pasado no es correcto
+   */
   @Post()
   @HttpCode(201)
   @ApiResponse({
@@ -137,6 +168,13 @@ export class PosicionesController {
     return await this.posicionesService.create(createPosicioneDto)
   }
 
+  /**
+   * **Actualiza una posicion.**
+   * @see PosicionesService.updateById
+   * @returns Promise<Posicion> - Objeto Posicion.
+   * @throws BadRequestException si el id o el dto son incorrectos
+   * @throws NotFoundException si la pos con ese id no existe
+   */
   @Put(':id')
   @ApiResponse({
     status: 200,
@@ -170,6 +208,12 @@ export class PosicionesController {
     return await this.posicionesService.updateById(id, updatePosicioneDto)
   }
 
+  /**
+   * **Elimina una posicion.**
+   * @see PosicionesService.softRemoveById
+   * @throws BadRequestException si el id es incorrectos
+   * @throws NotFoundException si la posicion con ese id no existe
+   */
   @Delete(':id')
   @ApiResponse({
     status: 204,
@@ -193,6 +237,14 @@ export class PosicionesController {
     return await this.posicionesService.removeById(id)
   }
 
+  /**
+   * **Borrado logico de una posicion.**
+   * Parchea el valor del atributo deleted de la posicion a true
+   * @see PosicionesService.softRemoveById
+   * @returns Promise<Posicion> - Objeto Posicion.
+   * @throws BadRequestException si el id es incorrectos
+   * @throws NotFoundException si la posicion con ese id no existe
+   */
   @Patch('/softRemove/:id')
   @ApiResponse({
     status: 200,

@@ -13,7 +13,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateTrabajadorDto {
   @ApiProperty({
-    example: '64857416T',
+    example: '53718369Y',
     description: 'Dni del trabajador',
   })
   @IsNotEmpty({ message: 'El DNI no debe estar vacio' })

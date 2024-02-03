@@ -5,7 +5,7 @@ import { PosicionesValidas } from '../../posiciones/entities/posicion.entity'
 
 export class UpdateTrabajadorDto extends PartialType(CreateTrabajadorDto) {
   @ApiProperty({
-    example: '64857416T',
+    example: '53718369Y',
     description: 'Dni del trabajador',
   })
   dni?: string

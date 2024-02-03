@@ -126,7 +126,8 @@ export class TrabajadoresController {
     type: CreateTrabajadorDto,
   })
   @ApiBadRequestResponse({
-    description: 'Los datos del trabajador no son válidos',
+    description:
+      'Los datos del trabajador no son válidos o el dni pasado ya existe',
   })
   @HttpCode(201)
   //@Roles('ADMIN')
@@ -155,6 +156,10 @@ export class TrabajadoresController {
   })
   @ApiBadRequestResponse({
     description: 'El id del Trabajador no es válido',
+  })
+  @ApiBadRequestResponse({
+    description:
+      'Los datos del trabajador no son válidos o el dni pasado ya existe',
   })
   //@Roles('ADMIN')
   async updateById(

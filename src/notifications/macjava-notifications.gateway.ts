@@ -16,6 +16,9 @@ import { Restaurante } from '../rest/restaurantes/entities/restaurante.entity'
 
 const ENDPOINT: string = `/ws/${process.env.API_VERSION || 'v1'}/macjava`
 
+/**
+ * websocket general de nuestra aplicacion, por el pasaran todos los cambios relevantes que se produzcan en nuestra app, se podria implementar estrategias particulares para cada uno de los eventos producidos si fuera necesario.
+ */
 @WebSocketGateway({
   namespace: ENDPOINT,
 })
@@ -29,6 +32,11 @@ export class MacjavaNotificationsGateway {
     this.logger.log(`MacjavaNotificationsGateway is listening on ${ENDPOINT}`)
   }
 
+  /**
+   * metodo principal del gateway, se encarga de generar los eventos producidos para cada uno de los tipos pasados. <br>
+   * Es necesario que los metodos que se pasen tengan el valor CLASS_NAME. Este se concatenara con el tipo de la notificacion para generar el mensage de subscription
+   * @param notification
+   */
   sendMessage(
     notification: Notification<
       Posicion | Trabajador | Cliente | Producto | Proveedor | Restaurante
@@ -53,6 +61,30 @@ export class MacjavaNotificationsGateway {
 
     this.sendMessage(notification)
   }
+
+  /**
+   * Este método se ejecutará cuando un cliente se conecte al WebSocket
+   * @param client
+   * @private
+   */
+  private handleConnection(client: Socket) {
+    this.logger.debug('Cliente conectado:', client.id)
+    this.server.emit(
+      'connection',
+      ' Notificaciones del WS General de la app: MacJava API NestJS',
+    )
+  }
+
+  /**
+   * Este método se ejecutará cuando un cliente se desconecte del WebSocket   * @param client
+   * @private
+   */
+  private handleDisconnect(client: Socket) {
+    console.log('Cliente desconectado:', client.id)
+    this.logger.debug('Cliente desconectado:', client.id)
+  }
+
+  // distintas subscripciones, hacen lo mismo, pero se prevee el uso de distintas estrategias en el futuro
   @SubscribeMessage('CREATED_POSICION')
   handleCreatePosicion(client: Socket, data: any) {
     const notification: Notification<Posicion> = {
@@ -241,19 +273,5 @@ export class MacjavaNotificationsGateway {
     }
 
     this.sendMessage(notification)
-  }
-  private handleConnection(client: Socket) {
-    // Este método se ejecutará cuando un cliente se conecte al WebSocket
-    this.logger.debug('Cliente conectado:', client.id)
-    this.server.emit(
-      'connection',
-      ' Notifications WS: Posiciones, Trabajadores - MacJava API NestJS',
-    )
-  }
-
-  private handleDisconnect(client: Socket) {
-    // Este método se ejecutará cuando un cliente se desconecte del WebSocket
-    console.log('Cliente desconectado:', client.id)
-    this.logger.debug('Cliente desconectado:', client.id)
   }
 }

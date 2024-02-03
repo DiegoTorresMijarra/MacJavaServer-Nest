@@ -10,6 +10,7 @@ import { ClientesModule } from './rest/clientes/clientes.module'
 import { CorsConfigModule } from './config/cors/cors.module'
 import { ProveedoresModule } from './rest/proveedores/proveedores.module'
 import { ProductosModule } from './rest/productos/productos.module'
+import { LocaleConfigModule } from './config/locale-config/locale-config.module'
 
 @Module({
   imports: [
@@ -18,6 +19,8 @@ import { ProductosModule } from './rest/productos/productos.module'
       envFilePath: '.env', //jugar con los config y los perfiles
       ignoreEnvFile: false,
     }),
+    //locale config
+    LocaleConfigModule,
     //entities
     TrabajadoresModule,
     PosicionesModule,

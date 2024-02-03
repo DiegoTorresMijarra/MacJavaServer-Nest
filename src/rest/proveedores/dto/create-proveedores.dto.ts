@@ -1,6 +1,7 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsMobilePhone,
   IsNotEmpty,
   IsString,
   Length,
@@ -8,6 +9,7 @@ import {
   NotContains,
 } from 'class-validator'
 import { Producto } from '../../productos/entities/producto.entity'
+import { LocaleConfigModule } from '../../../config/locale-config/locale-config.module'
 
 export class CreateProveedoresDto {
   @IsNotEmpty({ message: 'El nombre del proveedor no puede estar vacio' })
@@ -25,8 +27,10 @@ export class CreateProveedoresDto {
   })
   tipo: string
   @IsNotEmpty({ message: 'El telefono del proveedor no puede estar vacio' })
-  @Matches(/^[679]\d{8}$/, {
-    message: 'El teléfono debe empezar por 6, 7 o 9 y tener 9 dígitos en total',
-  })
+  @IsMobilePhone(
+    LocaleConfigModule.LOCALE_MOBILE,
+    {},
+    { message: 'El telefono debe ser un telefono movil valido' },
+  )
   tlf: string
 }

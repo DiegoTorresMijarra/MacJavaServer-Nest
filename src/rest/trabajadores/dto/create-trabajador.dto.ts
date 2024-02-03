@@ -9,10 +9,11 @@ import {
   Min,
 } from 'class-validator'
 import { PosicionesValidas } from '../../posiciones/entities/posicion.entity'
+import { LocaleConfigModule } from '../../../config/locale-config/locale-config.module'
 
 export class CreateTrabajadorDto {
   @IsNotEmpty({ message: 'El DNI no debe estar vacio' })
-  @IsIdentityCard('ES', {
+  @IsIdentityCard(LocaleConfigModule.LOCALE_ID_CARD, {
     message: 'El DNI debe ser un DNI valido',
   })
   dni: string
@@ -34,9 +35,9 @@ export class CreateTrabajadorDto {
 
   @IsNotEmpty({ message: 'El telefono no debe estar vacio' })
   @IsMobilePhone(
-    'es-ES',
+    LocaleConfigModule.LOCALE_MOBILE,
     {},
-    { message: 'El telefono debe ser un telefono valido' },
+    { message: 'El telefono debe ser un telefono movil valido' },
   )
   telefono: string
 

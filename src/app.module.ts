@@ -11,6 +11,8 @@ import { CorsConfigModule } from './config/cors/cors.module'
 import { ProveedoresModule } from './rest/proveedores/proveedores.module'
 import { ProductosModule } from './rest/productos/productos.module'
 import { LocaleConfigModule } from './config/locale-config/locale-config.module'
+import { AuthModule } from './rest/auth/auth.module'
+import { UsersModule } from './rest/usuarios/users.module'
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { LocaleConfigModule } from './config/locale-config/locale-config.module'
     //locale config
     LocaleConfigModule,
     //entities
+    AuthModule,
+    UsersModule,
     TrabajadoresModule,
     PosicionesModule,
     ClientesModule,

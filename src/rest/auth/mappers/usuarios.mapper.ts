@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { UserSignUpDto } from '../dto/user-sign.up.dto'
+import { CreateUserDto } from '../../usuarios/dto/create-user.dto'
+import { Role } from '../../usuarios/entities/user-role.entity'
 
 @Injectable()
 export class AuthMapper {

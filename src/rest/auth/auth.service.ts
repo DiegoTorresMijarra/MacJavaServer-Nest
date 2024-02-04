@@ -8,6 +8,7 @@ import { UserSignUpDto } from './dto/user-sign.up.dto'
 import { UserSignInDto } from './dto/user-sign.in.dto'
 import { AuthMapper } from './mappers/usuarios.mapper'
 import { JwtService } from '@nestjs/jwt'
+import { UsersService } from '../usuarios/users.service'
 
 @Injectable()
 export class AuthService {

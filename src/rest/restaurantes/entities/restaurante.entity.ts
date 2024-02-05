@@ -17,7 +17,7 @@ import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColu
  */
 @Entity('restaurantes')
 export class Restaurante {
-    public static readonly CLASS_NAME = 'Restaurante';
+    public readonly CLASS_NAME = 'Restaurante';
 
     @PrimaryGeneratedColumn({type: 'bigint', name : 'id'})
     id: number;

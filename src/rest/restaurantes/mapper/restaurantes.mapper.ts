@@ -17,6 +17,7 @@ export class RestaurantesMapper{
      */
     createDtoToEntity(dto: CreateRestauranteDto): Restaurante{
         const restaurante: Restaurante = {
+            CLASS_NAME: 'Restaurante',
             id: null,
             borrado: false,
             ...dto,

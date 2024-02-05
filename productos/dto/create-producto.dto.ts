@@ -52,4 +52,13 @@ export class CreateProductoDto {
   @IsOptional()
   @IsString()
   imagen?: string;
+
+  @ApiProperty({
+    example: 'bimbo',
+    description: 'El id del proveedor',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  proveedor?: string;
 }

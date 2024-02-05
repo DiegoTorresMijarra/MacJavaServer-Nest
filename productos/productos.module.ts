@@ -5,6 +5,7 @@ import { ProductosController } from './productos.controller';
 import { ProductoEntity } from './entities/producto.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { diskStorage } from 'multer';
     }),
   ],
   controllers: [ProductosController],
-  providers: [ProductoService],
+  providers: [ProductoService, DataSource],
 })
 export class ProductosModule {}

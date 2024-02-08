@@ -4,10 +4,12 @@ import { ValidationPipe } from '@nestjs/common'
 import * as process from 'process'
 import { setupSwagger } from './config/swagger/swagger.config'
 import * as dotenv from 'dotenv'
+import { getSSLOptions } from './config/ssl/ssl.config'
 
 dotenv.config()
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const httpsOptions = getSSLOptions()
+  const app = await NestFactory.create(AppModule, { httpsOptions })
   if (process.env.NODE_ENV === 'dev') {
     setupSwagger(app)
   }

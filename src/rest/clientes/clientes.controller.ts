@@ -39,17 +39,22 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { ResponseCliente } from './dto/response-cliente.dto'
+import { Roles, RolesAuthGuard } from '../auth/guards/roles-auth.guard'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 
 @Controller('clientes')
 @UseInterceptors(CacheInterceptor)
 @ApiTags('Clientes')
+@UseGuards(JwtAuthGuard, RolesAuthGuard)
 export class ClientesController {
   logger: Logger = new Logger(ClientesController.name)
   constructor(private readonly clientesService: ClientesService) {}
 
   @Get()
   @CacheKey('all_clientes')
-  @CacheTTL(30)
+  @CacheTTL(60000)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiResponse({
     status: 200,
     description:
@@ -108,6 +113,8 @@ export class ClientesController {
     description: 'El id del cliente no es válido',
   })
   @Get(':id')
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Buscando cliente con id ${id}`)
     return this.clientesService.findOne(id)
@@ -115,6 +122,7 @@ export class ClientesController {
 
   @Post()
   @HttpCode(201)
+  @Roles('ADMIN')
   @ApiBearerAuth() // Indicar que se requiere autenticación con JWT en Swagger
   @ApiResponse({
     status: 201,
@@ -135,7 +143,8 @@ export class ClientesController {
   }
 
   @Put(':id')
-  @ApiBearerAuth() // Indicar que se requiere autenticación con JWT en Swagger
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: 'Cliente actualizado',
@@ -167,7 +176,8 @@ export class ClientesController {
 
   @Delete(':id')
   @HttpCode(204)
-  @ApiBearerAuth() // Indicar que se requiere autenticación con JWT en Swagger
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   @ApiResponse({
     status: 204,
     description: 'Cliente eliminado',
@@ -189,7 +199,8 @@ export class ClientesController {
   }
   @Patch('/imagen/:id')
   @UseGuards(clienteExistGuard)
-  @ApiBearerAuth() // Indicar que se requiere autenticación con JWT en Swagger
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: 'Imagen actualizada',

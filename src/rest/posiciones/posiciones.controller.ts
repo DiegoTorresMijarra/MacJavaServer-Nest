@@ -19,6 +19,7 @@ import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate'
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiNotFoundResponse,
   ApiParam,
@@ -28,6 +29,8 @@ import {
 } from '@nestjs/swagger'
 import { Posicion } from './entities/posicion.entity'
 import { UUID } from 'typeorm/driver/mongodb/bson.typings'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { Roles, RolesAuthGuard } from '../auth/guards/roles-auth.guard'
 
 /**
  * Controlador para la gestion de las peticiones relacionadas con las posiciones.
@@ -35,6 +38,7 @@ import { UUID } from 'typeorm/driver/mongodb/bson.typings'
 //@UseGuards(JwtAuthGuard, RolesAuthGuard)
 @ApiTags('Posiciones')
 @Controller('posiciones')
+@UseGuards(JwtAuthGuard, RolesAuthGuard)
 export class PosicionesController {
   logger: Logger = new Logger(PosicionesController.name)
   constructor(private readonly posicionesService: PosicionesService) {}
@@ -53,7 +57,8 @@ export class PosicionesController {
   })
   @CacheKey(PosicionesService.CACHE_KEY_FOUND_ALL)
   @CacheTTL(30000) // validez de la cache 30000 milisegundos es en seg en la v4 de cache-manager
-  //@Roles('USER')
+  @ApiBearerAuth()
+  @Roles('USER')
   async findAll() {
     this.logger.log('Buscando todas las posiciones')
     return await this.posicionesService.findAll()
@@ -101,7 +106,8 @@ export class PosicionesController {
     required: false,
     type: String,
   })
-  //@Roles('USER')
+  @ApiBearerAuth()
+  @Roles('USER')
   async findAllPaginated(@Paginate() paginatedQuery: PaginateQuery) {
     this.logger.log('Buscando todas las posiciones paginadas')
     return await this.posicionesService.findAllPaginated(paginatedQuery)
@@ -147,6 +153,8 @@ export class PosicionesController {
    */
   @Post()
   @HttpCode(201)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiResponse({
     status: 201,
     description: 'Crea una posicion',
@@ -176,6 +184,8 @@ export class PosicionesController {
    * @throws NotFoundException si la pos con ese id no existe
    */
   @Put(':id')
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiResponse({
     status: 200,
     description: 'Actualiza una posicion',
@@ -199,7 +209,8 @@ export class PosicionesController {
   @ApiBadRequestResponse({
     description: 'El nuevo contenido de la posicion no es valido',
   })
-  //@Roles('ADMIN')
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   async updateById(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePosicioneDto: UpdatePosicionDto,
@@ -215,6 +226,8 @@ export class PosicionesController {
    * @throws NotFoundException si la posicion con ese id no existe
    */
   @Delete(':id')
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiResponse({
     status: 204,
     description: 'Elimina una posicion',
@@ -231,7 +244,6 @@ export class PosicionesController {
     description: 'El id de la posicion no es valido',
   })
   @HttpCode(204)
-  // @Roles('ADMIN')
   async removeById(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Borrando posicion con id ${id}`)
     return await this.posicionesService.removeById(id)
@@ -262,7 +274,8 @@ export class PosicionesController {
   @ApiBadRequestResponse({
     description: 'El id de la posicion no es valido',
   })
-  // @Roles('ADMIN')
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   async softRemoveById(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Actualizando a deleted: true la posicon con id: ${id}`)
     return await this.posicionesService.softRemoveById(id)

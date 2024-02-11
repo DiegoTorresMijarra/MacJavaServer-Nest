@@ -10,6 +10,8 @@ import {
   ParseIntPipe,
   HttpCode,
   UseInterceptors,
+  UseGuards,
+  Put,
 } from '@nestjs/common'
 import { RestaurantesService } from './restaurantes.service'
 import { CreateRestauranteDto } from './dto/create-restaurante.dto'
@@ -18,6 +20,7 @@ import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate'
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiNotFoundResponse,
   ApiParam,
@@ -26,6 +29,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { Restaurante } from './entities/restaurante.entity'
+import { Roles, RolesAuthGuard } from '../auth/guards/roles-auth.guard'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 
 /**
  * Controlador de los restaurantes
@@ -122,6 +127,9 @@ export class RestaurantesController {
    * @returns Restaurante
    */
   @Post()
+  @ApiBearerAuth()
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -150,7 +158,10 @@ export class RestaurantesController {
    * @param updateRestauranteDto
    * @returns Restaurante
    */
-  @Patch(':id')
+  @Put(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles('ADMIN')
   @ApiResponse({
     status: 200,
     description: 'Actualiza un restaurante',
@@ -167,7 +178,6 @@ export class RestaurantesController {
     description: ' Datos del restaurante a actualizar',
     type: UpdateRestauranteDto,
   })
-  //@Roles('ADMIN')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRestauranteDto: UpdateRestauranteDto,
@@ -183,6 +193,9 @@ export class RestaurantesController {
    * @param id
    */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiResponse({ status: 200, description: 'Elimina un restaurante' })
   @ApiNotFoundResponse({
     description: 'No se encuentra el restaurante que quiere eliminar',

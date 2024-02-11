@@ -12,6 +12,7 @@ import {
   Put,
   Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 
@@ -26,12 +27,15 @@ import { UpdateProductoDto } from './dto/update-producto.dto'
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager'
 import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate'
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
 import { Request } from 'express'
+import { Roles, RolesAuthGuard } from '../auth/guards/roles-auth.guard'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 // Importaciones de autenticación y autorización, si las hay
 
 @Controller('productos')
@@ -66,6 +70,9 @@ export class ProductosController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -84,6 +91,9 @@ export class ProductosController {
   }
 
   @Put(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles('ADMIN')
   @ApiResponse({
     status: 200,
     description: 'ProductoEntity actualizado',
@@ -98,6 +108,9 @@ export class ProductosController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @HttpCode(204)
   @ApiResponse({ status: 204, description: 'ProductoEntity eliminado' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
@@ -106,6 +119,9 @@ export class ProductosController {
   }
 
   @Patch(':id/imagen')
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({

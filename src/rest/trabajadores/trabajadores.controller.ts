@@ -10,6 +10,7 @@ import {
   HttpCode,
   Logger,
   Put,
+  UseGuards,
 } from '@nestjs/common'
 import { TrabajadoresService } from './trabajadores.service'
 import { CreateTrabajadorDto } from './dto/create-trabajador.dto'
@@ -28,11 +29,13 @@ import {
 import { Trabajador } from './entities/trabajadores.entity'
 import { ResponseTrabajadorDto } from './dto/response-trabajador.dto'
 import { UUID } from 'typeorm/driver/mongodb/bson.typings'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { Roles, RolesAuthGuard } from '../auth/guards/roles-auth.guard'
 
 /**
  * Controlador para la gestion de las peticiones relacionadas con los trabajadores.
  */
-//@UseGuards(JwtAuthGuard, RolesAuthGuard)
+@UseGuards(JwtAuthGuard, RolesAuthGuard)
 @ApiTags('Trabajadores')
 @Controller('trabajadores')
 export class TrabajadoresController {
@@ -53,7 +56,7 @@ export class TrabajadoresController {
   })
   @CacheKey(TrabajadoresService.CACHE_KEY_FOUND_ALL)
   @CacheTTL(30000) // validez de la cache 30000 milisegundos es en seg en la v4 de cache-manager
-  //@Roles('USER')
+  @Roles('USER')
   async findAll() {
     this.logger.log('Buscando todos los trabajadores')
     return await this.trabajadoresService.findAll()
@@ -102,7 +105,7 @@ export class TrabajadoresController {
   })
   @CacheKey(TrabajadoresService.CACHE_KEY_PAGINATED)
   @CacheTTL(30000)
-  //@Roles('USER')
+  @Roles('USER')
   async findAllPaginated(@Paginate() paginatedQuery: PaginateQuery) {
     this.logger.log('Buscando todos los trabajadores paginados')
     return await this.trabajadoresService.findAllPaginated(paginatedQuery)
@@ -133,7 +136,7 @@ export class TrabajadoresController {
   @ApiBadRequestResponse({
     description: 'El id del Trabajador no es válido',
   })
-  //  @Roles('USER')
+  @Roles('USER')
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Buscando el trabajador con id ${id}`)
     return await this.trabajadoresService.findById(id)
@@ -161,7 +164,7 @@ export class TrabajadoresController {
       'Los datos del trabajador no son válidos o el dni pasado ya existe',
   })
   @HttpCode(201)
-  //@Roles('ADMIN')
+  @Roles('ADMIN')
   async create(@Body() createTrabajadorDto: CreateTrabajadorDto) {
     this.logger.log(`Creando el trabajador con dni ${createTrabajadorDto.dni}`)
     return await this.trabajadoresService.create(createTrabajadorDto)
@@ -199,7 +202,7 @@ export class TrabajadoresController {
     description:
       'Los datos del trabajador no son válidos o el dni pasado ya existe',
   })
-  //@Roles('ADMIN')
+  @Roles('ADMIN')
   async updateById(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrabajadorDto: UpdateTrabajadorDto,
@@ -229,7 +232,7 @@ export class TrabajadoresController {
     description: 'Trabajador no encontrado',
   })
   @HttpCode(204)
-  // @Roles('ADMIN')
+  @Roles('ADMIN')
   async removeById(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Borrando trabajador con id ${id}`)
     return await this.trabajadoresService.removeById(id)
@@ -255,7 +258,7 @@ export class TrabajadoresController {
   @ApiNotFoundResponse({
     description: 'Trabajador no encontrado',
   })
-  // @Roles('ADMIN')
+  @Roles('ADMIN')
   async softRemoveById(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`Actualizando a deleted: true el Trabajador con id: ${id}`)
     return await this.trabajadoresService.softRemoveById(id)

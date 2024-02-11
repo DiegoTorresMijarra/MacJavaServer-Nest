@@ -95,26 +95,30 @@ export class PedidosService {
     const original = await this.findOneById(id)
 
     await this.chekOrderIds(updatePedidoDto)
+
     const productosYTotales = await this.checkProductosPedidos(
       updatePedidoDto.productosPedidos,
     )
-    await this.actualizarStockProductos(
+
+    if (productosYTotales.productosPComprobados) {
+      //si nos lo han pasado, y es valido (no ha lanzado exc) actualizamos los stocks
+      await this.actualizarStockProductos(
+        productosYTotales.productosPComprobados,
+        false,
+      )
+      await this.actualizarStockProductos(original.productosPedidos, true)
+    }
+
+    const pedidoActualizado = this.mapper.updateToPedido(
+      original,
+      updatePedidoDto,
+      productosYTotales.cantidadTotal,
+      productosYTotales.precioTotal,
       productosYTotales.productosPComprobados,
-      false,
     )
 
     return await this.pedidosRepository
-      .findByIdAndUpdate(
-        id,
-        this.mapper.updateToPedido(
-          original,
-          updatePedidoDto,
-          productosYTotales.cantidadTotal,
-          productosYTotales.precioTotal,
-          productosYTotales.productosPComprobados,
-        ),
-        { new: true },
-      )
+      .findByIdAndUpdate(id, { pedidoActualizado }, { new: true })
       .exec()
   }
 
@@ -152,6 +156,14 @@ export class PedidosService {
   async checkProductosPedidos(productosPedidos: ProductosPedidosDto[]) {
     this.logger.log('Comprobando los productos del pedido')
 
+    if (!productosPedidos) {
+      return {
+        cantidadTotal: null,
+        precioTotal: null,
+        productosPComprobados: null,
+      }
+    }
+
     const productosPComprobados: ProductosPedidos[] = []
 
     let cantidadTotal: number = 0
@@ -163,8 +175,8 @@ export class PedidosService {
       const productoReal = await this.productosService.findOne(pp.productoId)
       if (
         !productoReal ||
-        productoReal.stock < pp.cantidad ||
-        productoReal.precio !== pp.precioProducto
+        productoReal.stock <= pp.cantidad ||
+        productoReal.precio != pp.precioProducto
       ) {
         throw new BadRequestException(
           `Producto con id ${pp.productoId} no encontrado o datos de este erroneos`,

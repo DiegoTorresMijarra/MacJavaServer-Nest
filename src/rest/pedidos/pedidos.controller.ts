@@ -9,6 +9,7 @@ import {
   Query,
   DefaultValuePipe,
   Logger,
+  Put,
 } from '@nestjs/common'
 import { PedidosService } from './pedidos.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
@@ -55,7 +56,7 @@ export class PedidosController {
     return this.pedidosService.create(createPedidoDto)
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id', IdValidatePipe) id: string,
     @Body() updatePedidoDto: UpdatePedidoDto,

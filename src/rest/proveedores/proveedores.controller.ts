@@ -14,17 +14,19 @@ import {
 import { ProveedoresService } from './proveedores.service'
 import { CreateProveedoresDto } from './dto/create-proveedores.dto'
 import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
-import {CacheInterceptor, CacheKey, CacheTTL} from "@nestjs/cache-manager";
-import {Paginate, Paginated, PaginateQuery} from "nestjs-paginate";
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
+import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate'
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth, ApiBody,
+  ApiBearerAuth,
+  ApiBody,
   ApiNotFoundResponse,
-  ApiParam, ApiQuery,
+  ApiParam,
+  ApiQuery,
   ApiResponse,
-  ApiTags
-} from "@nestjs/swagger";
-import {Proveedor} from "./entities/proveedores.entity";
+  ApiTags,
+} from '@nestjs/swagger'
+import { Proveedor } from './entities/proveedores.entity'
 
 @Controller('proveedores')
 @ApiTags('Proveedores')
@@ -41,7 +43,7 @@ export class ProveedoresController {
   @ApiResponse({
     status: 200,
     description:
-        'Lista de proveedores paginada. Se puede filtrar por limite, pagina sortBy, filter y search',
+      'Lista de proveedores paginada. Se puede filtrar por limite, pagina sortBy, filter y search',
     type: Paginated<Proveedor>,
   })
   @ApiQuery({
@@ -118,7 +120,7 @@ export class ProveedoresController {
   })
   @ApiBadRequestResponse({
     description:
-        'Alguno de los campos no es valido segun las validaciones del dto',
+      'Alguno de los campos no es valido segun las validaciones del dto',
   })
   @ApiBadRequestResponse({
     description: 'El telefono o el nombre ya existen',
@@ -153,7 +155,7 @@ export class ProveedoresController {
   })
   @ApiBadRequestResponse({
     description:
-        'Alguno de los campos no es valido segun las validaciones del dto',
+      'Alguno de los campos no es valido segun las validaciones del dto',
   })
   @ApiBadRequestResponse({
     description: 'El telefono o el nombre ya existen',

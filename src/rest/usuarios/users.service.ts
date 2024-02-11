@@ -225,7 +225,7 @@ export class UsersService {
         'Do not have permission to access this resource',
       )
     }
-    return await this.pedidosService.remove(idPedido)
+    return await this.pedidosService.removeById(idPedido)
   }
 
   private async findByEmail(email: string) {

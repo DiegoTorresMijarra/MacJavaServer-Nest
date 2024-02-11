@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ProveedoresService } from './proveedores.service'
-import {Repository} from "typeorm";
-import {Proveedor} from "./entities/proveedores.entity";
-import {ProveedoresMapper} from "./mappers/proveedores.mapper";
-import {Cache} from "cache-manager"
-import {getRepositoryToken} from "@nestjs/typeorm";
-import {CACHE_MANAGER} from "@nestjs/cache-manager";
-import {NotFoundException} from "@nestjs/common";
-import {CreateProveedoresDto} from "./dto/create-proveedores.dto";
-import {UpdateProveedoresDto} from "./dto/update-proveedores.dto";
-import {hash} from "typeorm/util/StringUtils";
-import {MacjavaNotificationsGateway} from "../../notifications/macjava-notifications.gateway";
-import {NotificationsModule} from "../../notifications/notifications.module";
-import {paginate} from "nestjs-paginate";
+import { Repository } from 'typeorm'
+import { Proveedor } from './entities/proveedores.entity'
+import { ProveedoresMapper } from './mappers/proveedores.mapper'
+import { Cache } from 'cache-manager'
+import { getRepositoryToken } from '@nestjs/typeorm'
+import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { NotFoundException } from '@nestjs/common'
+import { CreateProveedoresDto } from './dto/create-proveedores.dto'
+import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
+import { hash } from 'typeorm/util/StringUtils'
+import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
+import { NotificationsModule } from '../../notifications/notifications.module'
+import { paginate } from 'nestjs-paginate'
 
 describe('ProveedoresService', () => {
   let service: ProveedoresService
@@ -35,14 +35,14 @@ describe('ProveedoresService', () => {
   }
 
   const proveedoresGateawayMock = {
-    sendMessage: jest.fn()
+    sendMessage: jest.fn(),
   }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [NotificationsModule],
       providers: [
-          ProveedoresService,
+        ProveedoresService,
         { provide: ProveedoresMapper, useValue: proveedoresMapperMock },
         {
           provide: getRepositoryToken(Proveedor),
@@ -52,16 +52,17 @@ describe('ProveedoresService', () => {
           provide: MacjavaNotificationsGateway,
           useValue: proveedoresGateawayMock,
         },
-        { provide: CACHE_MANAGER, useValue: cacheManagerMock },],
+        { provide: CACHE_MANAGER, useValue: cacheManagerMock },
+      ],
     }).compile()
 
     service = module.get<ProveedoresService>(ProveedoresService)
     repository = module.get<Repository<Proveedor>>(
-        getRepositoryToken(Proveedor),
+      getRepositoryToken(Proveedor),
     )
     mapper = module.get<ProveedoresMapper>(ProveedoresMapper)
     proveedpresGateaway = module.get<MacjavaNotificationsGateway>(
-        MacjavaNotificationsGateway,
+      MacjavaNotificationsGateway,
     )
     cache = module.get<Cache>(CACHE_MANAGER)
   })
@@ -100,8 +101,9 @@ describe('ProveedoresService', () => {
         getOne: jest.fn().mockResolvedValue(testProveedor),
       }
 
-      jest.spyOn(repository, 'createQueryBuilder')
-          .mockReturnValue(mockQueryBuilder as any)
+      jest
+        .spyOn(repository, 'createQueryBuilder')
+        .mockReturnValue(mockQueryBuilder as any)
       jest.spyOn(repository, 'findOne').mockResolvedValue(null)
       jest.spyOn(mapper, 'toEntity').mockReturnValue(testProveedor)
       jest.spyOn(repository, 'save').mockResolvedValue(testProveedor)
@@ -109,7 +111,7 @@ describe('ProveedoresService', () => {
       jest.spyOn(cache.store, 'keys').mockResolvedValue([])
 
       expect(await service.add(new CreateProveedoresDto())).toEqual(
-          testProveedor,
+        testProveedor,
       )
       expect(mapper.toEntity).toHaveBeenCalled()
     })
@@ -130,8 +132,9 @@ describe('ProveedoresService', () => {
 
       const mockUpdateProveedoresDto = new UpdateProveedoresDto()
 
-      jest.spyOn(repository, 'createQueryBuilder')
-          .mockReturnValue(mockQueryBuilder as any)
+      jest
+        .spyOn(repository, 'createQueryBuilder')
+        .mockReturnValue(mockQueryBuilder as any)
       jest.spyOn(service, 'findOne').mockResolvedValue(testProveedor)
       jest.spyOn(repository, 'findOne').mockResolvedValue(null)
       jest.spyOn(mapper, 'toEntity').mockReturnValue(testProveedor)

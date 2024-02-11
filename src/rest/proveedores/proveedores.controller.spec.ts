@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ProveedoresController } from './proveedores.controller'
 import { ProveedoresService } from './proveedores.service'
-import {Proveedor} from "./entities/proveedores.entity";
-import {CacheModule} from "@nestjs/cache-manager";
-import {NotFoundException} from "@nestjs/common";
-import {CreateProveedoresDto} from "./dto/create-proveedores.dto";
-import {UpdateProveedoresDto} from "./dto/update-proveedores.dto";
-import {Paginated} from "nestjs-paginate";
+import { Proveedor } from './entities/proveedores.entity'
+import { CacheModule } from '@nestjs/cache-manager'
+import { NotFoundException } from '@nestjs/common'
+import { CreateProveedoresDto } from './dto/create-proveedores.dto'
+import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
+import { Paginated } from 'nestjs-paginate'
 
 describe('ProveedoresController', () => {
   let controller: ProveedoresController
@@ -25,7 +25,9 @@ describe('ProveedoresController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [CacheModule.register()],
       controllers: [ProveedoresController],
-      providers: [{ provide: ProveedoresService, useValue: mockProveedoresService },],
+      providers: [
+        { provide: ProveedoresService, useValue: mockProveedoresService },
+      ],
     }).compile()
 
     controller = module.get<ProveedoresController>(ProveedoresController)
@@ -67,7 +69,7 @@ describe('ProveedoresController', () => {
       expect(result.meta.totalPages).toEqual(1) // You may need to adjust this value based on your test case
       // Expect the result to have the correct current link
       expect(result.links.current).toEqual(
-          `categorias?page=${paginateOptions.page}&limit=${paginateOptions.limit}&sortBy=nombre:ASC`,
+        `categorias?page=${paginateOptions.page}&limit=${paginateOptions.limit}&sortBy=nombre:ASC`,
       )
       expect(service.findAll).toHaveBeenCalled()
     })
@@ -94,9 +96,9 @@ describe('ProveedoresController', () => {
   describe('add', () => {
     it('Deberia crear un proveedor', async () => {
       const dto: CreateProveedoresDto = {
-        nombre : 'test',
-        tipo : 'Test',
-        telefono : '651235576'
+        nombre: 'test',
+        tipo: 'Test',
+        telefono: '651235576',
       }
       const mockResult = new Proveedor()
       jest.spyOn(service, 'add').mockResolvedValue(mockResult)
@@ -109,9 +111,9 @@ describe('ProveedoresController', () => {
     it('Deberia actualizar un proveedor', async () => {
       const id = 1
       const dto: UpdateProveedoresDto = {
-        nombre : 'tests',
-        tipo : 'Tests',
-        telefono : '651235570',
+        nombre: 'tests',
+        tipo: 'Tests',
+        telefono: '651235570',
         deleted: true,
       }
       const mockResult = new Proveedor()
@@ -126,7 +128,7 @@ describe('ProveedoresController', () => {
       const dto: UpdateProveedoresDto = {}
       jest.spyOn(service, 'update').mockRejectedValue(new NotFoundException())
       await expect(controller.update(id, dto)).rejects.toThrow(
-          NotFoundException,
+        NotFoundException,
       )
     })
   })
@@ -135,18 +137,18 @@ describe('ProveedoresController', () => {
     it('should remove a categoria', async () => {
       const id = 1
       const mockResult = new Proveedor()
-      const removeSpy = jest.spyOn(service, 'remove').mockResolvedValue(mockResult)
-      const result = await controller.remove(id);
+      const removeSpy = jest
+        .spyOn(service, 'remove')
+        .mockResolvedValue(mockResult)
+      const result = await controller.remove(id)
 
-      expect(result).toEqual(mockResult);
+      expect(result).toEqual(mockResult)
       expect(removeSpy).toHaveBeenCalledWith(id)
     })
 
     it('should throw NotFoundException if categoria does not exist', async () => {
       const id = 1
-      jest
-          .spyOn(service, 'remove')
-          .mockRejectedValue(new NotFoundException())
+      jest.spyOn(service, 'remove').mockRejectedValue(new NotFoundException())
       await expect(controller.remove(id)).rejects.toThrow(NotFoundException)
     })
   })

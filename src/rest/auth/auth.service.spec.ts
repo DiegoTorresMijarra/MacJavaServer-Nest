@@ -93,12 +93,16 @@ describe('AuthService', () => {
       const result = await authService.singUp(userSignUpDto)
 
       expect(authMapperMock.toCreateDto).toHaveBeenCalledWith(userSignUpDto)
-      expect(usersServiceMock.create).toHaveBeenCalledWith({
-        id: 1,
-        username: 'john_doe',
-        password: 'hashed_password',
-        // Add other properties as needed
-      })
+      expect(usersServiceMock.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          username: 'john_doe',
+          apellidos: 'Doe',
+          email: 'john@example.com',
+          nombre: 'John',
+          password: 'Password123',
+          roles: ['USER'],
+        }),
+      )
       expect(result).toEqual({
         access_token: 'mocked_access_token',
       })
@@ -156,11 +160,15 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('should validate user and return user details', async () => {
-      const result = await authService.validateUser(1)
+      const result = await authService.validateUser(
+        '00000000-0000-0000-0002-000000000007',
+      )
 
-      expect(usersServiceMock.findOne).toHaveBeenCalledWith(1)
+      expect(usersServiceMock.findOne).toHaveBeenCalledWith(
+        '00000000-0000-0000-0002-000000000007',
+      )
       expect(result).toEqual({
-        id: 1,
+        id: '00000000-0000-0000-0002-000000000007',
         username: 'john_doe',
         password: 'hashed_password',
         // Add other properties as needed
@@ -170,9 +178,13 @@ describe('AuthService', () => {
 
   describe('getAccessToken', () => {
     it('should return access token', () => {
-      const result = authService['getAccessToken'](1)
+      const result = authService['getAccessToken'](
+        '00000000-0000-0000-0002-000000000030',
+      )
 
-      expect(jwtServiceMock.sign).toHaveBeenCalledWith({ id: 1 })
+      expect(jwtServiceMock.sign).toHaveBeenCalledWith({
+        id: '00000000-0000-0000-0002-000000000030',
+      })
       expect(result).toEqual({
         access_token: 'mocked_access_token',
       })
@@ -183,10 +195,12 @@ describe('AuthService', () => {
         throw new Error('Mocked error')
       })
 
-      expect(() => authService['getAccessToken'](1)).toThrowError(
-        InternalServerErrorException,
-      )
-      expect(jwtServiceMock.sign).toHaveBeenCalledWith({ id: 1 })
+      expect(() =>
+        authService['getAccessToken']('00000000-0000-0000-0002-000000000003'),
+      ).toThrowError(InternalServerErrorException)
+      expect(jwtServiceMock.sign).toHaveBeenCalledWith({
+        id: '00000000-0000-0000-0002-000000000003',
+      })
     })
   })
 })

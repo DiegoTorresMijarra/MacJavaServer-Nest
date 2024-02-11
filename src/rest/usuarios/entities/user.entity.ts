@@ -50,7 +50,7 @@ export class Usuario {
   @OneToMany(() => UserRole, (userRole) => userRole.usuario, { eager: true })
   roles: UserRole[]
 
-  get roleNames(): string[] {
-    return this.roles.map((role) => role.role)
-  }
+  // get roleNames(): string[] {
+  //  return this.roles.map((role) => role.role)
+  // }
 }

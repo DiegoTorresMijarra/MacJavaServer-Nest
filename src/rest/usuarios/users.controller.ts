@@ -6,7 +6,6 @@ import {
   HttpCode,
   Logger,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Put,

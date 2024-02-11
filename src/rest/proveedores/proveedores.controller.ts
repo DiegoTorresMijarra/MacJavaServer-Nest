@@ -10,6 +10,7 @@ import {
   HttpCode,
   UseInterceptors,
   Logger,
+  UseGuards,
 } from '@nestjs/common'
 import { ProveedoresService } from './proveedores.service'
 import { CreateProveedoresDto } from './dto/create-proveedores.dto'
@@ -27,10 +28,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { Proveedor } from './entities/proveedores.entity'
+import { Roles, RolesAuthGuard } from '../auth/guards/roles-auth.guard'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 
 @Controller('proveedores')
 @ApiTags('Proveedores')
 @UseInterceptors(CacheInterceptor)
+@UseGuards(JwtAuthGuard, RolesAuthGuard)
 export class ProveedoresController {
   private readonly logger = new Logger(ProveedoresController.name)
 
@@ -39,7 +43,8 @@ export class ProveedoresController {
   @Get()
   @CacheKey('all_proveedores')
   @CacheTTL(30)
-  //Roles('ADMIN)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiResponse({
     status: 200,
     description:
@@ -82,7 +87,8 @@ export class ProveedoresController {
   }
 
   @Get(':id')
-  //Roles('ADMIN)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
@@ -106,7 +112,8 @@ export class ProveedoresController {
   }
 
   @Post()
-  //Roles('ADMIN)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @HttpCode(201)
   @ApiBearerAuth()
   @ApiResponse({
@@ -131,7 +138,8 @@ export class ProveedoresController {
   }
 
   @Put(':id')
-  //Roles('ADMIN)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
@@ -169,7 +177,8 @@ export class ProveedoresController {
   }
 
   @Delete(':id')
-  //Roles('ADMIN)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @HttpCode(204)
   @ApiBearerAuth()
   @ApiResponse({
@@ -194,7 +203,8 @@ export class ProveedoresController {
   }
 
   @Delete('/soft/:id')
-  //Roles('ADMIN)
+  @ApiBearerAuth()
+  @Roles('ADMIN')
   @HttpCode(204)
   @ApiBearerAuth()
   @ApiResponse({

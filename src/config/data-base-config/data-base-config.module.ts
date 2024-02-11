@@ -52,6 +52,7 @@ export class DataBasePostgreSQLConfigModule {}
       useFactory: async () => ({
         /*
         uri: `mongodb://${process.env.DATABASE_USER || 'admin'}:
+
           ${process.env.DATABASE_PASSWORD || 'admin123'}@${process.env.MONGO_HOST || 'localhost'}:
           ${process.env.MONGO_PORT || 27017}/${process.env.MONGO_DATABASE || 'MACJAVA_MDB'}`,
 

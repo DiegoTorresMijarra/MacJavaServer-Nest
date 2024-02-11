@@ -7,6 +7,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { StorageService } from './storage.service'
@@ -16,6 +17,8 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { Request, Response } from 'express'
 import { ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { RolesAuthGuard } from '../auth/guards/roles-auth.guard'
 
 @Controller('storage')
 @ApiTags('Storage')

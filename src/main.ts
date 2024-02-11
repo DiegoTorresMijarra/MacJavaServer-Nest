@@ -18,10 +18,13 @@ async function bootstrap() {
 }
 bootstrap().then(() => {
   console.log(
-    `Servidor escuchando en el puerto ${
-      process.env.API_PORT || 3000
-    } y con el perfil ${process.env.NODE_ENV || 'dev'}`,
+    `Servidor escuchando en el puerto ${process.env.API_PORT || 3000}`,
   )
+  if (process.env.NODE_ENV === 'dev') {
+    console.log('🛠️ Iniciando Nestjs Modo desarrollo 🛠️')
+  } else {
+    console.log('🚗 Iniciando Nestjs Modo producción 🚗')
+  }
   if (process.env.NODE_ENV === 'dev') {
     console.log(
       `Swagger configurado en la ruta: http:localhost:${process.env.API_PORT || 3000}/api/`,

@@ -19,13 +19,17 @@ import { UsersModule } from './rest/usuarios/users.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, //para setearlo en todos los modulos
-      envFilePath: '.env', //jugar con los config y los perfiles
-      ignoreEnvFile: false,
-    }),
+    ConfigModule.forRoot(
+      process.env.NODE_ENV === 'dev'
+        ? { envFilePath: '.env.dev' || '.env' }
+        : { envFilePath: '.env.prod' },
+    ),
     //locale config
     LocaleConfigModule,
+    //bbdd con postgrest
+    DataBasePostgreSQLConfigModule,
+    //bbdd con MongoDB
+    DataBaseMongoDBConfigModule,
     //entities
     AuthModule,
     UsersModule,
@@ -37,10 +41,6 @@ import { UsersModule } from './rest/usuarios/users.module'
     RestaurantesModule,
     //cache
     CacheModule.register(),
-    //bbdd con postgrest
-    DataBasePostgreSQLConfigModule,
-    //bbdd con MongoDB
-    DataBaseMongoDBConfigModule,
     //cors
     CorsConfigModule,
     //notifications

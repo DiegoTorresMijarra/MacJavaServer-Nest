@@ -153,3 +153,48 @@ VALUES
     (1,'Producto 1', 'Descripción del producto 1', 'https://via.placeholder.com/150', 10.99, 100, '00000000-0000-0000-0000-000000000001', 1),
     (2,'Producto 2', 'Descripción del producto 2', 'https://via.placeholder.com/150', 20.49, 50, '00000000-0000-0000-0000-000000000002', 2),
     (3,'Producto 3', 'Descripción del producto 3', 'https://via.placeholder.com/150', 15.75, 75, '00000000-0000-0000-0000-000000000003', 3);
+-- Creación de la tabla usuarios
+CREATE TABLE "public"."usuarios"
+(
+    "is_deleted" boolean DEFAULT false,
+    "created_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+    "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "apellidos" character varying(255) NOT NULL,
+    "email" character varying(255) NOT NULL,
+    "nombre" character varying(255) NOT NULL,
+    "password" character varying(255) NOT NULL,
+    "username" character varying(255) NOT NULL,
+    CONSTRAINT "usuarios_email_key" UNIQUE ("email"),
+    CONSTRAINT "usuarios_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "usuarios_username_key" UNIQUE ("username")
+) WITH (oids = false);
+-- Creación de la tabla user_roles
+CREATE TABLE "public"."user_roles"
+(
+    "user_id" uuid NOT NULL,
+    "roles" character varying(255)
+) WITH (oids = false);
+
+-- Insert usuarios y roles
+-- Contraseña: Admin1
+INSERT INTO usuarios (is_deleted, created_at, id, updated_at, apellidos, email, nombre, password, username)
+VALUES (false, '2023-11-02 11:43:24.724871', '00000000-0000-0000-0000-000000000000', '2023-11-02 11:43:24.724871', 'Admin Admin', 'admin@prueba.net', 'Admin', '$2a$10$vPaqZvZkz6jhb7U7k/V/v.5vprfNdOnh4sxi/qpPRkYTzPmFlI9p2', 'admin');
+
+-- Asignar roles al administrador
+INSERT INTO user_roles (user_id, roles)
+VALUES ('00000000-0000-0000-0000-000000000000', 'USER');
+INSERT INTO user_roles (user_id, roles)
+VALUES ('00000000-0000-0000-0000-000000000000', 'ADMIN');
+
+-- Contraseña: User1
+INSERT INTO usuarios (is_deleted, created_at, id, updated_at, apellidos, email, nombre, password, username)
+VALUES (false, '2023-11-02 11:43:24.730431', '00000000-0000-0000-0000-000000000001', '2023-11-02 11:43:24.730431', 'User User', 'user@prueba.net', 'User', '$2a$12$RUq2ScW1Kiizu5K4gKoK4OTz80.DWaruhdyfi2lZCB.KeuXTBh0S.', 'user');
+
+-- Asignar roles al usuario
+INSERT INTO user_roles (user_id, roles)
+VALUES ('00000000-0000-0000-0000-000000000001', 'USER');
+
+-- Restricciones de clave externa
+ALTER TABLE ONLY "public"."user_roles"
+    ADD CONSTRAINT "fk2chxp26bnpqjibydrikgq4t9e" FOREIGN KEY (user_id) REFERENCES usuarios (id) NOT DEFERRABLE;

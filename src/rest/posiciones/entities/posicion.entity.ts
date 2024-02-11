@@ -19,6 +19,8 @@ export enum PosicionesValidas {
 }
 @Entity('posiciones')
 export class Posicion {
+  public readonly CLASS_NAME = 'Posicion'
+
   @PrimaryGeneratedColumn('uuid', {
     primaryKeyConstraintName: 'posicion_pk',
   })

@@ -210,7 +210,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"dni\": \"00000000T\",\n    \"nombre\": \"Jane\",\n    \"apellido\": \"Doe\",\n    \"edad\": 30,\n    \"telefono\": \"+34629384747\",\n    \"posicionNombre\": \"MANAGER\"\n}",
+							"raw": "{\n\t\"dni\": \"00000000T\",\n    \"nombre\": \"Jane\",\n    \"apellido\": \" Doe\",\n    \"edad\": 30,\n    \"telefono\": \"+34629384747\",\n    \"posicionNombre\": \"MANAGER\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -303,6 +303,24 @@
 								"{{DOMAIN_NAME}}trabajadores"
 							],
 							"path": [
+								"00000000-0000-0000-0001-000000000002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "softRemove",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}trabajadores/softRemove/00000000-0000-0000-0001-000000000002",
+							"host": [
+								"{{DOMAIN_NAME}}trabajadores"
+							],
+							"path": [
+								"softRemove",
 								"00000000-0000-0000-0001-000000000002"
 							]
 						}
@@ -511,59 +529,17 @@
 					"name": "Storage",
 					"item": [
 						{
-							"name": "newImage",
+							"name": "GetImagen",
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file",
-											"type": "file",
-											"src": "/C:/Users/jaime/OneDrive/Imágenes/Capturas de pantalla/principal.png"
-										}
-									]
-								},
 								"url": {
-									"raw": "https://localhost:3000/storage",
-									"protocol": "https",
+									"raw": "{{DOMAIN_NAME}}storage/12.jpg",
 									"host": [
-										"localhost"
+										"{{DOMAIN_NAME}}storage"
 									],
-									"port": "3000",
 									"path": [
-										"storage"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ModifyImage",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file",
-											"type": "file",
-											"src": "/C:/Users/jaime/OneDrive/Imágenes/Capturas de pantalla/principal.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "https://localhost:3000/image/1d62ad8a-cc0d-4ba8-bdcb-380cc7178621",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"image",
-										"1d62ad8a-cc0d-4ba8-bdcb-380cc7178621"
+										"12.jpg"
 									]
 								}
 							},
@@ -572,191 +548,132 @@
 					]
 				},
 				{
-					"name": "Clients",
-					"item": [
-						{
-							"name": "GetAll",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://localhost:3000/clientes",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"clientes"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "GetAllFilters",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://localhost:3000/clientes",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"clientes"
-									],
-									"query": [
-										{
-											"key": "dni",
-											"value": "99999999D",
-											"disabled": true
-										},
-										{
-											"key": "name",
-											"value": "Jane",
-											"disabled": true
-										},
-										{
-											"key": "last_name",
-											"value": "Doe",
-											"disabled": true
-										},
-										{
-											"key": "age",
-											"value": "35",
-											"disabled": true
-										},
-										{
-											"key": "ageMax",
-											"value": "35",
-											"disabled": true
-										},
-										{
-											"key": "ageMin",
-											"value": "35",
-											"disabled": true
-										},
-										{
-											"key": "phone",
-											"value": "555555555",
-											"disabled": true
-										},
-										{
-											"key": "deleted",
-											"value": "true",
-											"disabled": true
-										},
-										{
-											"key": "format",
-											"value": "xml",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "GetByID",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://localhost:3000/clientes/2ff369fa-4cf6-4bd3-b6d2-7485c10ac436",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"clientes",
-										"2ff369fa-4cf6-4bd3-b6d2-7485c10ac436"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "NewClient",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n        \"dni\": \"64734418F\",\r\n        \"name\": \"Pedro\",\r\n        \"last_name\": \"Rodriguez\",\r\n        \"age\": 26,\r\n        \"phone\":\"738294765\"\r\n    }",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost:3000/clientes",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"clientes"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "ModifyClient",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n     \"dni\": \"85736418F\",\r\n        \"name\": \"Paco\",\r\n        \"last_name\": \"Lopez\",\r\n        \"age\": 26,\r\n        \"phone\":\"738294765\",\r\n        \"image\":\"null\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost:3000/clientes/2ff369fa-4cf6-4bd3-b6d2-7485c10ac436",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"clientes",
-										"2ff369fa-4cf6-4bd3-b6d2-7485c10ac436"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "DeleteClient",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "https://localhost:3000/clientes/2ff369fa-4cf6-4bd3-b6d2-7485c10ac436",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"clientes",
-										"2ff369fa-4cf6-4bd3-b6d2-7485c10ac436"
-									]
-								}
-							},
-							"response": []
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}clientes",
+							"host": [
+								"{{DOMAIN_NAME}}clientes"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "FindOne",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}clientes/00000000-0000-0000-0000-000000000099",
+							"host": [
+								"{{DOMAIN_NAME}}clientes"
+							],
+							"path": [
+								"00000000-0000-0000-0000-000000000099"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewCliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"dni\": \"71430818V\",\r\n        \"nombre\": \"Pedro\",\r\n        \"apellido\": \"Rodriguez\",\r\n        \"edad\": 26,\r\n        \"telefono\":\"738294765\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DOMAIN_NAME}}clientes",
+							"host": [
+								"{{DOMAIN_NAME}}clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dni\": \"71430818V\",\r\n    \"nombre\": \"Pedro\",\r\n    \"apellido\": \"Rodriguez\",\r\n    \"edad\": 26,\r\n    \"telefono\":\"738294765\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DOMAIN_NAME}}clientes/00000000-0000-0000-0000-000000000099",
+							"host": [
+								"{{DOMAIN_NAME}}clientes"
+							],
+							"path": [
+								"00000000-0000-0000-0000-000000000099"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveCliente",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{DOMAIN_NAME}}clientes/00000000-0000-0000-0000-000000000099",
+							"host": [
+								"{{DOMAIN_NAME}}clientes"
+							],
+							"path": [
+								"00000000-0000-0000-0000-000000000099"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateImagen",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/jaime/OneDrive/Imágenes/Capturas de pantalla/principal.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/clientes/imagen/00000000-0000-0000-0000-000000000099",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"clientes",
+								"imagen",
+								"00000000-0000-0000-0000-000000000099"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

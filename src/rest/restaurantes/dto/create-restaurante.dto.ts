@@ -1,6 +1,18 @@
 import {IsBoolean, IsNotEmpty, IsOptional, IsPositive, IsString, Length} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
 
+/**
+ * DTO para la creación de un restaurante
+ * @export
+ * @class CreateRestauranteDto
+ *
+ * @property {string} nombre - Nombre del restaurante
+ * @property {string} calle - Calle del restaurante
+ * @property {string} localidad - Localidad del restaurante
+ * @property {number} capacidad - Capacidad del restaurante
+ * @property {boolean} borrado - Indica si el restaurante ha sido borrado
+ *
+ */
 export class CreateRestauranteDto {
     @ApiProperty({
         example: 'MacJava',

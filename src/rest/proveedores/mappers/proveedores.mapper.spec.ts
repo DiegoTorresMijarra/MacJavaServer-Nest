@@ -1,7 +1,7 @@
 import {Test, TestingModule} from "@nestjs/testing";
 import {ProveedoresMapper} from "./proveedores.mapper";
 import {CreateProveedoresDto} from "../dto/create-proveedores.dto";
-import {Proveedores} from "../entities/proveedores.entity";
+import {Proveedor} from "../entities/proveedores.entity";
 import {UpdateProveedoresDto} from "../dto/update-proveedores.dto";
 
 describe('ProveedoresMapper', () => {
@@ -38,21 +38,30 @@ describe('ProveedoresMapper', () => {
             const createProveedoresDto: CreateProveedoresDto = {
                 nombre: 'Pizza 4 Quesos',
                 tipo: 'Pizzas',
-                tlf: '690135540',
+                telefono: '690135540',
             }
 
-            const expectedProveedor: Proveedores = {
+            const expectedProveedor: {
+                id: number;
+                nombre: string;
+                tipo: string;
+                telefono: string;
+                created_at: Date;
+                updated_at: Date;
+                deleted: boolean;
+                productos: any[]
+            } = {
                 id: 1,
                 nombre: 'Pizza 4 Quesos',
                 tipo: 'Pizzas',
-                tlf: '690135540',
-                fechaCre: new Date(),
-                fechaUp: new Date(),
-                isActive: true,
+                telefono: '690135540',
+                created_at: new Date(),
+                updated_at: new Date(),
+                deleted: true,
                 productos: [],
             }
 
-            const actualProveedor: Proveedores =
+            const actualProveedor: Proveedor =
                 proveedoresMapper.toEntity(createProveedoresDto)
 
             expect(actualProveedor.nombre).toEqual(
@@ -64,28 +73,37 @@ describe('ProveedoresMapper', () => {
             const updateproveedoresDto: UpdateProveedoresDto = {
                 nombre: 'Pizza 4 Quesos',
                 tipo: 'Pizzas',
-                tlf: '690135540',
-                isActive: false,
+                telefono: '690135540',
+                deleted: false,
             }
 
-            const expectedCategoriaEntity: Proveedores = {
+            const expectedProveedoresEntity: {
+                id: number;
+                nombre: string;
+                tipo: string;
+                telefono: string;
+                created_at: Date;
+                updated_at: Date;
+                deleted: boolean;
+                productos: any[]
+            } = {
                 id: 1,
                 nombre: 'Pizza 4 Quesos',
                 tipo: 'Pizzas',
-                tlf: '690135540',
-                fechaCre: new Date(),
-                fechaUp: new Date(),
-                isActive: false,
+                telefono: '690135540',
+                created_at: new Date(),
+                updated_at: new Date(),
+                deleted: false,
                 productos: [],
             }
 
-            const actualProveedor: Proveedores =
+            const actualProveedor: Proveedor =
                 proveedoresMapper.toEntity(updateproveedoresDto)
 
-            expect(actualProveedor).toBeInstanceOf(Proveedores)
+            expect(actualProveedor).toBeInstanceOf(Proveedor)
 
             expect(actualProveedor.nombre).toEqual(
-                expectedCategoriaEntity.nombre,
+                expectedProveedoresEntity.nombre,
             )
         })
     })

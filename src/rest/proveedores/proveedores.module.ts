@@ -3,13 +3,13 @@ import { ProveedoresService } from './proveedores.service'
 import { ProveedoresController } from './proveedores.controller'
 import {ProveedoresMapper} from "./mappers/proveedores.mapper";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {Proveedores} from "./entities/proveedores.entity";
-import {Producto} from "../productos/entities/producto.entity";
+import {Proveedor} from "./entities/proveedores.entity";
 import {CacheModule} from "@nestjs/cache-manager";
+import {MacjavaNotificationsGateway} from "../../notifications/macjava-notifications.gateway";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Proveedores,/*Prueba*/ Producto]), CacheModule.register()],
+  imports: [TypeOrmModule.forFeature([Proveedor]), CacheModule.register()],
   controllers: [ProveedoresController],
-  providers: [ProveedoresService, ProveedoresMapper],
+  providers: [ProveedoresService, ProveedoresMapper, MacjavaNotificationsGateway],
 })
 export class ProveedoresModule {}

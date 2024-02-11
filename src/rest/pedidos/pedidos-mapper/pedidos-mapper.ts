@@ -22,8 +22,8 @@ export class PedidosMapper {
   updateToPedido(
     original: Pedido,
     dto: UpdatePedidoDto,
-    cantidadTotal: number,
-    precioTotal: number,
+    cantidadTotal?: number,
+    precioTotal?: number,
     productosPedidos?: ProductosPedidos[],
   ): Pedido {
     // const  updatePP: boolean = cantidadTotal && precioTotal && productosPedidos

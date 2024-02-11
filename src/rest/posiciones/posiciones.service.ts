@@ -36,7 +36,7 @@ export class PosicionesService {
   static readonly CACHE_KEY_FOUND_ALL: string = 'all_posiciones'
   static readonly CACHE_KEY_FOUND: string = 'posicion_'
   static readonly PAGED_DEFAULT_QUERY: PaginateQuery = {
-    path: 'http://localhost:3000/posiciones/paginated',
+    path: 'https://localhost:3000/posiciones/paginated',
   }
   static readonly CACHE_KEY_PAGINATED_DEFAULT: string =
     'posiciones_paged_default'

@@ -14,7 +14,7 @@ import { Producto } from '../rest/productos/entities/producto.entity'
 import { Proveedor } from '../rest/proveedores/entities/proveedores.entity'
 import { Restaurante } from '../rest/restaurantes/entities/restaurante.entity'
 
-const ENDPOINT: string = `/ws/${process.env.API_VERSION || 'v1'}/macjava`
+const ENDPOINT: string = `/wss/${process.env.API_VERSION || 'v1'}/macjava`
 
 /**
  * websocket general de nuestra aplicacion, por el pasaran todos los cambios relevantes que se produzcan en nuestra app, se podria implementar estrategias particulares para cada uno de los eventos producidos si fuera necesario.

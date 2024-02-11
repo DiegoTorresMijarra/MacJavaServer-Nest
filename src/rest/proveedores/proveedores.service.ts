@@ -5,11 +5,9 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common'
-import { CreateProveedoresDto } from './dto/create-proveedores.dto'
-import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
-import { ProveedoresMapper } from './mappers/proveedores.mapper'
+
 import { InjectRepository } from '@nestjs/typeorm'
-import { Proveedor } from './entities/proveedores.entity'
+
 import { Repository } from 'typeorm'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
@@ -25,6 +23,10 @@ import {
   Notification,
   NotificationTipo,
 } from '../../notifications/models/notificacion.model'
+import { ProveedoresMapper } from './mappers/proveedores.mapper'
+import { Proveedor } from './entities/proveedores.entity'
+import { CreateProveedoresDto } from './dto/create-proveedores.dto'
+import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
 
 @Injectable()
 export class ProveedoresService {

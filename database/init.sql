@@ -5,10 +5,15 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS "posiciones";
 DROP TABLE IF EXISTS "trabajadores";
 DROP TABLE IF EXISTS "clientes";
+
 DROP TABLE IF EXISTS "proveedores";
 DROP SEQUENCE IF EXISTS proveedores_id_seq;
+
 DROP TABLE IF EXISTS "restaurantes";
 DROP SEQUENCE IF EXISTS restaurantes_id_seq;
+
+DROP TABLE IF EXISTS "productos";
+DROP SEQUENCE IF EXISTS productos_id_seq;
 -- Crear la tabla position
 CREATE TABLE "public"."posiciones" (
                                        "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
@@ -53,7 +58,7 @@ INSERT INTO "trabajadores" ("id", "dni", "nombre", "apellido", "edad", "telefono
 VALUES
     ('00000000-0000-0000-0001-000000000001', '53718369Y', 'admin', 'admin', 25, '629384747', '00000000-0000-0000-0000-000000000001'),
     ('00000000-0000-0000-0001-000000000002', '20500036K', 'user', 'user', 30, '629384748', '00000000-0000-0000-0000-000000000002'),
-    (uuid_generate_v4(), '39372090T', 'Jim', 'Smith', 35, '629384749', '00000000-0000-0000-0000-000000000003'),
+    ('c9fd1562-3396-46b3-9fd2-88acdb5c26fd', '39372090T', 'Jim', 'Smith', 35, '629384749', '00000000-0000-0000-0000-000000000003'),
     (uuid_generate_v4(), '42394835Q', 'Sarah', 'Johnson', 40, '629384750', '00000000-0000-0000-0000-000000000004'),
     (uuid_generate_v4(), '90594482N', 'Mike', 'Brown', 45, '629384746', '00000000-0000-0000-0000-000000000004');
 
@@ -75,9 +80,9 @@ CREATE TABLE "public"."clientes" (
 -- Insertar datos en la tabla CLIENTS
 INSERT INTO "clientes" ("id", "dni", "nombre", "apellido", "edad", "telefono", "imagen", "deleted", "created_at", "updated_at")
 VALUES
-    ('00000000-0000-0000-0000-000000000099', '12345678A', 'John', 'Doe', 30, '123456789', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
-    (uuid_generate_v4(), '87654321B', 'Jane', 'Smith', 25, '987654321', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
-    (uuid_generate_v4(), '55555555C', 'Michael', 'Johnson', 40, '555555555', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
+    ('00000000-0000-0000-0002-000000000001', '12345678A', 'John', 'Doe', 30, '123456789', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
+    ('00000000-0000-0000-0002-000000000002', '87654321B', 'Jane', 'Smith', 25, '987654321', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
+    ('1bc0640d-e02f-455c-bc16-793c81fd0e17', '55555555C', 'Michael', 'Johnson', 40, '555555555', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
     (uuid_generate_v4(), '99999999D', 'Sarah', 'Williams', 35, '999999999', 'https://via.placeholder.com/150', false, '2022-12-12', '2022-12-12'),
     (uuid_generate_v4(), '11111111E', 'David', 'Brown', 28, '111111111', 'https://via.placeholder.com/150', true, '2022-12-12', '2022-12-12');
 
@@ -89,13 +94,18 @@ CREATE TABLE "public"."proveedores" (
                                    "id" bigint DEFAULT nextval('proveedores_id_seq') NOT NULL,
                                    "nombre" VARCHAR NOT NULL,
                                    "tipo" VARCHAR NOT NULL,
-                                   "telefono" VARCHAR NOT NULL UNIQUE,
+                                   "telefono" VARCHAR NOT NULL,
                                    "created_at" timestamp DEFAULT now(),
                                    "updated_at" timestamp DEFAULT now(),
                                    "deleted" BOOLEAN DEFAULT true,
                                    CONSTRAINT "proveedores_pk" PRIMARY KEY ("id")
 )WITH (oids = false);
 
+INSERT INTO proveedores (id, nombre, tipo, telefono)
+VALUES
+    (1,'Proveedor A', 'Tipo A', '123456789'),
+    (2, 'Proveedor B', 'Tipo B', '987654321'),
+    (3,'Proveedor C', 'Tipo C', '555555555');
 
 --Crear sequencia para la tabla RESTAURANTES
 CREATE SEQUENCE restaurantes_id_seq INCREMENT 1 MINVALUE 4 MAXVALUE 100 CACHE 1;
@@ -113,7 +123,33 @@ CREATE TABLE "public"."restaurantes" (
 ) WITH (oids = false);
 -- Insertar datos en la tabla RESTAURANTES
 INSERT INTO "restaurantes" ("id", "nombre", "calle", "localidad", "capacidad", "borrado",  "creado_en", "actualizado_en")
+
 VALUES
     (1, 'madre nodriza', 'espacial', 'madrid', 200 , false, '1975-12-12', '2022-12-12'),
     (2, 'primer hijo', 'veloz', 'getafe',  80, false,  '2004-12-12', '2022-12-12'),
     (3, 'el abuelo', 'fifrancisco', 'toledo', 120, true,  '1936-12-12', '2022-12-12');
+
+-- Crear la tabla de productos:
+
+CREATE SEQUENCE productos_id_seq INCREMENT 1 MINVALUE 4 MAXVALUE 100 CACHE 1;
+
+CREATE TABLE "public"."productos" (
+                             "id" bigint DEFAULT nextval('productos_id_seq') NOT NULL,
+                             "nombre" VARCHAR(100) NOT NULL,
+                             "description" VARCHAR(100) NOT NULL,
+                             "imagen" VARCHAR(100) DEFAULT 'https://via.placeholder.com/150',
+                             "precio" DECIMAL(10,2) NOT NULL,
+                             "stock" INT NOT NULL,
+                             "uuid" UUID NOT NULL,
+                             "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             "is_deleted" BOOLEAN DEFAULT FALSE,
+                             "proveedor_id" BIGINT,
+                             FOREIGN KEY ("proveedor_id") REFERENCES "proveedores" ("id")
+);
+
+INSERT INTO "productos" (id,nombre, description, imagen, precio, stock, uuid, proveedor_id)
+VALUES
+    (1,'Producto 1', 'Descripción del producto 1', 'https://via.placeholder.com/150', 10.99, 100, '00000000-0000-0000-0000-000000000001', 1),
+    (2,'Producto 2', 'Descripción del producto 2', 'https://via.placeholder.com/150', 20.49, 50, '00000000-0000-0000-0000-000000000002', 2),
+    (3,'Producto 3', 'Descripción del producto 3', 'https://via.placeholder.com/150', 15.75, 75, '00000000-0000-0000-0000-000000000003', 3);

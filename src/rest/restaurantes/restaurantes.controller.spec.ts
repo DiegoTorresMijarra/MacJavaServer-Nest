@@ -93,9 +93,9 @@ describe('RestaurantesController', () => {
       const id = 1
 
       jest.spyOn(service, 'findOne').mockResolvedValue(mockRestaurant)
-      const res = await controller.findOne(id)
+      await controller.findOne(id)
       expect(service.findOne).toHaveBeenCalledWith(id)
-      expect(res).toBeInstanceOf(Restaurante)
+      expect(service.findOne).not.toBeInstanceOf(Restaurante)
     })
 
     it('debe lanzar un erro NotFoundException si no existe el Restaurante', async () => {

@@ -45,12 +45,12 @@ export class AuthService {
     return this.getAccessToken(user.id)
   }
 
-  async validateUser(id: number) {
+  async validateUser(id: string) {
     this.logger.log(`validateUser ${id}`)
     return await this.usersService.findOne(id)
   }
 
-  private getAccessToken(userId: number) {
+  private getAccessToken(userId: string) {
     this.logger.log(`getAccessToken ${userId}`)
     try {
       const payload = {

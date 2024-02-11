@@ -38,7 +38,7 @@ export class UsersService {
     )
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     this.logger.log(`findOne: ${id}`)
     return this.usuariosMapper.toResponseDto(
       await this.usuariosRepository.findOneBy({ id }),
@@ -89,7 +89,7 @@ export class UsersService {
     return await this.bcryptService.isMatch(password, hashPassword)
   }
 
-  async deleteById(idUser: number) {
+  async deleteById(idUser: string) {
     this.logger.log(`deleteUserById: ${idUser}`)
     const user = await this.usuariosRepository.findOneBy({ id: idUser })
     if (!user) {
@@ -112,7 +112,7 @@ export class UsersService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateUserDto: UpdateUserDto,
     updateRoles: boolean = false,
   ) {
@@ -169,15 +169,15 @@ export class UsersService {
     return this.usuariosMapper.toResponseDto(updatedUser)
   }
 
-  async getPedidos(id: number) {
+  async getPedidos(id: string) {
     return await this.pedidosService.getPedidosByUser(id)
   }
 
-  async getPedido(idUser: number, idPedido: string) {
-    const pedido = await this.pedidosService.findOne(idPedido)
-    console.log(pedido.idUsuario)
+  async getPedido(idUser: string, idPedido: string) {
+    const pedido = await this.pedidosService.findOneById(idPedido)
+    console.log(pedido.idCliente)
     console.log(idUser)
-    if (pedido.idUsuario != idUser) {
+    if (pedido.idCliente != idUser) {
       throw new ForbiddenException(
         'Do not have permission to access this resource',
       )
@@ -185,9 +185,9 @@ export class UsersService {
     return pedido
   }
 
-  async createPedido(createPedidoDto: CreatePedidoDto, userId: number) {
+  async createPedido(createPedidoDto: CreatePedidoDto, userId: string) {
     this.logger.log(`Creando pedido ${JSON.stringify(createPedidoDto)}`)
-    if (createPedidoDto.idUsuario != userId) {
+    if (createPedidoDto.idCliente != userId) {
       throw new BadRequestException(
         'Producto idUsuario must be the same as the authenticated user',
       )
@@ -198,34 +198,34 @@ export class UsersService {
   async updatePedido(
     id: string,
     updatePedidoDto: UpdatePedidoDto,
-    userId: number,
+    userId: string,
   ) {
     this.logger.log(
       `Actualizando pedido con id ${id} y ${JSON.stringify(updatePedidoDto)}`,
     )
-    if (updatePedidoDto.idUsuario != userId) {
+    if (updatePedidoDto.idCliente != userId) {
       throw new BadRequestException(
         'Producto idUsuario must be the same as the authenticated user',
       )
     }
-    const pedido = await this.pedidosService.findOne(id)
-    if (pedido.idUsuario != userId) {
+    const pedido = await this.pedidosService.findOneById(id)
+    if (pedido.idCliente != userId) {
       throw new ForbiddenException(
         'Do not have permission to access this resource',
       )
     }
-    return await this.pedidosService.update(id, updatePedidoDto)
+    return await this.pedidosService.updateById(id, updatePedidoDto)
   }
 
-  async removePedido(idPedido: string, userId: number) {
+  async removePedido(idPedido: string, userId: string) {
     this.logger.log(`removePedido: ${idPedido}`)
-    const pedido = await this.pedidosService.findOne(idPedido)
-    if (pedido.idUsuario != userId) {
+    const pedido = await this.pedidosService.findOneById(idPedido)
+    if (pedido.idCliente != userId) {
       throw new ForbiddenException(
         'Do not have permission to access this resource',
       )
     }
-    return await this.pedidosService.remove(idPedido)
+    return await this.pedidosService.removeById(idPedido)
   }
 
   private async findByEmail(email: string) {

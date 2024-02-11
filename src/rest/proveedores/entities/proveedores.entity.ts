@@ -36,7 +36,7 @@ export class Proveedor {
   })
   updated_at: Date
   @Column({ type: 'boolean', default: true })
-  deleted: boolean = true
+  deleted: boolean
 
   @OneToMany(() => Producto, (producto) => producto.proveedor, {
     cascade: true,

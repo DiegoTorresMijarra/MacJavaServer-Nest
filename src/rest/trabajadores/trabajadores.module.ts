@@ -19,5 +19,6 @@ import { Posicion } from '../posiciones/entities/posicion.entity'
     NotificationsModule,
     CacheModule.register(),
   ],
+  exports: [TrabajadoresService, TrabajadorMapper],
 })
 export class TrabajadoresModule {}

@@ -56,29 +56,73 @@ describe('ProveedoresMapper', () => {
       expect(actualProveedor.nombre).toEqual(expectedProveedor.nombre)
     })
 
-    it('Mapear UpdateDto a Proveedor', () => {
-      const updateproveedoresDto: UpdateProveedoresDto = {
+    it('Mapear CreateDto a Proveedor', () => {
+      const createProveedoresDto: CreateProveedoresDto = {
         nombre: 'Pizza 4 Quesos',
         tipo: 'Pizzas',
-        tlf: '690135540',
-        isActive: false,
+        telefono: '690135540',
       }
 
-      const expectedCategoriaEntity: Proveedor = {
-        ...new Proveedor(),
+      const expectedProveedor: {
+        id: number
+        nombre: string
+        tipo: string
+        telefono: string
+        created_at: Date
+        updated_at: Date
+        deleted: boolean
+        productos: any[]
+      } = {
         id: 1,
         nombre: 'Pizza 4 Quesos',
         tipo: 'Pizzas',
         telefono: '690135540',
+        created_at: new Date(),
+        updated_at: new Date(),
+        deleted: true,
         productos: [],
       }
 
       const actualProveedor: Proveedor =
-        proveedoresMapper.toEntity(updateproveedoresDto)
+        proveedoresMapper.toEntity(createProveedoresDto)
 
       expect(actualProveedor).toBeInstanceOf(Proveedor)
 
-      expect(actualProveedor.nombre).toEqual(expectedCategoriaEntity.nombre)
+      it('Mapear UpdateDto a Proveedor', () => {
+        const updateproveedoresDto: UpdateProveedoresDto = {
+          nombre: 'Pizza 4 Quesos',
+          tipo: 'Pizzas',
+          telefono: '690135540',
+          deleted: false,
+        }
+
+        const expectedProveedoresEntity: {
+          id: number
+          nombre: string
+          tipo: string
+          telefono: string
+          created_at: Date
+          updated_at: Date
+          deleted: boolean
+          productos: any[]
+        } = {
+          id: 1,
+          nombre: 'Pizza 4 Quesos',
+          tipo: 'Pizzas',
+          telefono: '690135540',
+          created_at: new Date(),
+          updated_at: new Date(),
+          deleted: false,
+          productos: [],
+        }
+
+        const actualProveedor: Proveedor =
+          proveedoresMapper.toEntity(updateproveedoresDto)
+
+        expect(actualProveedor).toBeInstanceOf(Proveedor)
+
+        expect(actualProveedor.nombre).toEqual(expectedProveedoresEntity.nombre)
+      })
     })
   })
 })

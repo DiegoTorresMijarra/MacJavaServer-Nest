@@ -15,5 +15,6 @@ import { NotificationsModule } from '../../notifications/notifications.module'
   ],
   controllers: [RestaurantesController],
   providers: [RestaurantesService, RestaurantesMapper],
+  exports: [RestaurantesService, RestaurantesMapper],
 })
 export class RestaurantesModule {}

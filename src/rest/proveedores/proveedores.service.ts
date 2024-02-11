@@ -5,11 +5,9 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common'
-import { CreateProveedoresDto } from './dto/create-proveedores.dto'
-import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
-import { ProveedoresMapper } from './mappers/proveedores.mapper'
+
 import { InjectRepository } from '@nestjs/typeorm'
-import { Proveedor } from './entities/proveedores.entity'
+
 import { Repository } from 'typeorm'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
@@ -25,7 +23,10 @@ import {
   Notification,
   NotificationTipo,
 } from '../../notifications/models/notificacion.model'
-import { Producto } from '../productos/entities/producto.entity'
+import { ProveedoresMapper } from './mappers/proveedores.mapper'
+import { Proveedor } from './entities/proveedores.entity'
+import { CreateProveedoresDto } from './dto/create-proveedores.dto'
+import { UpdateProveedoresDto } from './dto/update-proveedores.dto'
 
 @Injectable()
 export class ProveedoresService {
@@ -52,11 +53,11 @@ export class ProveedoresService {
       sortableColumns: ['id', 'nombre', 'tipo', 'telefono', 'deleted'],
       defaultSortBy: [['id', 'ASC']],
       searchableColumns: ['id', 'nombre', 'tipo', 'telefono', 'deleted'],
-      select: ['id', 'nombre', 'tipo', 'tlf', 'deleted'],
+      select: ['id', 'nombre', 'tipo', 'telefono', 'deleted'],
       filterableColumns: {
         nombre: [FilterOperator.EQ, FilterSuffix.NOT],
         tipo: [FilterOperator.EQ, FilterSuffix.NOT],
-        tlf: [FilterOperator.EQ, FilterSuffix.NOT],
+        telefono: [FilterOperator.EQ, FilterSuffix.NOT],
         deleted: true,
       },
     })
@@ -95,7 +96,7 @@ export class ProveedoresService {
   async add(createProveedoresDto: CreateProveedoresDto) {
     this.logger.log(`Servicio: Creando proveedor`)
     const nombre = createProveedoresDto.nombre
-    const tlf = createProveedoresDto.tlf
+    const tlf = createProveedoresDto.telefono
 
     const existsProveedor = await this.proveedoresRepository.findOne({
       where: { nombre },
@@ -125,19 +126,25 @@ export class ProveedoresService {
     const existingProveedor = await this.findOne(id)
 
     const nombre = updateProveedoreDto.nombre
-    const tlf = updateProveedoreDto.tlf
+    const tlf = updateProveedoreDto.telefono
 
     const existsProveedor = await this.proveedoresRepository.findOne({
       where: { nombre },
     })
-    if (existsProveedor) {
-      throw new BadRequestException(`Ya estamos trabajando con ${nombre}`)
+    if (existingProveedor.nombre !== nombre) {
+      if (existsProveedor) {
+        throw new BadRequestException(`Ya estamos trabajando con ${nombre}`)
+      }
     }
+
     const existsTlf = await this.proveedoresRepository.findOne({
       where: { telefono: tlf },
     })
-    if (existsTlf) {
-      throw new BadRequestException(`El telefono ${tlf} ya existe`)
+
+    if (existingProveedor.telefono !== tlf) {
+      if (existsTlf) {
+        throw new BadRequestException(`El telefono ${tlf} ya existe`)
+      }
     }
 
     const updatedProveedor = await this.proveedoresRepository.save({

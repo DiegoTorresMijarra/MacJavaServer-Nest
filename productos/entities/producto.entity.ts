@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Proveedor } from '../../provedores/entities/proveedores.entity';
+import { JoinColumn } from 'typeorm/browser';
 @Entity({ name: 'productos' })
 export class ProductoEntity {
   public static IMAGE_DEFAULT = 'https://via.placeholder.com/150';
@@ -16,7 +19,6 @@ export class ProductoEntity {
 
   @Column({ type: 'varchar', length: 100 })
   description: string;
-  S;
 
   @Column({
     type: 'varchar',
@@ -49,4 +51,9 @@ export class ProductoEntity {
   updatedAt: Date;
   @Column({ name: 'is_deleted', type: 'boolean', default: false })
   isDeleted: boolean;
+  @ManyToOne(() => Proveedor, (proveedor) => proveedor.productos, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'proveedor_id' })
+  proveedor: Proveedor;
 }

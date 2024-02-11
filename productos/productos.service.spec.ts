@@ -85,9 +85,10 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
+        createdAt: new Date(), // Fecha actual como ejemplo
+        updatedAt: new Date(), // Fecha actual como ejemplo
         isDeleted: false,
+        proveedor: '',
       });
 
       const result = await service.findAll(query);
@@ -119,9 +120,10 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
+        createdAt: new Date(), // Fecha actual como ejemplo
+        updatedAt: new Date(), // Fecha actual como ejemplo
         isDeleted: false,
+        proveedor: '',
       });
 
       expect(await service.findOne(id)).toBeDefined();
@@ -154,9 +156,10 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
+        createdAt: new Date(), // Fecha actual como ejemplo
+        updatedAt: new Date(), // Fecha actual como ejemplo
         isDeleted: false,
+        proveedor: '',
       });
 
       expect(await service.create(createProductoDto)).toBeDefined();
@@ -185,9 +188,10 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
+        createdAt: new Date(), // Fecha actual como ejemplo
+        updatedAt: new Date(), // Fecha actual como ejemplo
         isDeleted: false,
+        proveedor: '',
       });
 
       expect(await service.update(id, updateProductoDto)).toBeDefined();
@@ -247,9 +251,10 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
+        createdAt: new Date(), // Fecha actual como ejemplo
+        updatedAt: new Date(), // Fecha actual como ejemplo
         isDeleted: false,
+        proveedor: '',
       });
 
       expect(await service.updateImage(id, imageFile)).toBeDefined();

@@ -1,7 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types'
 import { CreateTrabajadorDto } from './create-trabajador.dto'
 import { ApiProperty } from '@nestjs/swagger'
-import { PosicionesValidas } from '../../posiciones/entities/posicion.entity'
 
 export class UpdateTrabajadorDto extends PartialType(CreateTrabajadorDto) {
   @ApiProperty({

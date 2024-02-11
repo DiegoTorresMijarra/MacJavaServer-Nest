@@ -50,13 +50,11 @@ export class DataBasePostgreSQLConfigModule {}
     // Configurar el módulo de base de datos de Mongo asíncronamente
     MongooseModule.forRootAsync({
       useFactory: async () => ({
-        /*
         uri: `mongodb://${process.env.DATABASE_USER || 'admin'}:
           ${process.env.DATABASE_PASSWORD || 'admin123'}@${process.env.MONGO_HOST || 'localhost'}:
           ${process.env.MONGO_PORT || 27017}/${process.env.MONGO_DATABASE || 'MACJAVA_MDB'}`,
 
-         */
-        uri: `mongodb://admin:admin123@localhost:27017/MACJAVA_MDB`,
+        //uri: `mongodb://admin:admin123@localhost:27017/MACJAVA_MDB`,
         retryAttempts: 3,
         connectionFactory: (connection) => {
           Logger.log(

@@ -173,6 +173,16 @@ export class ProductoService {
     return !!producto
   }
 
+  public async patchStock(id: number, monto: number, sumar: boolean) {
+    this.logger.log(
+      `${sumar ? 'Añadiendo' : 'Restando'} la cantidad de ${monto} al producto con id ${id}`,
+    )
+    const original = await this.findOne(id)
+    const newStock = sumar ? original.stock + monto : original.stock - monto
+
+    return await this.productoRepository.update({ id: id }, { stock: newStock })
+  }
+
   private onChange(type: NotificationTipo, data: Producto) {
     const notification: Notification<Producto> = {
       message: `La Posicion con id ${data.id} ha sido ${type.toLowerCase()}d`,

@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { DataBaseConfigModule } from './config/data-base-config/data-base-config.module'
+import {
+  DataBaseMongoDBConfigModule,
+  DataBasePostgreSQLConfigModule,
+} from './config/data-base-config/data-base-config.module'
 import { TrabajadoresModule } from './rest/trabajadores/trabajadores.module'
 import { RestaurantesModule } from './rest/restaurantes/restaurantes.module'
 import { CacheModule } from '@nestjs/cache-manager'
@@ -35,8 +38,11 @@ import { UsersModule } from './rest/usuarios/users.module'
     //cache
     CacheModule.register(),
     //bbdd con postgrest
+    DataBasePostgreSQLConfigModule,
+    //bbdd con MongoDB
+    DataBaseMongoDBConfigModule,
+    //cors
     CorsConfigModule,
-    DataBaseConfigModule,
     //notifications
     NotificationsModule,
   ],

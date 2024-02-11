@@ -7,6 +7,7 @@ import {
   Logger,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Put,
   Req,
@@ -22,6 +23,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CreatePedidoDto } from '../pedidos/dto/create-pedido.dto'
 import { UpdatePedidoDto } from '../pedidos/dto/update-pedido.dto'
 import { ApiExcludeController } from '@nestjs/swagger'
+import { IdValidatePipe } from '../pedidos/pipes/id-validate.pipe'
 
 @Controller('users')
 @UseInterceptors(CacheInterceptor) // Aplicar el interceptor aquí de cache
@@ -43,7 +45,7 @@ export class UsersController {
 
   @Get(':id')
   @Roles('ADMIN')
-  async findOne(id: number) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log(`findOne: ${id}`)
     return await this.usersService.findOne(id)
   }
@@ -59,7 +61,7 @@ export class UsersController {
   @Put(':id')
   @Roles('ADMIN')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     this.logger.log(`update: ${id}`)

@@ -18,6 +18,8 @@ import { TrabajadoresService } from '../trabajadores/trabajadores.service'
 import { ProductoService } from '../productos/productos.service'
 import { UpdateResult } from 'typeorm'
 import { PedidosMapper } from './pedidos-mapper/pedidos-mapper'
+import { Producto } from '../productos/entities/producto.entity'
+import { ResponseProductoDto } from '../productos/dto/response-producto.dto'
 
 export const PedidosOrderByValues: string[] = ['_id', 'idUsuario'] // Lo usamos en los pipes
 export const PedidosOrderValues: string[] = ['asc', 'desc'] // Lo usamos en los pipes
@@ -172,14 +174,21 @@ export class PedidosService {
     for (const pp of productosPedidos) {
       this.logger.log(`Comprobando producto: ${pp.productoId}`)
 
-      const productoReal = await this.productosService.findOne(pp.productoId)
+      let productoReal: ResponseProductoDto
+      try {
+        productoReal = await this.productosService.findOne(pp.productoId)
+      } catch (err) {
+        throw new BadRequestException(
+          `Producto con id ${pp.productoId} no existe`,
+        )
+      }
       if (
         !productoReal ||
         productoReal.stock <= pp.cantidad ||
         productoReal.precio != pp.precioProducto
       ) {
         throw new BadRequestException(
-          `Producto con id ${pp.productoId} no encontrado o datos de este erroneos`,
+          `Producto con id ${pp.productoId} tiene datos de este erroneos`,
         )
       } else {
         precioTotal += pp.cantidad * pp.precioProducto

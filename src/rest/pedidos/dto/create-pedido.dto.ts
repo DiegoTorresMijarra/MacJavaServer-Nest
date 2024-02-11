@@ -9,6 +9,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator'
+import { Type } from 'class-transformer'
 
 export class ProductosPedidosDto {
   @IsNotEmpty({
@@ -28,6 +29,7 @@ export class ProductosPedidosDto {
   })
   @IsInt({ message: 'La cantidad del producto debe ser un numero entero' })
   cantidad: number
+
   @IsNotEmpty({
     message: 'El precio del producto no puede estar vacío',
   })
@@ -92,6 +94,7 @@ export class CreatePedidoDto {
   })
   @ValidateNested({
     message: 'Cada producto pedido debe ser valido',
-  }) // todo
+  })
+  @Type(() => ProductosPedidosDto)
   productosPedidos: ProductosPedidosDto[]
 }

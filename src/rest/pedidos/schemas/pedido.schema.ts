@@ -83,7 +83,7 @@ export class Pedido {
     type: Boolean,
     required: true,
   })
-  pagado: boolean
+  pagado: boolean = false
 
   @Prop({
     required: true,

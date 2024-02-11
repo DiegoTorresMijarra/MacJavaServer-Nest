@@ -1,14 +1,12 @@
 import { Logger, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import * as process from 'process'
-import * as Path from 'path'
 import { Posicion } from '../../rest/posiciones/entities/posicion.entity'
 import { Trabajador } from '../../rest/trabajadores/entities/trabajadores.entity'
 import { Cliente } from '../../rest/clientes/entities/cliente.entity'
 import { Proveedor } from '../../rest/proveedores/entities/proveedores.entity'
 import { Producto } from '../../rest/productos/entities/producto.entity'
 import { Restaurante } from '../../rest/restaurantes/entities/restaurante.entity'
-import { ModuleFinder } from '@nestjs/schematics'
 import { MongooseModule } from '@nestjs/mongoose'
 
 @Module({
@@ -50,14 +48,7 @@ export class DataBasePostgreSQLConfigModule {}
     // Configurar el módulo de base de datos de Mongo asíncronamente
     MongooseModule.forRootAsync({
       useFactory: async () => ({
-        /*
-        uri: `mongodb://${process.env.DATABASE_USER || 'admin'}:
-
-          ${process.env.DATABASE_PASSWORD || 'admin123'}@${process.env.MONGO_HOST || 'localhost'}:
-          ${process.env.MONGO_PORT || 27017}/${process.env.MONGO_DATABASE || 'MACJAVA_MDB'}`,
-
-         */
-        uri: `mongodb://admin:admin123@localhost:27017/MACJAVA_MDB`,
+        uri: `mongodb://${process.env.DATABASE_USER || 'admin'}:${process.env.DATABASE_PASSWORD || 'admin123'}@${process.env.MONGO_HOST || 'localhost'}:${process.env.MONGO_PORT || '27017'}/${process.env.MONGO_DATABASE || 'MACJAVA_MDB'}`,
         retryAttempts: 3,
         connectionFactory: (connection) => {
           Logger.log(

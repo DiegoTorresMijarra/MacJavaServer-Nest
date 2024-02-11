@@ -24,9 +24,6 @@ export class Posicion {
   @PrimaryGeneratedColumn('uuid', {
     primaryKeyConstraintName: 'posicion_pk',
   })
-  @IsUUID(5, {
-    message: 'El id debe ser un UUID',
-  })
   id: string
 
   @Column({

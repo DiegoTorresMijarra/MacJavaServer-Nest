@@ -24,6 +24,7 @@ import {
   NotificationTipo,
 } from '../../notifications/models/notificacion.model'
 import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
+import * as process from 'process'
 
 /**
  * Servicio CRUD para la gestion de las posiciones de nuestro negocio.  <br>
@@ -36,7 +37,7 @@ export class PosicionesService {
   static readonly CACHE_KEY_FOUND_ALL: string = 'all_posiciones'
   static readonly CACHE_KEY_FOUND: string = 'posicion_'
   static readonly PAGED_DEFAULT_QUERY: PaginateQuery = {
-    path: 'https://localhost:3000/posiciones/paginated',
+    path: `https://localhost:${process.env.API_PORT || '3000'}/posiciones/paginated`,
   }
   static readonly CACHE_KEY_PAGINATED_DEFAULT: string =
     'posiciones_paged_default'

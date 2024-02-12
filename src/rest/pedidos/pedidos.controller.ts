@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Query,
@@ -30,8 +29,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { Trabajador } from '../trabajadores/entities/trabajadores.entity'
-import { Pedido } from './schemas/pedido.schema'
 import { ObjectId } from 'mongodb'
 
 /**
@@ -80,6 +77,7 @@ export class PedidosController {
     type: String,
   })
   @Get()
+  @Roles('ADMIN')
   async findAll(
     @Query('page', new DefaultValuePipe(1)) page: number = 1,
     @Query('limit', new DefaultValuePipe(20)) limit: number = 20,
@@ -117,6 +115,7 @@ export class PedidosController {
     description: 'Pedido no encontrado',
   })
   @Get(':id')
+  @Roles('ADMIN')
   findOneById(@Param('id', IdValidatePipe) id: string) {
     this.logger.log(`Buscando pedido con id${id}`)
     return this.pedidosService.findOneById(id)
@@ -142,6 +141,7 @@ export class PedidosController {
   })
   @Post()
   @HttpCode(201)
+  @Roles('ADMIN')
   create(@Body() createPedidoDto: CreatePedidoDto) {
     this.logger.log('Creando pedido')
     return this.pedidosService.create(createPedidoDto)
@@ -174,6 +174,7 @@ export class PedidosController {
     description: 'Los datos del pedido no son válidos',
   })
   @Put(':id')
+  @Roles('ADMIN')
   update(
     @Param('id', IdValidatePipe) id: string,
     @Body() updatePedidoDto: UpdatePedidoDto,
@@ -204,6 +205,7 @@ export class PedidosController {
     description: 'Los datos del pedido no son válidos',
   })
   @HttpCode(204)
+  @Roles('ADMIN')
   @Delete(':id')
   remove(@Param('id', IdValidatePipe) id: string) {
     this.logger.log(`Eliminando pedido con id${id}`)

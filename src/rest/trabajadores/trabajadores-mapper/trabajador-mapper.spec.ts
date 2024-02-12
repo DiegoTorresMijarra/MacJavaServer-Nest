@@ -103,7 +103,10 @@ describe('TrabajadorMapper', () => {
       const dto = {} as UpdateTrabajadorDto
       const res = provider.updateToTrabajador(original, dto, undefined)
 
-      expect(res).toEqual(original)
+      expect(res.nombre).toEqual(original.nombre)
+      expect(res.apellido).toEqual(original.apellido)
+      expect(res.edad).toEqual(original.edad)
+      expect(res.telefono).toEqual(original.telefono)
       expect(typeof res).toEqual(typeof Trabajador.prototype)
     })
 

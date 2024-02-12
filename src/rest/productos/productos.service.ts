@@ -177,9 +177,12 @@ export class ProductoService {
     this.logger.log(
       `${sumar ? 'Añadiendo' : 'Restando'} la cantidad de ${monto} al producto con id ${id}`,
     )
+    const cacheKey = `product_${id}`
+
     const original = await this.findOne(id)
     const newStock = sumar ? original.stock + monto : original.stock - monto
 
+    await this.cacheManager.del(cacheKey)
     return await this.productoRepository.update({ id: id }, { stock: newStock })
   }
 

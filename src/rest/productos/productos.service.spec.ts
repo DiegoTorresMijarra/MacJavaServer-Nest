@@ -85,6 +85,7 @@ describe('ProductoService', () => {
         }),
       } as any)
       jest.spyOn(mapper, 'toResponseDto').mockReturnValue({
+        ...new Producto(),
         id: 0,
         nombre: '',
         description: '',
@@ -92,9 +93,7 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        isDeleted: false,
+        proveedor: '',
       })
 
       const result = await service.findAll(query)
@@ -119,6 +118,7 @@ describe('ProductoService', () => {
       const producto = new Producto()
       jest.spyOn(repository, 'findOne').mockResolvedValue(producto)
       jest.spyOn(mapper, 'toResponseDto').mockReturnValue({
+        ...new Producto(),
         id: 0,
         nombre: '',
         description: '',
@@ -126,9 +126,7 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        isDeleted: false,
+        proveedor: '',
       })
 
       expect(await service.findOne(id)).toBeDefined()
@@ -149,11 +147,13 @@ describe('ProductoService', () => {
         nombre: 'Test',
         precio: 100,
         stock: 10,
+        proveedor: '',
       }
       const producto = new Producto()
       jest.spyOn(mapper, 'toEntity').mockReturnValue(producto)
       jest.spyOn(repository, 'save').mockResolvedValue(producto)
       jest.spyOn(mapper, 'toResponseDto').mockReturnValue({
+        ...new Producto(),
         id: 0,
         nombre: '',
         description: '',
@@ -161,9 +161,7 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        isDeleted: false,
+        proveedor: '',
       })
 
       expect(await service.create(createProductoDto)).toBeDefined()
@@ -185,6 +183,7 @@ describe('ProductoService', () => {
       jest.spyOn(repository, 'findOne').mockResolvedValue(producto)
       jest.spyOn(repository, 'save').mockResolvedValue(producto)
       jest.spyOn(mapper, 'toResponseDto').mockReturnValue({
+        ...new Producto(),
         id: 0,
         nombre: '',
         description: '',
@@ -192,9 +191,7 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        isDeleted: false,
+        proveedor: '',
       })
 
       expect(await service.update(id, updateProductoDto)).toBeDefined()
@@ -253,6 +250,7 @@ describe('ProductoService', () => {
         .mockReturnValue('image.jpg')
       jest.spyOn(repository, 'save').mockResolvedValue(producto)
       jest.spyOn(mapper, 'toResponseDto').mockReturnValue({
+        ...new Producto(),
         id: 0,
         nombre: '',
         description: '',
@@ -260,9 +258,7 @@ describe('ProductoService', () => {
         stock: 0,
         imagen: '',
         uuid: '',
-        createdAt: undefined,
-        updatedAt: undefined,
-        isDeleted: false,
+        proveedor: '',
       })
 
       expect(

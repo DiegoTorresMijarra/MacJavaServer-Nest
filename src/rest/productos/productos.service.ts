@@ -27,6 +27,8 @@ import {
 } from '../../notifications/models/notificacion.model'
 import { Posicion } from '../posiciones/entities/posicion.entity'
 import { MacjavaNotificationsGateway } from '../../notifications/macjava-notifications.gateway'
+import { Proveedor } from '../proveedores/entities/proveedores.entity'
+import { CreateProductoDto } from './dto/create-producto.dto'
 
 @Injectable()
 export class ProductoService {
@@ -35,6 +37,8 @@ export class ProductoService {
   constructor(
     @InjectRepository(Producto)
     private readonly productoRepository: Repository<Producto>,
+    @InjectRepository(Proveedor)
+    private readonly proveedoresRepository: Repository<Proveedor>, // Corregido
     private readonly productosMapper: ProductosMapper,
     private readonly storageService: StorageService,
     private readonly notificationGateway: MacjavaNotificationsGateway,
@@ -52,6 +56,7 @@ export class ProductoService {
     const pagination = await paginate(query, queryBuilder, {
       sortableColumns: ['nombre', 'precio', 'stock'],
       defaultSortBy: [['nombre', 'ASC']],
+      relations: ['proveedor'],
       searchableColumns: ['nombre', 'precio', 'stock'],
       filterableColumns: {
         nombre: [FilterOperator.EQ, FilterSuffix.NOT],
@@ -78,7 +83,12 @@ export class ProductoService {
       return cache
     }
 
-    const producto = await this.productoRepository.findOne({ where: { id } })
+    const producto = await this.productoRepository
+      .createQueryBuilder('producto')
+      .leftJoinAndSelect('producto.proveedor', 'proveedor') // Corregido
+      .where('producto.id = :id', { id })
+      .getOne()
+
     if (!producto) {
       throw new NotFoundException(`Producto con id ${id} no encontrado`)
     }
@@ -88,13 +98,13 @@ export class ProductoService {
     return dto
   }
 
-  async create(createProductoDto: {
-    precio: number
-    stock: number
-    nombre: string
-  }): Promise<ResponseProductoDto> {
+  async create(
+    createProductoDto: CreateProductoDto,
+  ): Promise<ResponseProductoDto> {
     this.logger.log('Create producto')
-    const producto = this.productosMapper.toEntity(createProductoDto)
+    const proveedor = await this.checkProveedor(createProductoDto.proveedor) // Corregido
+    const producto = this.productosMapper.toEntity(createProductoDto, proveedor)
+
     const res = await this.productoRepository.save(producto)
     this.onChange(NotificationTipo.CREATE, res)
     return this.productosMapper.toResponseDto(res)
@@ -105,9 +115,21 @@ export class ProductoService {
     updateProductoDto: UpdateProductoDto,
   ): Promise<ResponseProductoDto> {
     this.logger.log(`Update producto by id: ${id}`)
-    const producto = await this.productoRepository.findOne({ where: { id } })
+
+    const producto = await this.productoRepository.findOne({
+      where: { id },
+      relations: ['proveedor'], // Corregido
+    })
+
     if (!producto) {
       throw new NotFoundException(`Producto con id ${id} no encontrado`)
+    }
+
+    if (updateProductoDto.proveedor) {
+      // Corregido
+      producto.proveedor = await this.checkProveedor(
+        updateProductoDto.proveedor,
+      ) // Corregido
     }
 
     Object.assign(producto, updateProductoDto)
@@ -184,6 +206,22 @@ export class ProductoService {
 
     await this.cacheManager.del(cacheKey)
     return await this.productoRepository.update({ id: id }, { stock: newStock })
+  }
+
+  public async checkProveedor(nombreProveedor: string) {
+    // Corregido
+    const proveedor = await this.proveedoresRepository // Corregido
+      .createQueryBuilder()
+      .where('LOWER(nombre) = LOWER(:nombre)', {
+        nombre: nombreProveedor.toLowerCase(),
+      }) // Corregido
+      .getOne()
+
+    if (!proveedor) {
+      // Corregido
+      throw new BadRequestException(`El proveedor ${nombreProveedor} no existe`) // Corregido
+    }
+    return proveedor
   }
 
   private onChange(type: NotificationTipo, data: Producto) {

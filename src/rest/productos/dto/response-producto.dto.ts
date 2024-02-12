@@ -44,4 +44,11 @@ export class ResponseProductoDto {
     description: 'Indica si el producto ha sido eliminado',
   })
   isDeleted: boolean
+
+  @ApiProperty({
+    example: 'bimbo',
+    description: 'El id del proveedor',
+    required: false,
+  })
+  proveedor: string
 }

@@ -73,6 +73,7 @@ describe('ProductosController', () => {
   describe('create', () => {
     it('should create a product', async () => {
       const createProductoDto: CreateProductoDto = {
+        proveedor: '',
         nombre: 'Test',
         precio: 100,
         stock: 10,
@@ -87,6 +88,7 @@ describe('ProductosController', () => {
   describe('update', () => {
     it('should update a product', async () => {
       const updateProductoDto: UpdateProductoDto = {
+        proveedor: '',
         nombre: 'Test',
         precio: 100,
         stock: 10,
@@ -99,6 +101,7 @@ describe('ProductosController', () => {
 
     it('should throw NotFoundException if product is not found', async () => {
       const updateProductoDto: UpdateProductoDto = {
+        proveedor: '',
         nombre: 'Test',
         precio: 100,
         stock: 10,
@@ -119,7 +122,7 @@ describe('ProductosController', () => {
     it('should remove a product', async () => {
       jest.spyOn(service, 'remove').mockResolvedValue()
 
-      await expect(controller.remove(1)).resolves.toBeUndefined()
+      await expect(controller.remove(1)).resolves.toBe(undefined)
     })
 
     it('should throw NotFoundException if product is not found', async () => {

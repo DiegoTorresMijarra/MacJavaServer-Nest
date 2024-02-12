@@ -9,26 +9,14 @@ import { NotificationsModule } from '../../notifications/notifications.module'
 import { StorageModule } from '../storage/storage.module'
 import { CacheModule } from '@nestjs/cache-manager'
 import { ProductosMapper } from './mappers/producto-mapper'
+import { Proveedor } from '../proveedores/entities/proveedores.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Producto]),
+    TypeOrmModule.forFeature([Producto, Proveedor]),
     CacheModule.register(),
     NotificationsModule,
     StorageModule,
-    /*
-    MulterModule.register({
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const fileName: string = file.originalname.split('.')[0]
-          const fileExtName: string = file.originalname.split('.')[1]
-          cb(null, `${fileName}-${Date.now()}.${fileExtName}`)
-        },
-      }),
-    }),
-
-     */
   ],
   controllers: [ProductosController],
   providers: [ProductoService, ProductosMapper],

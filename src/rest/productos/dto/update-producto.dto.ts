@@ -24,4 +24,8 @@ export class UpdateProductoDto {
   @IsOptional()
   @IsString()
   imagen?: string
+
+  @IsOptional()
+  @IsString()
+  proveedor?: string
 }

@@ -1,11 +1,11 @@
 import { INestApplication, NotFoundException } from '@nestjs/common'
-import { RestaurantesService } from '../../src/rest/restaurantes/restaurantes.service'
+import { RestaurantesService } from '../../../src/rest/restaurantes/restaurantes.service'
 import { Test } from '@nestjs/testing'
-import { RestaurantesModule } from '../../src/rest/restaurantes/restaurantes.module'
+import { RestaurantesModule } from '../../../src/rest/restaurantes/restaurantes.module'
 import * as request from 'supertest'
-import { Restaurante } from '../../src/rest/restaurantes/entities/restaurante.entity'
-import { UpdateRestauranteDto } from '../../src/rest/restaurantes/dto/update-restaurante.dto'
-import { CreateRestauranteDto } from '../../src/rest/restaurantes/dto/create-restaurante.dto'
+import { Restaurante } from '../../../src/rest/restaurantes/entities/restaurante.entity'
+import { UpdateRestauranteDto } from '../../../src/rest/restaurantes/dto/update-restaurante.dto'
+import { CreateRestauranteDto } from '../../../src/rest/restaurantes/dto/create-restaurante.dto'
 
 describe('RestaurantesController (e2e)', () => {
   let app: INestApplication

@@ -22,7 +22,7 @@ import { Posicion } from '../posiciones/entities/posicion.entity'
 import { CreatePedidoDto, ProductosPedidosDto } from './dto/create-pedido.dto'
 import { UpdatePedidoDto } from './dto/update-pedido.dto'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import { ObjectId } from 'mongodb'
+import { ResponseProductoDto } from '../productos/dto/response-producto.dto'
 
 describe('PedidosService', () => {
   let service: PedidosService
@@ -234,7 +234,10 @@ describe('PedidosService', () => {
       it('should return correct, when correct one is passed', async () => {
         const mockProdFind = jest
           .spyOn(productosService, 'findOne')
-          .mockResolvedValue(producto)
+          .mockResolvedValue({
+            ...producto,
+            proveedor: 'Bimbo',
+          } as ResponseProductoDto)
 
         const res = await service.checkProductosPedidos(productoPedidoDto)
 
@@ -246,7 +249,11 @@ describe('PedidosService', () => {
       it('should throw bad request when one is incorrect', async () => {
         const mockProdFind = jest
           .spyOn(productosService, 'findOne')
-          .mockResolvedValue({ ...producto, precio: 99 })
+          .mockResolvedValue({
+            ...producto,
+            precio: 99,
+            proveedor: 'Bimbo',
+          })
 
         await expect(() =>
           service.checkProductosPedidos(productoPedidoDto),

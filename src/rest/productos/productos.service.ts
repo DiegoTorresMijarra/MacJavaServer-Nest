@@ -209,17 +209,15 @@ export class ProductoService {
   }
 
   public async checkProveedor(nombreProveedor: string) {
-    // Corregido
-    const proveedor = await this.proveedoresRepository // Corregido
+    const proveedor = await this.proveedoresRepository
       .createQueryBuilder()
       .where('LOWER(nombre) = LOWER(:nombre)', {
         nombre: nombreProveedor.toLowerCase(),
-      }) // Corregido
+      })
       .getOne()
 
     if (!proveedor) {
-      // Corregido
-      throw new BadRequestException(`El proveedor ${nombreProveedor} no existe`) // Corregido
+      throw new BadRequestException(`El proveedor ${nombreProveedor} no existe`)
     }
     return proveedor
   }

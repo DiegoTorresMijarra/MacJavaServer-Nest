@@ -126,7 +126,7 @@ describe('ProductosController', () => {
     })
 
     it('should throw NotFoundException if product is not found', async () => {
-      jest.spyOn(service, 'remove').mockResolvedValue(null)
+      jest.spyOn(service, 'remove').mockRejectedValue(new NotFoundException())
 
       await expect(controller.remove(1)).rejects.toThrow(NotFoundException)
     })

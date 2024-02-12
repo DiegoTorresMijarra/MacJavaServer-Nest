@@ -145,7 +145,7 @@
 									"disabled": true
 								},
 								{
-									"key": "size",
+									"key": "limit",
 									"value": "1",
 									"disabled": true
 								},
@@ -405,7 +405,7 @@
 									"disabled": true
 								},
 								{
-									"key": "size",
+									"key": "limit",
 									"value": "1",
 									"disabled": true
 								},
@@ -1025,41 +1025,14 @@
 			"name": "Orders",
 			"item": [
 				{
-					"name": "listAll",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:3000/v1/orders/listAll",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"listAll"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "GetAll Pageable",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:3000/v1/orders",
-							"protocol": "https",
+							"raw": "{{DOMAIN_NAME}}pedidos",
 							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders"
+								"{{DOMAIN_NAME}}pedidos"
 							],
 							"query": [
 								{
@@ -1115,7 +1088,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"clientUUID\": \"168ecf01-a6b6-4a56-ba5a-cb26199f21ab\",\r\n  \"workerUUID\": \"550e8400-e29b-41d4-a716-446655440000\",\r\n  \"restaurantId\": 2,\r\n  \"orderedProducts\": [\r\n    {\r\n      \"quantity\": 4,\r\n      \"productId\":1,\r\n      \"productPrice\": 10.50,\r\n      \"totalPrice\": 42.00\r\n    }\r\n  ]\r\n}\r\n",
+							"raw": "{\r\n  \"idCliente\": \"1bc0640d-e02f-455c-bc16-793c81fd0e17\",\r\n  \"idTrabajador\": \"c9fd1562-3396-46b3-9fd2-88acdb5c26fd\",\r\n  \"idRestaurante\": 2,\r\n  \"pagado\":false,\r\n  \"productosPedidos\": [\r\n    {\r\n      \"cantidad\": 4,\r\n      \"productoId\":2,\r\n      \"precioProducto\": 20.49\r\n    }\r\n  ]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1123,16 +1096,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:3000/v1/orders/orders",
-							"protocol": "https",
+							"raw": "{{DOMAIN_NAME}}pedidos",
 							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"orders"
+								"{{DOMAIN_NAME}}pedidos"
 							]
 						}
 					},
@@ -1174,16 +1140,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:3000/v1/orders/6569a77e44ce487c8247abbb",
-							"protocol": "https",
+							"raw": "{{DOMAIN_NAME}}pedidos/65c8bb0317f6af56176e80b2",
 							"host": [
-								"localhost"
+								"{{DOMAIN_NAME}}pedidos"
 							],
-							"port": "3000",
 							"path": [
-								"v1",
-								"orders",
-								"6569a77e44ce487c8247abbb"
+								"65c8bb0317f6af56176e80b2"
 							]
 						}
 					},
@@ -1196,7 +1158,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"clientUUID\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\"\r\n   // \"workerUUID\": \"550e8400-e29b-41d4-a716-446655440000\"\r\n    //\"restaurantId\": 5\r\n    ,\"orderedProducts\": [        {\r\n            \"quantity\": 60,\r\n            \"productId\": 1,\r\n            \"productPrice\": 10.5\r\n        }]\r\n}",
+							"raw": "{\r\n  \"idCliente\": \"1bc0640d-e02f-455c-bc16-793c81fd0e17\",\r\n  \"idTrabajador\": \"c9fd1562-3396-46b3-9fd2-88acdb5c26fd\",\r\n  \"idRestaurante\": 1,\r\n  \"pagado\":true,\r\n  \"productosPedidos\": [\r\n    {\r\n      \"cantidad\": 1,\r\n      \"productoId\":3,\r\n      \"precioProducto\": 15.75\r\n    }\r\n  ]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1204,214 +1166,12 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:3000/v1/orders/6569a29d62996427018dc774",
-							"protocol": "https",
+							"raw": "{{DOMAIN_NAME}}pedidos/65c953279bd6a9ba69685491",
 							"host": [
-								"localhost"
+								"{{DOMAIN_NAME}}pedidos"
 							],
-							"port": "3000",
 							"path": [
-								"v1",
-								"orders",
-								"6569a29d62996427018dc774"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "existsByClientExistsUUID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:3000/v1/orders/clientExists/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"clientExists",
-								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "ListAll findByClientUUID Pag",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:3000/v1/orders/client/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"client",
-								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "size",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "sortBy",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "direction",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "existsByworkerExistsUUID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:3000/v1/orders/workerExists/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"workerExists",
-								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "ListAll findByworkerUUID Pag",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:3000/v1/orders/worker/168ecf01-a6b6-4a56-ba5a-cb26199f21ab",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"worker",
-								"168ecf01-a6b6-4a56-ba5a-cb26199f21ab"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "size",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "sortBy",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "direction",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "existsByRestaurantId",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:3000/v1/orders/restaurantExists/1",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"restaurantExists",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "ListAll findByRestaurantId Pag",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:3000/v1/orders/restaurant/2",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"v1",
-								"orders",
-								"restaurant",
-								"2"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "size",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "sortBy",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "direction",
-									"value": null,
-									"disabled": true
-								}
+								"65c953279bd6a9ba69685491"
 							]
 						}
 					},
@@ -1497,15 +1257,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:3000/v1/auth/signin",
-							"protocol": "https",
+							"raw": "{{DOMAIN_NAME}}auth/signin",
 							"host": [
-								"localhost"
+								"{{DOMAIN_NAME}}auth"
 							],
-							"port": "3000",
 							"path": [
-								"v1",
-								"auth",
 								"signin"
 							]
 						}
@@ -1956,6 +1712,16 @@
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImlhdCI6MTcwNzcwOTUxNywiZXhwIjoxNzA3NzEzMTE3fQ.kD-Cs1sJOX617nbcwFcnMgK8dNJJ4fW2mm-hHZzii6SvvVElXL-yawwI1crgaeXyg7LmYcJGjTih0YVLEWqSIQ",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -1979,7 +1745,7 @@
 	"variable": [
 		{
 			"key": "DOMAIN_NAME",
-			"value": "http://localhost:3000/"
+			"value": "https://localhost:3000/"
 		}
 	]
 }

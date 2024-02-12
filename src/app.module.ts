@@ -24,6 +24,8 @@ import { UsersModule } from './rest/usuarios/users.module'
         ? { envFilePath: '.env.dev' || '.env' }
         : { envFilePath: '.env.prod' },
     ),
+    //cache
+    CacheModule.register(),
     //locale config
     LocaleConfigModule,
     //bbdd con postgrest
@@ -39,8 +41,6 @@ import { UsersModule } from './rest/usuarios/users.module'
     ProveedoresModule,
     ProductosModule,
     RestaurantesModule,
-    //cache
-    CacheModule.register(),
     //cors
     CorsConfigModule,
     //notifications

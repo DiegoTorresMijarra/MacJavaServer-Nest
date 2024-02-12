@@ -1,5 +1,6 @@
 # Lo necesario para ejecutar la aplicación en local
 services:
+
   # PostgreSQL
   postgres-db:
     container_name: macjava-db_postgres
@@ -57,6 +58,7 @@ services:
 volumes:
   storage-dir:
 
+# Red para conectar los contenedores (opcional)
 networks:
-  mcjava-networks:
+  macjava-network:
     driver: bridge

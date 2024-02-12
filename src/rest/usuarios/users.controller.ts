@@ -67,6 +67,14 @@ export class UsersController {
     return await this.usersService.update(id, updateUserDto, true)
   }
 
+  @Delete(':id')
+  @HttpCode(204)
+  @Roles('ADMIN')
+  async removeById(@Param('id', ParseUUIDPipe) id: string) {
+    this.logger.log(`Borrando usuario con id ${id}`)
+    return await this.usersService.deleteById(id)
+  }
+
   // ME/PROFILE, CUALQUIER USUARIO AUTENTICADO
   @Get('me/profile')
   @Roles('USER')

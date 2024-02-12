@@ -2,18 +2,26 @@ import { Injectable } from '@nestjs/common'
 import { Producto } from '../entities/producto.entity'
 import { plainToClass } from 'class-transformer'
 import { CreateProductoDto } from '../dto/create-producto.dto'
-import { v4 as uuidv4 } from 'uuid'
 import { ResponseProductoDto } from '../dto/response-producto.dto'
+import { Proveedor } from '../../proveedores/entities/proveedores.entity'
 
 @Injectable()
 export class ProductosMapper {
-  toEntity(createProductoDto: CreateProductoDto): Producto {
-    const productoEntity = plainToClass(Producto, createProductoDto)
-    productoEntity.uuid = uuidv4() // Asumiendo que se necesita un UUID
-    return productoEntity
+  toEntity(dto: CreateProductoDto, proveedor: Proveedor): Producto {
+    return {
+      ...new Producto(),
+      ...dto,
+      proveedor: proveedor,
+    }
   }
 
   toResponseDto(productoEntity: Producto): ResponseProductoDto {
-    return plainToClass(ResponseProductoDto, productoEntity)
+    const dto = plainToClass(ResponseProductoDto, productoEntity)
+    if (productoEntity.proveedor && productoEntity.proveedor.nombre) {
+      dto.proveedor = productoEntity.proveedor.nombre
+    } else {
+      dto.proveedor = null
+    }
+    return dto
   }
 }

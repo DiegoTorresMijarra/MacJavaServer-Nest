@@ -54,7 +54,9 @@ export class Producto {
   @Column({ name: 'is_deleted', type: 'boolean', default: false })
   isDeleted: boolean
 
-  @ManyToOne(() => Proveedor, (proveedor) => proveedor.productos)
+  @ManyToOne(() => Proveedor, (proveedor) => proveedor.productos, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'proveedor_id' })
   proveedor: Proveedor
 }

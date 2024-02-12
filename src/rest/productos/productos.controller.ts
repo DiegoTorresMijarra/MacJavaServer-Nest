@@ -126,7 +126,7 @@ export class ProductosController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: process.env.UPLOADS_DIR || './storage-dir',
-        filename: (req, file, cb) => {
+        filename: (_req, file, cb) => {
           const { name } = parse(file.originalname)
           const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
           const fileExt = extname(file.originalname)

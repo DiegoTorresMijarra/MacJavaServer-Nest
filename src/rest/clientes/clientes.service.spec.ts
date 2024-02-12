@@ -330,7 +330,7 @@ describe('ClientesService', () => {
     })
   })
   describe('updateImage', () => {
-    it('Update image Funko', async () => {
+    it('Update image Cliente', async () => {
       const mockRequest = {
         protocol: 'http',
         get: () => 'localhost',

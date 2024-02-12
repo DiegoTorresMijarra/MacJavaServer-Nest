@@ -15,7 +15,7 @@ services:
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/macjava.sql
     networks:
-      - macjava-network
+      - macjava-networks
 
   # MongoDB
   mongo-db:
@@ -32,7 +32,7 @@ services:
     volumes:
       - ./database/init.js:/docker-entrypoint-initdb.d/macjava.js:ro
     networks:
-      - macjava-network
+      - macjava-networks
 
   # Servicio de la API REST
   macjava-api-rest:
@@ -48,7 +48,7 @@ services:
       - storage-dir:/app/storage-dir
       - ./cert:/app/cert
     networks:
-      - macjava-network
+      - macjava-networks
     depends_on:
       - postgres-db
       - mongo-db
@@ -58,5 +58,5 @@ volumes:
   storage-dir:
 
 networks:
-  mcjava-networks:
+  macjava-networks:
     driver: bridge

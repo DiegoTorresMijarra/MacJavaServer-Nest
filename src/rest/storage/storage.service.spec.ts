@@ -20,7 +20,7 @@ describe('StorageService', () => {
   describe('findFile', () => {
     it('Encuentra el archivo', () => {
       const filename = 'example.jpg'
-      const filePath = `${process.cwd()}\\storage-dir\\${filename}`
+      const filePath = `${process.cwd()}/storage-dir/${filename}`
 
       jest.spyOn(fs, 'existsSync').mockReturnValue(true)
 

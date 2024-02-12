@@ -161,50 +161,42 @@ VALUES
     (3,'Producto 3', 'Descripción del producto 3', 'https://via.placeholder.com/150', 15.75, 75, '00000000-0000-0000-0000-000000000003', 3);
 
 
--- Creación de la tabla usuarios
-CREATE TABLE "public"."usuarios"
-(
-    "is_deleted" boolean DEFAULT false,
-    "created_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
-    "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "apellidos" character varying(255) NOT NULL,
-    "email" character varying(255) NOT NULL,
-    "nombre" character varying(255) NOT NULL,
-    "password" character varying(255) NOT NULL,
-    "username" character varying(255) NOT NULL,
-    CONSTRAINT "usuarios_email_key" UNIQUE ("email"),
-    CONSTRAINT "usuarios_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "usuarios_username_key" UNIQUE ("username")
+DROP TABLE IF EXISTS "user_roles";
+DROP SEQUENCE IF EXISTS user_roles_id_seq;
+CREATE SEQUENCE user_roles_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 6 CACHE 1;
+
+CREATE TABLE "public"."user_roles" (
+                                       "user_id" uuid NOT NULL,
+                                       "role" character varying(50) DEFAULT 'USER' NOT NULL,
+                                       "id" integer DEFAULT nextval('user_roles_id_seq') NOT NULL,
+                                       CONSTRAINT "PK_8acd5cf26ebd158416f477de799" PRIMARY KEY ("id")
 ) WITH (oids = false);
 
--- Creación de la tabla user_roles
-CREATE SEQUENCE user_roles_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 4 CACHE 1;
-CREATE TABLE "public"."user_roles"
-(
-    "user_id" uuid NOT NULL,
-    "role" character varying(255),
-    "id" integer DEFAULT nextval('user_roles_id_seq') NOT NULL
+INSERT INTO "user_roles" ("user_id", "role", "id") VALUES
+                                                       ('00000000-0000-0000-0001-000000000001',	'USER',	1),
+                                                       ('00000000-0000-0000-0001-000000000001',	'ADMIN',2),
+                                                       ('00000000-0000-0000-0001-000000000002',	'USER',	3);
+
+DROP TABLE IF EXISTS "usuarios";
+DROP SEQUENCE IF EXISTS usuarios_id_seq;
+CREATE SEQUENCE usuarios_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 5 CACHE 1;
+
+CREATE TABLE "public"."usuarios" (
+                                     "is_deleted" boolean DEFAULT false NOT NULL,
+                                     "created_at" timestamp DEFAULT now() NOT NULL,
+                                     "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+                                     "updated_at" timestamp DEFAULT now() NOT NULL,
+                                     "apellidos" character varying(255) NOT NULL,
+                                     "email" character varying(255) NOT NULL,
+                                     "nombre" character varying(255) NOT NULL,
+                                     "password" character varying(255) NOT NULL,
+                                     "username" character varying(255) NOT NULL,
+                                     CONSTRAINT "usuarios_email_key" UNIQUE ("email"),
+                                     CONSTRAINT "usuarios_pkey" PRIMARY KEY ("id"),
+                                     CONSTRAINT "usuarios_username_key" UNIQUE ("username")
 ) WITH (oids = false);
 
--- Insert usuarios y roles
--- Contraseña: Admin1
-INSERT INTO usuarios (is_deleted, created_at, id, updated_at, apellidos, email, nombre, password, username)
-VALUES (false, '2023-11-02 11:43:24.724871', '00000000-0000-0000-0000-000000000000', '2023-11-02 11:43:24.724871', 'Admin Admin', 'admin@prueba.net', 'Admin', '$2a$10$vPaqZvZkz6jhb7U7k/V/v.5vprfNdOnh4sxi/qpPRkYTzPmFlI9p2', 'admin');
-
--- Asignar roles al administrador
-INSERT INTO user_roles (user_id, role, id)
-VALUES ('00000000-0000-0000-0000-000000000000', 'USER',1),
-       ('00000000-0000-0000-0000-000000000000', 'ADMIN',2);
-
--- Contraseña: User1
-INSERT INTO usuarios (is_deleted, created_at, id, updated_at, apellidos, email, nombre, password, username)
-VALUES (false, '2023-11-02 11:43:24.730431', '00000000-0000-0000-0000-000000000001', '2023-11-02 11:43:24.730431', 'User User', 'user@prueba.net', 'User', '$2a$12$RUq2ScW1Kiizu5K4gKoK4OTz80.DWaruhdyfi2lZCB.KeuXTBh0S.', 'user');
-
--- Asignar roles al usuario
-INSERT INTO user_roles (user_id, role, id)
-VALUES ('00000000-0000-0000-0000-000000000001', 'USER',3);
-
--- Restricciones de clave externa
-ALTER TABLE ONLY "public"."user_roles"
-    ADD CONSTRAINT "user_roles_users_fk" FOREIGN KEY (user_id) REFERENCES usuarios (id) NOT DEFERRABLE;
+INSERT INTO "usuarios" ("is_deleted", "created_at", "id", "updated_at", "apellidos", "email", "nombre", "password", "username") VALUES
+                                                                                                                                    ('f',	'2023-11-02 11:43:24.724871',	'00000000-0000-0000-0001-000000000001',	'2023-11-02 11:43:24.724871',	'Admin Admin',	'admin@prueba.net',	'Admin',	'$2a$10$vPaqZvZkz6jhb7U7k/V/v.5vprfNdOnh4sxi/qpPRkYTzPmFlI9p2',	'admin'),
+                                                                                                                                    ('f',	'2023-11-02 11:43:24.730431',	'00000000-0000-0000-0001-000000000002',	'2023-11-02 11:43:24.730431',	'User User',	'user@prueba.net',	'User',	'$2a$12$RUq2ScW1Kiizu5K4gKoK4OTz80.DWaruhdyfi2lZCB.KeuXTBh0S.',	'user');
+ALTER TABLE ONLY "public"."user_roles" ADD CONSTRAINT "FK_87b8888186ca9769c960e926870" FOREIGN KEY (user_id) REFERENCES usuarios(id) NOT DEFERRABLE;

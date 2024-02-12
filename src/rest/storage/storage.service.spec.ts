@@ -2,6 +2,7 @@ import { StorageService } from './storage.service'
 import { Test, TestingModule } from '@nestjs/testing'
 import * as fs from 'fs'
 import { NotFoundException } from '@nestjs/common'
+import * as path from 'path'
 
 describe('StorageService', () => {
   let service: StorageService
@@ -20,7 +21,7 @@ describe('StorageService', () => {
   describe('findFile', () => {
     it('Encuentra el archivo', () => {
       const filename = 'example.jpg'
-      const filePath = `${process.cwd()}\\storage-dir\\${filename}`
+      const filePath = `${process.cwd()}${path.sep}storage-dir${path.sep}${filename}`
 
       jest.spyOn(fs, 'existsSync').mockReturnValue(true)
 
@@ -54,7 +55,7 @@ describe('StorageService', () => {
   describe('removeFile', () => {
     it('elimina archivo', () => {
       const filename = 'example.jpg'
-      const filePath = `${process.cwd()}/storage-dir/${filename}`
+      const filePath = `${process.cwd()}${path.sep}storage-dir${path.sep}${filename}`
 
       jest.spyOn(fs, 'existsSync').mockReturnValue(true)
       jest.spyOn(fs, 'unlinkSync').mockReturnValue(undefined)

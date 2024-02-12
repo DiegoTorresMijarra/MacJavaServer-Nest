@@ -15,7 +15,7 @@ Bienvenido a la API MacJavaNest, desarrollada por Jaime Lozano, Diego Torres, Os
 [Documento](https://github.com/DiegoTorresMijarra/MacJavaServer-Nest/tree/master/pdf/MacJavaServer-Nest.pdf)
 
 ## Video
-[Video](https://www.youtube.com/watch?v=nvKjzIZSk80)
+[Video](https://youtu.be/t7Uu5FNnc3s)
 
 ## Nest
 Para trabajar con nuestra API, recomendamos mirar: [Nest](https://github.com/DiegoTorresMijarra/MacJavaServer-Nest/tree/master/README_NEST.md)

@@ -187,7 +187,6 @@ export class PosicionesService {
     if (cache) {
       return cache
     }
-
     const posicionRes = await this.posicionRepository
       .createQueryBuilder('posicion')
       .leftJoinAndMapMany(
@@ -208,7 +207,6 @@ export class PosicionesService {
       posicionRes,
       60000,
     )
-
     return posicionRes
   }
 

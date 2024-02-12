@@ -27,7 +27,7 @@ bootstrap().then(() => {
   }
   if (process.env.NODE_ENV === 'dev') {
     console.log(
-      `Swagger configurado en la ruta: http:localhost:${process.env.API_PORT || 3000}/api/`,
+      `Swagger configurado en la ruta: https:localhost:${process.env.API_PORT || 3000}/api/`,
     )
   }
 })

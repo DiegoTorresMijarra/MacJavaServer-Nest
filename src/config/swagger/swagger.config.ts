@@ -24,6 +24,7 @@ export function setupSwagger(app: INestApplication) {
     .addTag('Proveedores', 'Operaciones con proveedores')
     .addTag('Restaurantes', 'Operaciones con los trabajadores')
     .addTag('Pedidos', 'Operaciones con los pedidos')
+    .addTag('Productos', 'Operaciones con los productos')
     .addBearerAuth()
     .build()
 
